@@ -20,10 +20,10 @@ const jost = Jost({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://milankucko.hu"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://gamma-apartmanok.hu"),
   title: {
-    default: "Milán Kuckó | Prémium pihenés Miskolctapolcán",
-    template: "%s | Milán Kuckó",
+    default: "Gamma Apartmanok | Prémium pihenés Miskolctapolcán",
+    template: "%s | Gamma Apartmanok",
   },
   description:
     "Romantikus vendégház privát jacuzzival és kandallóval Miskolctapolcán. Foglaljon közvetlenül – nincsenek extra díjak!",
@@ -40,15 +40,15 @@ export const metadata: Metadata = {
   openGraph: {
     type:        "website",
     locale:      "hu_HU",
-    url:         "https://milankucko.hu",
-    siteName:    "Milán Kuckó",
-    title:       "Milán Kuckó | Prémium pihenés Miskolctapolcán",
+    url:         "https://gamma-apartmanok.hu",
+    siteName:    "Gamma Apartmanok",
+    title:       "Gamma Apartmanok | Prémium pihenés Miskolctapolcán",
     description: "Romantikus vendégház privát jacuzzival Miskolctapolcán.",
     images: [{ url: "/og-image.jpg", width: 1200, height: 630 }],
   },
   twitter: {
     card:        "summary_large_image",
-    title:       "Milán Kuckó | Prémium pihenés Miskolctapolcán",
+    title:       "Gamma Apartmanok | Prémium pihenés Miskolctapolcán",
     description: "Romantikus vendégház privát jacuzzival Miskolctapolcán.",
     images:      ["/og-image.jpg"],
   },
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
     follow: true,
   },
   alternates: {
-    canonical: "https://milankucko.hu",
+    canonical: "https://gamma-apartmanok.hu",
   },
 };
 
@@ -77,9 +77,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             __html: JSON.stringify({
               "@context":  "https://schema.org",
               "@type":     "LodgingBusiness",
-              name:        "Milán Kuckó",
+              name:        "Gamma Apartmanok",
               description: "Romantikus vendégház privát jacuzzival és kandallóval Miskolctapolcán",
-              url:         "https://milankucko.hu",
+              url:         "https://gamma-apartmanok.hu",
               telephone:   "+36 30 845 4923",
               email:       "milan.kucko117@gmail.com",
               address: {

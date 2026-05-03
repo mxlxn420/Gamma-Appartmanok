@@ -50,7 +50,7 @@ export default function AdminLogin() {
             <Lock size={24} className="text-cream" />
           </div>
           <h1 className="font-serif text-2xl text-forest-900">Admin belépés</h1>
-          <p className="text-stone-500 text-sm mt-1">Milán Kuckó kezelőfelület</p>
+          <p className="text-stone-500 text-sm mt-1">Gamma Apartmanok kezelőfelület</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">

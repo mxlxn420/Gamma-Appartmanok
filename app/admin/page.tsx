@@ -41,7 +41,7 @@ export default async function AdminDashboard() {
     <div>
       <div className="mb-8">
         <h1 className="font-serif text-3xl text-stone-800">Áttekintés</h1>
-        <p className="text-stone-500 text-sm mt-1">Milán Kuckó foglaláskezelő</p>
+        <p className="text-stone-500 text-sm mt-1">Gamma Apartmanok foglaláskezelő</p>
       </div>
       <AdminStats stats={stats} />
       <div className="mt-8">

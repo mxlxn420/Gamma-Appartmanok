@@ -42,6 +42,6 @@ export const useBookingStore = create<BookingState>()(
         children2to6: 0, children6to12: 0,
       }),
     }),
-    { name: "milan-kucko-booking" }
+    { name: "gamma-apartmanok-booking" }
   )
 );

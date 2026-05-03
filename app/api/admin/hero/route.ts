@@ -10,7 +10,7 @@ const DEFAULTS = {
   description:   `Romantikus vendégház hatalmas kerttel és privát jacuzzival, Miskolctapolca csendes zsákutcájában. Csak ti vagytok az egész \u201Ebirtokon.\u201D`,
   highlights:    [{ icon: "Waves", label: "Privát jacuzzi" }, { icon: "Home", label: "Csak ti vagytok" }],
   slides:        [
-    { src: "/images/haz/IMG_8519 kicsi.jpg", alt: "Milán Kuckó – vendégház kívülről" },
+    { src: "/images/haz/IMG_8519 kicsi.jpg", alt: "Gamma Apartmanok – vendégház kívülről" },
     { src: "/images/jacuzzi/jacuzzikivilag.jpg", alt: "Privát jacuzzi" },
     { src: "/images/kert/kert.jpg", alt: "Hatalmas privát kert" },
     { src: "", alt: "" },

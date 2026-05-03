@@ -2,8 +2,8 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
 export const metadata = {
-  title: "ÁSZF – Milán Kuckó",
-  description: "Általános Szerződési Feltételek – Milán Kuckó vendégház, Miskolctapolca",
+  title: "ÁSZF – Gamma Apartmanok",
+  description: "Általános Szerződési Feltételek – Gamma Apartmanok és Jakuzzi, Miskolctapolca",
 };
 
 export default function AszfPage() {
@@ -23,7 +23,7 @@ export default function AszfPage() {
 
           <section>
             <h2 className="font-serif text-xl text-forest-900 mb-3">1. A szolgáltató adatai</h2>
-            <p>Szolgáltató neve: Milán Kuckó vendégház</p>
+            <p>Szolgáltató neve: Gamma Apartmanok és Jakuzzi</p>
             <p>Cím: 3519 Miskolctapolca, Bencések útja 117/A</p>
             <p>Telefon: +36 30 845 4923</p>
             <p>E-mail: milan.kucko117@gmail.com</p>

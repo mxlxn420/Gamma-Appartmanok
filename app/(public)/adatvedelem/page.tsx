@@ -2,8 +2,8 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
 export const metadata = {
-  title: "Adatvédelmi tájékoztató – Milán Kuckó",
-  description: "Adatvédelmi tájékoztató – Milán Kuckó vendégház, Miskolctapolca",
+  title: "Adatvédelmi tájékoztató – Gamma Apartmanok",
+  description: "Adatvédelmi tájékoztató – Gamma Apartmanok és Jakuzzi, Miskolctapolca",
 };
 
 export default function AdatvedelemPage() {
@@ -23,7 +23,7 @@ export default function AdatvedelemPage() {
 
           <section>
             <h2 className="font-serif text-xl text-forest-900 mb-3">1. Az adatkezelő adatai</h2>
-            <p>Adatkezelő neve: Milán Kuckó vendégház</p>
+            <p>Adatkezelő neve: Gamma Apartmanok és Jakuzzi</p>
             <p>Cím: 3519 Miskolctapolca, Bencések útja 117/A</p>
             <p>Telefon: +36 30 845 4923</p>
             <p>E-mail: milan.kucko117@gmail.com</p>

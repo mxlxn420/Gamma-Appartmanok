@@ -53,7 +53,7 @@ export default function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex flex-col leading-none">
             <span className="font-serif text-2xl font-light text-cream tracking-tight">
-              Milán Kuckó
+              Gamma Apartmanok
             </span>
             <span className="text-[10px] font-sans tracking-[0.25em] uppercase text-cream/60">
               Miskolctapolca
@@ -123,7 +123,7 @@ export default function Navbar() {
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
             >
               <div className="flex items-center justify-between px-6 py-5 border-b border-white/10">
-                <span className="font-serif text-xl text-cream">Milán Kuckó</span>
+                <span className="font-serif text-xl text-cream">Gamma Apartmanok</span>
                 <button onClick={() => setMobileOpen(false)} className="text-cream/60 hover:text-cream">
                   <X size={20} />
                 </button>

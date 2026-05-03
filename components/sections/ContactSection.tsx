@@ -93,7 +93,7 @@ export default function ContactSection() {
                 width="100%" height="100%" style={{ border: 0 }}
                 allowFullScreen loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                title="Milán Kuckó – Bencések útja 117/A"
+                title="Gamma Apartmanok – Bencések útja 117/A"
               />
             </div>
           </AnimatedSection>

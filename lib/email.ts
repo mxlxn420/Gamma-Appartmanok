@@ -108,7 +108,7 @@ function guestEmailHtml(data: BookingEmailData): string {
       <!-- Fejléc -->
       <tr>
         <td style="background:#1a3a2a;padding:36px 40px;text-align:center;">
-          <p style="color:#f5f0e8;font-size:28px;font-weight:300;margin:0;letter-spacing:-0.02em;">Milán Kuckó</p>
+          <p style="color:#f5f0e8;font-size:28px;font-weight:300;margin:0;letter-spacing:-0.02em;">Gamma Apartmanok</p>
           <p style="color:rgba(245,240,232,0.6);font-size:11px;margin:8px 0 0;font-family:sans-serif;letter-spacing:0.2em;text-transform:uppercase;">Miskolctapolca · Bencések útja 117/A</p>
         </td>
       </tr>
@@ -141,7 +141,7 @@ function guestEmailHtml(data: BookingEmailData): string {
         <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e8d9b5;border-radius:12px;margin-bottom:24px;">
           <tr><td style="padding:20px 24px;">
             <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#1a3a2a;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 14px;">Foglalás részletei</p>
-            <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;margin:0 0 4px;"><strong>Milán Kuckó Miskolctapolca</strong></p>
+            <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;margin:0 0 4px;"><strong>Gamma Apartmanok Miskolctapolca</strong></p>
             <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 4px;">Cím: 3519 Miskolctapolca, Bencések útja 117/A</p>
             <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 4px;">Telefonszám: +36/30 845 4923</p>
             <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 16px;">E-mail: milan.kucko117@gmail.com</p>
@@ -293,7 +293,7 @@ function guestEmailHtml(data: BookingEmailData): string {
             <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#1a3a2a;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 10px;">Számlázási cím</p>
             <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;margin:0 0 3px;">Név: ${escapeHtml(data.guestName)}</p>
             <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 6px;">Cím: ${escapeHtml(data.guestAddress)}</p>
-            <p style="font-family:sans-serif;font-size:12px;color:#a8a8a8;margin:0;">(Ha Szép Kártyával szeretne fizetni, akkor a Milán Kuckó Miskolctapolca, 3519 Miskolctapolca, Bencések útja 117/A. elfogadóhelyet kell megkeresnie az előleg utalásnál.)</p>
+            <p style="font-family:sans-serif;font-size:12px;color:#a8a8a8;margin:0;">(Ha Szép Kártyával szeretne fizetni, akkor a Gamma Apartmanok Miskolctapolca, 3519 Miskolctapolca, Bencések útja 117/A. elfogadóhelyet kell megkeresnie az előleg utalásnál.)</p>
             <p style="font-family:sans-serif;font-size:12px;color:#a8a8a8;margin:0;">(Ha a számla kiállítását más névre és címre kéri, vagy adószám feltüntetését is kéri, kérem legyen szíves megírni!)</p>
           </td></tr>
         </table>` : ""}
@@ -304,7 +304,7 @@ function guestEmailHtml(data: BookingEmailData): string {
             <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#1a3a2a;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 12px;">Az ár tartalmazza</p>
             ${[
       "Önellátás",
-      "Szállás Milán Kuckó teljes ház (" + data.nights + " éj), csak Önök vannak a szálláson",
+      "Szállás Gamma Apartmanok teljes ház (" + data.nights + " éj), csak Önök vannak a szálláson",
       "Jakuzzi korlátlan használat",
       "Klíma használat",
       "Internethasználat",
@@ -347,7 +347,7 @@ function guestEmailHtml(data: BookingEmailData): string {
         <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;line-height:1.8;margin:0 0 4px;">
           Üdvözlettel: <strong>Beáta</strong>
         </p>
-        <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 4px;">Milán Kuckó Vendégház</p>
+        <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 4px;">Gamma Apartmanok Vendégház</p>
         <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 16px;">+36 30 845 4923</p>
 
         <p style="font-family:sans-serif;font-size:12px;color:#a8a8a8;line-height:1.6;margin:0;">
@@ -361,7 +361,7 @@ function guestEmailHtml(data: BookingEmailData): string {
       <tr>
         <td style="background:#f5f0e8;padding:20px 40px;text-align:center;border-top:1px solid #e8d9b5;">
           <p style="font-family:sans-serif;font-size:12px;color:#a8a8a8;margin:0;">
-            Milán Kuckó · milan.kucko117@gmail.com · +36 30 845 4923
+            Gamma Apartmanok · milan.kucko117@gmail.com · +36 30 845 4923
           </p>
           <p style="font-family:sans-serif;font-size:11px;color:#d4d4d4;margin:4px 0 0;">
             Azonosító: ${data.bookingId}
@@ -408,7 +408,7 @@ function adminEmailHtml(data: BookingEmailData): string {
       <!-- Fejléc -->
       <tr>
         <td style="background:#1a3a2a;padding:28px 32px;">
-          <p style="color:rgba(245,240,232,0.6);font-size:11px;margin:0 0 6px;letter-spacing:0.2em;text-transform:uppercase;">Milán Kuckó</p>
+          <p style="color:rgba(245,240,232,0.6);font-size:11px;margin:0 0 6px;letter-spacing:0.2em;text-transform:uppercase;">Gamma Apartmanok</p>
           <p style="color:#f5f0e8;font-size:22px;font-weight:600;margin:0 0 4px;">Új foglalás érkezett!</p>
           <p style="color:rgba(245,240,232,0.5);font-size:12px;margin:0;font-family:monospace;letter-spacing:0.1em;">${data.bookingId}</p>
         </td>
@@ -553,7 +553,7 @@ function adminEmailHtml(data: BookingEmailData): string {
       <!-- Lábléc -->
       <tr>
         <td style="background:#f5f0e8;padding:16px 32px;text-align:center;border-top:1px solid #e8d9b5;">
-          <p style="font-size:11px;color:#a8a8a8;margin:0;">Milán Kuckó admin értesítő · ${data.bookingId}</p>
+          <p style="font-size:11px;color:#a8a8a8;margin:0;">Gamma Apartmanok admin értesítő · ${data.bookingId}</p>
         </td>
       </tr>
 
@@ -599,7 +599,7 @@ function depositConfirmationHtml(data: BookingEmailData & { depositAmount: numbe
       <!-- Fejléc -->
       <tr>
         <td style="background:#1a3a2a;padding:36px 40px;text-align:center;">
-          <p style="color:#f5f0e8;font-size:28px;font-weight:300;margin:0;letter-spacing:-0.02em;">Milán Kuckó</p>
+          <p style="color:#f5f0e8;font-size:28px;font-weight:300;margin:0;letter-spacing:-0.02em;">Gamma Apartmanok</p>
           <p style="color:rgba(245,240,232,0.6);font-size:11px;margin:8px 0 0;font-family:sans-serif;letter-spacing:0.2em;text-transform:uppercase;">Miskolctapolca · Bencések útja 117/A</p>
         </td>
       </tr>
@@ -620,7 +620,7 @@ function depositConfirmationHtml(data: BookingEmailData & { depositAmount: numbe
         <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e8d9b5;border-radius:12px;margin-bottom:24px;">
           <tr><td style="padding:20px 24px;">
             <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#1a3a2a;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 14px;">Foglalás részletei</p>
-            <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;margin:0 0 4px;"><strong>Milán Kuckó Miskolctapolca</strong></p>
+            <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;margin:0 0 4px;"><strong>Gamma Apartmanok Miskolctapolca</strong></p>
             <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 4px;">Cím: 3519 Miskolctapolca, Bencések útja 117/A</p>
             <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 4px;">Telefonszám: +36/30 845 4923</p>
             <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 16px;">E-mail: milan.kucko117@gmail.com</p>
@@ -754,7 +754,7 @@ function depositConfirmationHtml(data: BookingEmailData & { depositAmount: numbe
             <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#1a3a2a;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 12px;">Az ár tartalmazza</p>
             ${[
       "Önellátás",
-      "Szállás Milán Kuckó teljes ház (" + data.nights + " éj), csak Önök vannak a szálláson",
+      "Szállás Gamma Apartmanok teljes ház (" + data.nights + " éj), csak Önök vannak a szálláson",
       "Jakuzzi korlátlan használat",
       "Klíma használat",
       "Internethasználat",
@@ -796,7 +796,7 @@ function depositConfirmationHtml(data: BookingEmailData & { depositAmount: numbe
         <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;line-height:1.8;margin:0 0 4px;">
           Üdvözlettel: <strong>Beáta</strong>
         </p>
-        <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 4px;">Milán Kuckó Vendégház</p>
+        <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 4px;">Gamma Apartmanok Vendégház</p>
         <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 16px;">+36 30 845 4923</p>
 
         <p style="font-family:sans-serif;font-size:12px;color:#a8a8a8;line-height:1.6;margin:0;">
@@ -810,7 +810,7 @@ function depositConfirmationHtml(data: BookingEmailData & { depositAmount: numbe
       <tr>
         <td style="background:#f5f0e8;padding:20px 40px;text-align:center;border-top:1px solid #e8d9b5;">
           <p style="font-family:sans-serif;font-size:12px;color:#a8a8a8;margin:0;">
-            Milán Kuckó · milan.kucko117@gmail.com · +36 30 845 4923
+            Gamma Apartmanok · milan.kucko117@gmail.com · +36 30 845 4923
           </p>
           <p style="font-family:sans-serif;font-size:11px;color:#d4d4d4;margin:4px 0 0;">
             Azonosító: ${data.bookingId}
@@ -859,7 +859,7 @@ export async function sendDepositConfirmationEmail(params: {
   bookingId: string;
 }): Promise<void> {
   const RESEND_API_KEY = process.env.RESEND_API_KEY;
-  const FROM_EMAIL = process.env.FROM_EMAIL ?? "info@milankucko.hu";
+  const FROM_EMAIL = process.env.FROM_EMAIL ?? "info@gamma-apartmanok.hu";
   const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? FROM_EMAIL;
 
   const remaining = params.totalPrice - params.depositAmount;
@@ -880,7 +880,7 @@ export async function sendDepositConfirmationEmail(params: {
       "Authorization": `Bearer ${RESEND_API_KEY}`,
     },
     body: JSON.stringify({
-      from: `Milán Kuckó <${FROM_EMAIL}>`,
+      from: `Gamma Apartmanok <${FROM_EMAIL}>`,
       to: [params.guestEmail],
       reply_to: [ADMIN_EMAIL],
       subject: `✅ Előleg befizetve – ${params.bookingId}`,
@@ -901,7 +901,7 @@ export async function sendDepositConfirmationEmail(params: {
       "Authorization": `Bearer ${RESEND_API_KEY}`,
     },
     body: JSON.stringify({
-      from: `Milán Kuckó Foglalások <${FROM_EMAIL}>`,
+      from: `Gamma Apartmanok Foglalások <${FROM_EMAIL}>`,
       to: [ADMIN_EMAIL],
       subject: `✅ Előleg befizetve: ${params.guestName} – ${params.bookingId}`,
       html,
@@ -917,8 +917,8 @@ export async function sendDepositConfirmationEmail(params: {
 // ─── FŐ EMAIL KÜLDŐ FÜGGVÉNY ─────────────────────────────────
 export async function sendBookingEmails(data: BookingEmailData): Promise<void> {
   const RESEND_API_KEY = process.env.RESEND_API_KEY;
-  const FROM_EMAIL = process.env.FROM_EMAIL ?? "info@milankucko.hu";
-  const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? process.env.FROM_EMAIL ?? "info@milankucko.hu";
+  const FROM_EMAIL = process.env.FROM_EMAIL ?? "info@gamma-apartmanok.hu";
+  const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? process.env.FROM_EMAIL ?? "info@gamma-apartmanok.hu";
 
   if (!RESEND_API_KEY || RESEND_API_KEY === "re_xxxxxxxxxxxx") {
     console.log("📧 [DEV] Email küldés szimulálva:", {
@@ -936,7 +936,7 @@ export async function sendBookingEmails(data: BookingEmailData): Promise<void> {
       "Authorization": `Bearer ${RESEND_API_KEY}`,
     },
     body: JSON.stringify({
-      from: `Milán Kuckó <${FROM_EMAIL}>`,
+      from: `Gamma Apartmanok <${FROM_EMAIL}>`,
       to: [data.guestEmail],
       bcc: [ADMIN_EMAIL],
       reply_to: [ADMIN_EMAIL],
@@ -958,7 +958,7 @@ export async function sendBookingEmails(data: BookingEmailData): Promise<void> {
       "Authorization": `Bearer ${RESEND_API_KEY}`,
     },
     body: JSON.stringify({
-      from: `Milán Kuckó Foglalások <${FROM_EMAIL}>`,
+      from: `Gamma Apartmanok Foglalások <${FROM_EMAIL}>`,
       to: [ADMIN_EMAIL],
       subject: `🏡 Új foglalás: ${data.guestName} – ${formatDate(data.checkIn)}`,
       html: adminEmailHtml(data),
@@ -991,7 +991,7 @@ function cancellationEmailHtml(data: {
 
       <!-- Fejléc -->
       <tr><td style="background:#1a3a2a;border-radius:16px 16px 0 0;padding:32px;text-align:center;">
-        <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:rgba(245,240,232,0.5);text-transform:uppercase;letter-spacing:0.2em;margin:0 0 8px;">Milán Kuckó</p>
+        <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:rgba(245,240,232,0.5);text-transform:uppercase;letter-spacing:0.2em;margin:0 0 8px;">Gamma Apartmanok</p>
         <h1 style="font-family:Georgia,serif;font-size:26px;font-weight:300;color:#f5f0e8;margin:0;">Foglalás törölve</h1>
       </td></tr>
 
@@ -1042,7 +1042,7 @@ function cancellationEmailHtml(data: {
 
       <!-- Lábléc -->
       <tr><td style="background:#f0ebe3;border-radius:0 0 16px 16px;padding:20px;text-align:center;">
-        <p style="font-family:sans-serif;font-size:12px;color:#a8a8a8;margin:0;">Milán Kuckó · Miskolctapolca, Bencések útja 117/A</p>
+        <p style="font-family:sans-serif;font-size:12px;color:#a8a8a8;margin:0;">Gamma Apartmanok · Miskolctapolca, Bencések útja 117/A</p>
         <p style="font-family:sans-serif;font-size:11px;color:#c0c0c0;margin:6px 0 0;">Azonosító: ${data.bookingId}</p>
       </td></tr>
 
@@ -1063,7 +1063,7 @@ export async function sendCancellationEmail(params: {
   adminNote?: string;
 }): Promise<void> {
   const RESEND_API_KEY = process.env.RESEND_API_KEY;
-  const FROM_EMAIL = process.env.FROM_EMAIL ?? "info@milankucko.hu";
+  const FROM_EMAIL = process.env.FROM_EMAIL ?? "info@gamma-apartmanok.hu";
   const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? FROM_EMAIL;
 
   if (!RESEND_API_KEY || RESEND_API_KEY === "re_xxxxxxxxxxxx") {
@@ -1078,7 +1078,7 @@ export async function sendCancellationEmail(params: {
       "Authorization": `Bearer ${RESEND_API_KEY}`,
     },
     body: JSON.stringify({
-      from: `Milán Kuckó <${FROM_EMAIL}>`,
+      from: `Gamma Apartmanok <${FROM_EMAIL}>`,
       to: [params.guestEmail],
       reply_to: [ADMIN_EMAIL],
       subject: `Foglalás törölve – ${params.bookingId}`,

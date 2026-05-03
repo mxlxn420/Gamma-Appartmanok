@@ -21,7 +21,7 @@ export default function Footer() {
           {/* Branding */}
           <div>
             <Link href="/" className="block mb-5">
-              <p className="font-serif text-3xl font-light text-cream">Milán Kuckó</p>
+              <p className="font-serif text-3xl font-light text-cream">Gamma Apartmanok</p>
               <p className="text-xs text-cream/50 tracking-[0.25em] uppercase mt-1">Miskolctapolca</p>
             </Link>
             <p className="text-sm leading-relaxed text-cream/60 mb-6">
@@ -115,7 +115,7 @@ export default function Footer() {
 
       <div className="border-t border-cream/10">
         <div className="container-custom py-5 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-cream/40">
-          <p>© {new Date().getFullYear()} Milán Kuckó – Minden jog fenntartva.</p>
+          <p>© {new Date().getFullYear()} Gamma Apartmanok – Minden jog fenntartva.</p>
           <div className="flex gap-6">
             <Link href="/adatvedelem" className="hover:text-cream/70 transition-colors">Adatvédelem</Link>
             <Link href="/aszf" className="hover:text-cream/70 transition-colors">ÁSZF</Link>

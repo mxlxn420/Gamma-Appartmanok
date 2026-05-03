@@ -30,17 +30,17 @@ export async function GET() {
   const lines: string[] = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
-    "PRODID:-//Milan Kucko//Vendeghaz//HU",
+    "PRODID:-//Gamma Apartmanok//Vendeghaz//HU",
     "CALSCALE:GREGORIAN",
     "METHOD:PUBLISH",
-    "X-WR-CALNAME:Milan Kucko Vendegház",
+    "X-WR-CALNAME:Gamma Apartmanok és Jakuzzi",
     "X-WR-TIMEZONE:Europe/Budapest",
   ];
 
   for (const b of bookings) {
     lines.push(
       "BEGIN:VEVENT",
-      `UID:booking-${b.id}@milankucko.hu`,
+      `UID:booking-${b.id}@gamma-apartmanok.hu`,
       `DTSTAMP:${now}`,
       `DTSTART;VALUE=DATE:${formatIcalDate(b.checkIn)}`,
       `DTEND;VALUE=DATE:${formatIcalDate(b.checkOut)}`,
@@ -52,7 +52,7 @@ export async function GET() {
   for (const p of blocked) {
     lines.push(
       "BEGIN:VEVENT",
-      `UID:blocked-${p.id}@milankucko.hu`,
+      `UID:blocked-${p.id}@gamma-apartmanok.hu`,
       `DTSTAMP:${now}`,
       `DTSTART;VALUE=DATE:${formatIcalDate(p.dateFrom)}`,
       `DTEND;VALUE=DATE:${formatIcalDate(p.dateTo)}`,

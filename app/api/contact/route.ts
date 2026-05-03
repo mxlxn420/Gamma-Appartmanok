@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
           "Authorization": "Bearer " + RESEND_API_KEY,
         },
         body: JSON.stringify({
-          from:     "Milán Kuckó <" + FROM_EMAIL + ">",
+          from:     "Gamma Apartmanok <" + FROM_EMAIL + ">",
           to:       [ADMIN_EMAIL],
           reply_to: email,
           subject:  "Új üzenet: " + escapeHtml(name),

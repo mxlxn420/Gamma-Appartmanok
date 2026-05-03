@@ -33,7 +33,7 @@ function NavContent({ pathname, onClose, onLogout }: {
       {/* Logo */}
       <div className="px-6 py-7 border-b border-white/10 flex items-center justify-between">
         <div>
-          <p className="font-serif text-xl text-cream">Milán Kuckó</p>
+          <p className="font-serif text-xl text-cream">Gamma Apartmanok</p>
           <p className="text-xs text-cream/50 tracking-widest uppercase mt-0.5">Admin</p>
         </div>
         {onClose && (
@@ -105,7 +105,7 @@ export default function AdminSidebar() {
       {/* Mobile top bar */}
       <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-forest-900 flex items-center justify-between px-4 py-3 border-b border-white/10">
         <div>
-          <p className="font-serif text-base text-cream">Milán Kuckó</p>
+          <p className="font-serif text-base text-cream">Gamma Apartmanok</p>
           <p className="text-[10px] text-cream/50 tracking-widest uppercase">Admin</p>
         </div>
         <button onClick={() => setOpen(true)} className="text-cream/70 hover:text-cream p-1">

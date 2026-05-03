@@ -129,7 +129,7 @@ function ImageUploader({
           <input
             value={image.alt}
             onChange={(e) => onChange({ ...image, alt: e.target.value })}
-            placeholder="pl. Milán Kuckó – vendégház kívülről"
+            placeholder="pl. Gamma Apartmanok – vendégház kívülről"
             className="w-full border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-forest-500/30"
           />
         </div>
