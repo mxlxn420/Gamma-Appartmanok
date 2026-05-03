@@ -76,15 +76,9 @@ export default function AboutSection({ data }: { data: AboutData }) {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.5 }}
             >
-              <div className="flex gap-0.5 mb-1">
-                {[...Array(5)].map((_, i) => (
-                  <svg key={i} className="w-3.5 h-3.5 text-terra-400 fill-current" viewBox="0 0 24 24">
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                  </svg>
-                ))}
-              </div>
-              <p className="text-xs font-medium text-stone-700"><strong>5.0 / 5.0</strong> – Kiváló</p>
-              <p className="text-[10px] text-stone-400">Google értékelés</p>
+              <p className="font-serif text-3xl font-light text-forest-900 leading-none mb-1">9.4<span className="text-base text-stone-400 font-sans"> / 10</span></p>
+              <p className="text-xs font-medium text-stone-700">Kiváló</p>
+              <p className="text-[10px] text-stone-400">Booking.com értékelés</p>
             </motion.div>
           </AnimatedSection>
 
