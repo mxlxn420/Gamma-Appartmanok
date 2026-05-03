@@ -32,9 +32,13 @@ interface EditableRule {
   pricePerNight:   number;
   price3:          number;
   price4:          number;
+  price5:          number;
+  price6:          number;
   weekendPrice:    number;
   weekendPrice3:   number;
   weekendPrice4:   number;
+  weekendPrice5:   number;
+  weekendPrice6:   number;
   childPrice2to6:  number;
   childPrice6to12: number;
   dateFrom:        Date | null;
@@ -82,9 +86,13 @@ export default function AdminPricing({ rules: initialRules, policies, apartments
     pricePerNight:   basePrice,
     price3:          0,
     price4:          0,
+    price5:          0,
+    price6:          0,
     weekendPrice:    0,
     weekendPrice3:   0,
     weekendPrice4:   0,
+    weekendPrice5:   0,
+    weekendPrice6:   0,
     childPrice2to6:  0,
     childPrice6to12: 0,
     dateFrom:        null as Date | null,
@@ -147,9 +155,13 @@ export default function AdminPricing({ rules: initialRules, policies, apartments
       pricePerNight:   rule.pricePerNight,
       price3:          (rule as any).price3          ?? 0,
       price4:          (rule as any).price4          ?? 0,
+      price5:          (rule as any).price5          ?? 0,
+      price6:          (rule as any).price6          ?? 0,
       weekendPrice:    (rule as any).weekendPrice    ?? 0,
       weekendPrice3:   (rule as any).weekendPrice3   ?? 0,
       weekendPrice4:   (rule as any).weekendPrice4   ?? 0,
+      weekendPrice5:   (rule as any).weekendPrice5   ?? 0,
+      weekendPrice6:   (rule as any).weekendPrice6   ?? 0,
       childPrice2to6:  (rule as any).childPrice2to6  ?? 0,
       childPrice6to12: (rule as any).childPrice6to12 ?? 0,
       dateFrom:        rule.dateFrom ? new Date(rule.dateFrom as string) : null,
@@ -177,9 +189,13 @@ export default function AdminPricing({ rules: initialRules, policies, apartments
           pricePerNight:   editRule.pricePerNight,
           price3:          editRule.price3,
           price4:          editRule.price4,
+          price5:          editRule.price5,
+          price6:          editRule.price6,
           weekendPrice:    editRule.weekendPrice,
           weekendPrice3:   editRule.weekendPrice3,
           weekendPrice4:   editRule.weekendPrice4,
+          weekendPrice5:   editRule.weekendPrice5,
+          weekendPrice6:   editRule.weekendPrice6,
           childPrice2to6:  editRule.childPrice2to6,
           childPrice6to12: editRule.childPrice6to12,
           dateFrom:        editRule.dateFrom ? format(editRule.dateFrom, "yyyy-MM-dd") : null,
@@ -200,9 +216,13 @@ export default function AdminPricing({ rules: initialRules, policies, apartments
             pricePerNight:   editRule.pricePerNight,
             price3:          editRule.price3,
             price4:          editRule.price4,
+            price5:          editRule.price5,
+            price6:          editRule.price6,
             weekendPrice:    editRule.weekendPrice,
             weekendPrice3:   editRule.weekendPrice3,
             weekendPrice4:   editRule.weekendPrice4,
+            weekendPrice5:   editRule.weekendPrice5,
+            weekendPrice6:   editRule.weekendPrice6,
             childPrice2to6:  editRule.childPrice2to6,
             childPrice6to12: editRule.childPrice6to12,
             dateFrom:        editRule.dateFrom ? format(editRule.dateFrom, "yyyy-MM-dd") : null,

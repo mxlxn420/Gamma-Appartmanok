@@ -69,9 +69,13 @@ export interface PricingRule {
   pricePerNight: number;
   price3: number;
   price4: number;
+  price5: number;
+  price6: number;
   weekendPrice: number;
   weekendPrice3: number;
   weekendPrice4: number;
+  weekendPrice5: number;
+  weekendPrice6: number;
   dateFrom?: Date | string | null;
   dateTo?: Date | string | null;
   minNights: number;

@@ -24,10 +24,14 @@ export default async function AdminArak() {
       <AdminPricing
         rules={rules.map((r) => ({
           ...r,
-          price3:        (r as any).price3        ?? 0,
-          price4:        (r as any).price4        ?? 0,
-          weekendPrice3: (r as any).weekendPrice3 ?? 0,
-          weekendPrice4: (r as any).weekendPrice4 ?? 0,
+          price3:        r.price3        ?? 0,
+          price4:        r.price4        ?? 0,
+          price5:        r.price5        ?? 0,
+          price6:        r.price6        ?? 0,
+          weekendPrice3: r.weekendPrice3 ?? 0,
+          weekendPrice4: r.weekendPrice4 ?? 0,
+          weekendPrice5: r.weekendPrice5 ?? 0,
+          weekendPrice6: r.weekendPrice6 ?? 0,
           dateFrom:      r.dateFrom?.toISOString() ?? null,
           dateTo:        r.dateTo?.toISOString()   ?? null,
           apartmentId:   r.apartmentId ?? null,

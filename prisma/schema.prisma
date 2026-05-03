@@ -93,9 +93,13 @@ model PricingRule {
   pricePerNight   Float
   price3          Float          @default(0)
   price4          Float          @default(0)
+  price5          Float          @default(0)
+  price6          Float          @default(0)
   weekendPrice    Float          @default(0)
   weekendPrice3   Float          @default(0)
   weekendPrice4   Float          @default(0)
+  weekendPrice5   Float          @default(0)
+  weekendPrice6   Float          @default(0)
   childPrice2to6  Float          @default(0)
   childPrice6to12 Float          @default(0)
   dateFrom        DateTime?

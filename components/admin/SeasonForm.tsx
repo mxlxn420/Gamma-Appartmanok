@@ -13,9 +13,13 @@ interface SeasonFormRule {
   pricePerNight:   number;
   price3:          number;
   price4:          number;
+  price5:          number;
+  price6:          number;
   weekendPrice:    number;
   weekendPrice3:   number;
   weekendPrice4:   number;
+  weekendPrice5:   number;
+  weekendPrice6:   number;
   childPrice2to6:  number;
   childPrice6to12: number;
   dateFrom:        Date | null;
@@ -302,6 +306,38 @@ export default function SeasonForm({
           </div>
         )}
 
+        {/* Hétköznapi 5 fő */}
+        {maxGuests >= 5 && (
+          <div>
+            <label className="text-xs text-cream/60 uppercase tracking-wider block mb-1.5">
+              5 fő
+            </label>
+            <input
+              type="number"
+              className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-cream text-sm focus:outline-none focus:border-white/50"
+              placeholder="Ha üres = 4 fő ár"
+              value={rule.price5 || ""}
+              onChange={(e) => setRule({ ...rule, price5: Number(e.target.value) })}
+            />
+          </div>
+        )}
+
+        {/* Hétköznapi 6 fő */}
+        {maxGuests >= 6 && (
+          <div>
+            <label className="text-xs text-cream/60 uppercase tracking-wider block mb-1.5">
+              6 fő
+            </label>
+            <input
+              type="number"
+              className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-cream text-sm focus:outline-none focus:border-white/50"
+              placeholder="Ha üres = 5 fő ár"
+              value={rule.price6 || ""}
+              onChange={(e) => setRule({ ...rule, price6: Number(e.target.value) })}
+            />
+          </div>
+        )}
+
         {/* Hétvégi árak fejléc */}
         <div className="md:col-span-2">
           <p className="text-xs text-cream/60 uppercase tracking-wider mb-1 pt-2 border-t border-white/10">
@@ -351,6 +387,38 @@ export default function SeasonForm({
               placeholder="Ha üres = 4 fő hétköznapi"
               value={rule.weekendPrice4 || ""}
               onChange={(e) => setRule({ ...rule, weekendPrice4: Number(e.target.value) })}
+            />
+          </div>
+        )}
+
+        {/* Hétvégi 5 fő */}
+        {maxGuests >= 5 && (
+          <div>
+            <label className="text-xs text-cream/60 uppercase tracking-wider block mb-1.5">
+              5 fő
+            </label>
+            <input
+              type="number"
+              className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-cream text-sm focus:outline-none focus:border-white/50"
+              placeholder="Ha üres = 5 fő hétköznapi"
+              value={rule.weekendPrice5 || ""}
+              onChange={(e) => setRule({ ...rule, weekendPrice5: Number(e.target.value) })}
+            />
+          </div>
+        )}
+
+        {/* Hétvégi 6 fő */}
+        {maxGuests >= 6 && (
+          <div>
+            <label className="text-xs text-cream/60 uppercase tracking-wider block mb-1.5">
+              6 fő
+            </label>
+            <input
+              type="number"
+              className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-cream text-sm focus:outline-none focus:border-white/50"
+              placeholder="Ha üres = 6 fő hétköznapi"
+              value={rule.weekendPrice6 || ""}
+              onChange={(e) => setRule({ ...rule, weekendPrice6: Number(e.target.value) })}
             />
           </div>
         )}

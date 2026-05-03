@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, error: "A szezon neve maximum 100 karakter lehet" }, { status: 400 });
     }
 
-    const priceFields = ["pricePerNight", "price3", "price4", "weekendPrice", "weekendPrice3", "weekendPrice4", "childPrice2to6", "childPrice6to12"];
+    const priceFields = ["pricePerNight", "price3", "price4", "price5", "price6", "weekendPrice", "weekendPrice3", "weekendPrice4", "weekendPrice5", "weekendPrice6", "childPrice2to6", "childPrice6to12"];
     for (const field of priceFields) {
       const val = Number(body[field]);
       if (body[field] !== undefined && body[field] !== null && body[field] !== "" && val < 0) {
@@ -56,9 +56,13 @@ export async function POST(req: NextRequest) {
         pricePerNight:   Number(body.pricePerNight),
         price3:          Number(body.price3)          || 0,
         price4:          Number(body.price4)          || 0,
+        price5:          Number(body.price5)          || 0,
+        price6:          Number(body.price6)          || 0,
         weekendPrice:    Number(body.weekendPrice)    || 0,
         weekendPrice3:   Number(body.weekendPrice3)   || 0,
         weekendPrice4:   Number(body.weekendPrice4)   || 0,
+        weekendPrice5:   Number(body.weekendPrice5)   || 0,
+        weekendPrice6:   Number(body.weekendPrice6)   || 0,
         childPrice2to6:  Number(body.childPrice2to6)  || 0,
         childPrice6to12: Number(body.childPrice6to12) || 0,
         dateFrom:        body.dateFrom ? new Date(body.dateFrom) : null,

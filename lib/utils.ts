@@ -57,19 +57,25 @@ export function getRuleForNight(date: Date, rules: PricingRule[]): PricingRule |
 
 export function getNightRateFromRule(rule: PricingRule, date: Date, personCount: number): number {
   const isWeekend = [5, 6].includes(date.getDay());
-  let tier1to2: number, tier3: number, tier4: number;
+  let tier1to2: number, tier3: number, tier4: number, tier5: number, tier6: number;
   if (isWeekend) {
-    const wkday3 = (rule as any).price3 > 0 ? (rule as any).price3 : rule.pricePerNight;
-    const wkday4 = (rule as any).price4 > 0 ? (rule as any).price4 : wkday3;
-    tier1to2 = rule.weekendPrice > 0 ? rule.weekendPrice : rule.pricePerNight;
-    tier3 = (rule as any).weekendPrice3 > 0 ? (rule as any).weekendPrice3 : wkday3;
-    tier4 = (rule as any).weekendPrice4 > 0 ? (rule as any).weekendPrice4 : wkday4;
+    const wkday3 = rule.price3 > 0 ? rule.price3 : rule.pricePerNight;
+    const wkday4 = rule.price4 > 0 ? rule.price4 : wkday3;
+    const wkday5 = rule.price5 > 0 ? rule.price5 : wkday4;
+    const wkday6 = rule.price6 > 0 ? rule.price6 : wkday5;
+    tier1to2 = rule.weekendPrice  > 0 ? rule.weekendPrice  : rule.pricePerNight;
+    tier3    = rule.weekendPrice3 > 0 ? rule.weekendPrice3 : wkday3;
+    tier4    = rule.weekendPrice4 > 0 ? rule.weekendPrice4 : wkday4;
+    tier5    = rule.weekendPrice5 > 0 ? rule.weekendPrice5 : wkday5;
+    tier6    = rule.weekendPrice6 > 0 ? rule.weekendPrice6 : wkday6;
   } else {
     tier1to2 = rule.pricePerNight;
-    tier3 = (rule as any).price3 > 0 ? (rule as any).price3 : tier1to2;
-    tier4 = (rule as any).price4 > 0 ? (rule as any).price4 : tier3;
+    tier3    = rule.price3 > 0 ? rule.price3 : tier1to2;
+    tier4    = rule.price4 > 0 ? rule.price4 : tier3;
+    tier5    = rule.price5 > 0 ? rule.price5 : tier4;
+    tier6    = rule.price6 > 0 ? rule.price6 : tier5;
   }
-  return personCount >= 4 ? tier4 : personCount >= 3 ? tier3 : tier1to2;
+  return personCount >= 6 ? tier6 : personCount >= 5 ? tier5 : personCount >= 4 ? tier4 : personCount >= 3 ? tier3 : tier1to2;
 }
 
 export function getAdminNightBreakdown(
