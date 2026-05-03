@@ -25,11 +25,9 @@ export interface ApartmentGuests {
   slug:          string;
   maxGuests:     number;
   coverImage:    string | null;
-  adults:        number;
-  teens:         number;
-  babies:        number;
-  children2to6:  number;
-  children6to12: number;
+  adults:   number;
+  children: number;  // 2-17 év, felnőtt ár, IFA nélkül
+  babies:   number;  // 0-2 év, első ingyenes, többi felnőtt ár
 }
 
 export interface SelectedService {
@@ -49,10 +47,8 @@ export interface BookingData {
   // Összesített vendégszámok (minden apartman)
   guests:          number;
   adults:          number;
-  teens:           number;
+  children:        number;
   babies:          number;
-  children2to6:    number;
-  children6to12:   number;
   nights:          number;
   weekdayNights:   number;
   weekendNights:   number;

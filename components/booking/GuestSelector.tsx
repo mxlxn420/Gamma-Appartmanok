@@ -53,16 +53,14 @@ function Counter({
 export default function GuestSelector({ apartments, onBack, onNext }: Props) {
   const [guestData, setGuestData] = useState<ApartmentGuests[]>(
     apartments.map((apt) => ({
-      id:           apt.id,
-      name:         apt.name,
-      slug:         apt.slug,
-      maxGuests:    apt.maxGuests,
-      coverImage:   apt.coverImage,
-      adults:       2,
-      teens:        0,
-      babies:       0,
-      children2to6: 0,
-      children6to12: 0,
+      id:       apt.id,
+      name:     apt.name,
+      slug:     apt.slug,
+      maxGuests: apt.maxGuests,
+      coverImage: apt.coverImage,
+      adults:   2,
+      children: 0,
+      babies:   0,
     }))
   );
 
@@ -70,13 +68,17 @@ export default function GuestSelector({ apartments, onBack, onNext }: Props) {
     setGuestData((prev) => prev.map((g) => g.id === aptId ? { ...g, [field]: value } : g));
   };
 
-  const totalGuests = (g: ApartmentGuests) =>
-    g.adults + g.teens + g.babies + g.children2to6 + g.children6to12;
+  // Tényleges férőhely: felnőtt + gyerek + (baba - 1, az első ingyenes)
+  const billableCount = (g: ApartmentGuests) =>
+    g.adults + g.children + Math.max(0, g.babies - 1);
+
+  const totalCount = (g: ApartmentGuests) =>
+    g.adults + g.children + g.babies;
 
   const handleNext = () => {
     for (const g of guestData) {
       if (g.adults < 1) { alert(`${g.name}: legalább 1 felnőtt szükséges!`); return; }
-      if (totalGuests(g) > g.maxGuests) { alert(`${g.name}: maximum ${g.maxGuests} fő!`); return; }
+      if (billableCount(g) > g.maxGuests) { alert(`${g.name}: maximum ${g.maxGuests} fizető vendég!`); return; }
     }
     onNext(guestData);
   };
@@ -89,8 +91,9 @@ export default function GuestSelector({ apartments, onBack, onNext }: Props) {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {guestData.map((g, i) => {
-          const total  = totalGuests(g);
-          const atMax  = total >= g.maxGuests;
+          const billed = billableCount(g);
+          const total  = totalCount(g);
+          const atMax  = billed >= g.maxGuests;
           return (
             <motion.div
               key={g.id}
@@ -107,62 +110,48 @@ export default function GuestSelector({ apartments, onBack, onNext }: Props) {
                   <h3 className="font-medium text-stone-800">{g.name}</h3>
                 </div>
                 <span className={`text-xs font-semibold px-2 py-1 rounded-full ${atMax ? "bg-terra-100 text-terra-600" : "bg-forest-100 text-forest-700"}`}>
-                  {total} / {g.maxGuests} fő
+                  {total} vendég
                 </span>
               </div>
 
               <Counter
                 label="Felnőtt (18+ év)"
-                sublabel="Felnőtt ár + IFA"
+                sublabel="Szobadíj + IFA (450 Ft/éj)"
                 value={g.adults}
                 min={1}
                 atMax={atMax}
                 onChange={(v) => setField(g.id, "adults", v)}
               />
               <Counter
-                label="Fiatal (12–18 év)"
-                sublabel="Felnőtt ár, IFA nélkül"
-                value={g.teens}
+                label="Gyerek (2–17 év)"
+                sublabel="Szobadíj, IFA nélkül"
+                value={g.children}
                 atMax={atMax}
-                onChange={(v) => setField(g.id, "teens", v)}
-              />
-              <Counter
-                label="Gyerek (6–12 év)"
-                value={g.children6to12}
-                atMax={atMax}
-                onChange={(v) => setField(g.id, "children6to12", v)}
-              />
-              <Counter
-                label="Kisgyerek (2–6 év)"
-                value={g.children2to6}
-                atMax={atMax}
-                onChange={(v) => setField(g.id, "children2to6", v)}
+                onChange={(v) => setField(g.id, "children", v)}
               />
               <Counter
                 label="Baba (0–2 év)"
-                sublabel="Ingyenes"
+                sublabel={g.babies === 0 ? "Az első ingyenes" : g.babies === 1 ? "1 db ingyenes" : "Az első ingyenes, többi szobadíj"}
                 value={g.babies}
-                atMax={atMax}
+                atMax={g.babies >= 1 ? atMax : false}
                 onChange={(v) => setField(g.id, "babies", v)}
               />
+
+              {g.babies > 1 && (
+                <p className="text-xs text-terra-500 pt-1">
+                  +{g.babies - 1} baba szobadíjat fizet (IFA nélkül)
+                </p>
+              )}
             </motion.div>
           );
         })}
       </div>
 
       <div className="flex gap-3 pt-2">
-        <button
-          type="button"
-          onClick={onBack}
-          className="px-6 py-4 rounded-full border border-stone-200 text-stone-600 text-sm font-medium hover:bg-stone-50 transition-colors"
-        >
+        <button type="button" onClick={onBack} className="px-6 py-4 rounded-full border border-stone-200 text-stone-600 text-sm font-medium hover:bg-stone-50 transition-colors">
           Vissza
         </button>
-        <button
-          type="button"
-          onClick={handleNext}
-          className="btn-primary flex-1 justify-center"
-        >
+        <button type="button" onClick={handleNext} className="btn-primary flex-1 justify-center">
           Tovább – Dátum kiválasztása
         </button>
       </div>

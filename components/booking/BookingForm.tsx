@@ -94,10 +94,10 @@ export default function BookingForm({ bookingData, onBack, onSuccess }: Props) {
           guestAddress: form.address,
           numberOfGuests: bookingData.guests,
           numberOfAdults: bookingData.adults,
-          numberOfTeens: bookingData.teens,
+          numberOfTeens: bookingData.children,
           numberOfBabies: bookingData.babies,
-          numberOfChildren2to6: bookingData.children2to6,
-          numberOfChildren6to12: bookingData.children6to12,
+          numberOfChildren2to6: 0,
+          numberOfChildren6to12: 0,
           notes: form.notes || null,
           paymentMethod: form.paymentMethod === "szep" && form.szepType
             ? `szep-${form.szepType}`
@@ -116,12 +116,12 @@ export default function BookingForm({ bookingData, onBack, onSuccess }: Props) {
           extraServices: selected,
           extraServicesTotal: extrasTotal,
           apartmentGuests: bookingData.apartmentGuests.map(a => ({
-            id:            a.id,
-            adults:        a.adults,
-            teens:         a.teens,
-            babies:        a.babies,
-            children2to6:  a.children2to6,
-            children6to12: a.children6to12,
+            id:       a.id,
+            adults:   a.adults,
+            teens:    a.children,
+            babies:   a.babies,
+            children2to6:  0,
+            children6to12: 0,
           })),
         }),
       });
@@ -520,9 +520,7 @@ export default function BookingForm({ bookingData, onBack, onSuccess }: Props) {
             <span className="text-cream/60">Vendégek</span>
             <span className="text-right text-sm">
               {bookingData.adults} felnőtt (18+)
-              {bookingData.teens > 0 && `, ${bookingData.teens} fiatal (12–18)`}
-              {bookingData.children6to12 > 0 && `, ${bookingData.children6to12} gyerek (6–12)`}
-              {bookingData.children2to6 > 0 && `, ${bookingData.children2to6} kisgyerek (2–6)`}
+              {bookingData.children > 0 && `, ${bookingData.children} gyerek (2–17)`}
               {bookingData.babies > 0 && `, ${bookingData.babies} baba`}
             </span>
           </div>
@@ -572,31 +570,6 @@ export default function BookingForm({ bookingData, onBack, onSuccess }: Props) {
             </div>
           )}
 
-          {/* Kisgyerek 2–6 */}
-          {bookingData.children2to6 > 0 && bookingData.childPrice2to6 > 0 && (
-            <div className="flex justify-between items-start">
-              <div>
-                <p className="text-cream/80">Kisgyerek (2–6 év)</p>
-                <p className="text-xs text-cream/40 mt-0.5">
-                  {bookingData.children2to6} fő × {bookingData.nights} éj × {formatCurrency(bookingData.childPrice2to6)}/éj
-                </p>
-              </div>
-              <span className="shrink-0 ml-3">{formatCurrency(bookingData.childPrice2to6 * bookingData.children2to6 * bookingData.nights)}</span>
-            </div>
-          )}
-
-          {/* Gyerek 6–12 */}
-          {bookingData.children6to12 > 0 && bookingData.childPrice6to12 > 0 && (
-            <div className="flex justify-between items-start">
-              <div>
-                <p className="text-cream/80">Gyerek (6–12 év)</p>
-                <p className="text-xs text-cream/40 mt-0.5">
-                  {bookingData.children6to12} fő × {bookingData.nights} éj × {formatCurrency(bookingData.childPrice6to12)}/éj
-                </p>
-              </div>
-              <span className="shrink-0 ml-3">{formatCurrency(bookingData.childPrice6to12 * bookingData.children6to12 * bookingData.nights)}</span>
-            </div>
-          )}
 
           {/* IFA */}
           <div className="flex justify-between items-start">

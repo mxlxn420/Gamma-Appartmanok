@@ -87,8 +87,9 @@ function getPriceForNight(date: Date, rule: PricingRule, personCount: number): n
 
 function calcApartmentPrice(
   checkIn: Date, checkOut: Date, rules: PricingRule[], apt: ApartmentGuests
-): { baseTotal: number; childTotal2to6: number; childTotal6to12: number; touristTax: number; nightBreakdown: { count: number; rate: number }[]; child2to6Price: number; child6to12Price: number } {
-  const personCount = apt.adults + apt.teens;
+): { baseTotal: number; touristTax: number; nightBreakdown: { count: number; rate: number }[] } {
+  // personCount: felnőtt + gyerek + (baba - 1, első ingyenes)
+  const personCount = apt.adults + apt.children + Math.max(0, apt.babies - 1);
   let baseTotal = 0;
   const groups: { count: number; rate: number }[] = [];
   const cur = new Date(checkIn);
@@ -103,14 +104,9 @@ function calcApartmentPrice(
     baseTotal += rate;
     cur.setDate(cur.getDate() + 1);
   }
-  const nights = differenceInCalendarDays(checkOut, checkIn);
-  const refRule = getApplicableRuleForApartment(checkIn, rules, apt.id);
-  const child2to6Price  = refRule?.childPrice2to6  ?? 0;
-  const child6to12Price = refRule?.childPrice6to12 ?? 0;
-  const childTotal2to6  = child2to6Price  * apt.children2to6  * nights;
-  const childTotal6to12 = child6to12Price * apt.children6to12 * nights;
-  const touristTax      = 450 * apt.adults * nights;
-  return { baseTotal, childTotal2to6, childTotal6to12, touristTax, nightBreakdown: groups, child2to6Price, child6to12Price };
+  const nights    = differenceInCalendarDays(checkOut, checkIn);
+  const touristTax = 450 * apt.adults * nights;
+  return { baseTotal, touristTax, nightBreakdown: groups };
 }
 
 function getEffectiveMinNights(checkIn: Date, checkOut: Date, rules: PricingRule[]): number {
@@ -205,20 +201,15 @@ export default function BookingCalendar({ apartmentGuests, onBack, onNext }: Pro
     : [];
 
   const totalBase       = aptPrices.reduce((s, a) => s + a.baseTotal, 0);
-  const totalChild2to6  = aptPrices.reduce((s, a) => s + a.childTotal2to6, 0);
-  const totalChild6to12 = aptPrices.reduce((s, a) => s + a.childTotal6to12, 0);
   const totalTouristTax = aptPrices.reduce((s, a) => s + a.touristTax, 0);
-  const accommodationTotal = totalBase + totalChild2to6 + totalChild6to12;
-  const discountAmount = discount ? Math.round(accommodationTotal * discount.discountPercent / 100) : 0;
-  const grandTotal = accommodationTotal + totalTouristTax - discountAmount;
+  const discountAmount  = discount ? Math.round(totalBase * discount.discountPercent / 100) : 0;
+  const grandTotal      = totalBase + totalTouristTax - discountAmount;
 
   // Összesített vendégszámok
-  const totalAdults       = apartmentGuests.reduce((s, a) => s + a.adults, 0);
-  const totalTeens        = apartmentGuests.reduce((s, a) => s + a.teens, 0);
-  const totalBabies       = apartmentGuests.reduce((s, a) => s + a.babies, 0);
-  const totalCh2to6       = apartmentGuests.reduce((s, a) => s + a.children2to6, 0);
-  const totalCh6to12      = apartmentGuests.reduce((s, a) => s + a.children6to12, 0);
-  const totalGuests       = totalAdults + totalTeens + totalBabies + totalCh2to6 + totalCh6to12;
+  const totalAdults   = apartmentGuests.reduce((s, a) => s + a.adults, 0);
+  const totalChildren = apartmentGuests.reduce((s, a) => s + a.children, 0);
+  const totalBabies   = apartmentGuests.reduce((s, a) => s + a.babies, 0);
+  const totalGuests   = totalAdults + totalChildren + totalBabies;
 
   const handleSelect = (r: DateRange | undefined) => {
     setError(null);
@@ -245,10 +236,8 @@ export default function BookingCalendar({ apartmentGuests, onBack, onNext }: Pro
       checkOut,
       guests:          totalGuests,
       adults:          totalAdults,
-      teens:           totalTeens,
+      children:        totalChildren,
       babies:          totalBabies,
-      children2to6:    totalCh2to6,
-      children6to12:   totalCh6to12,
       nights,
       weekdayNights,
       weekendNights,
@@ -256,8 +245,8 @@ export default function BookingCalendar({ apartmentGuests, onBack, onNext }: Pro
       weekendRate:     refApt?.nightBreakdown[0]?.rate ?? 0,
       totalPrice:      grandTotal,
       basePrice:       totalBase,
-      childPrice2to6:  refApt?.child2to6Price  ?? 0,
-      childPrice6to12: refApt?.child6to12Price ?? 0,
+      childPrice2to6:  0,
+      childPrice6to12: 0,
       guestSurcharge:  0,
       touristTax:      totalTouristTax,
       discountPercent: discount?.discountPercent ?? 0,
@@ -328,8 +317,8 @@ export default function BookingCalendar({ apartmentGuests, onBack, onNext }: Pro
             <>
               {/* Per-apartman bontás */}
               <div className="space-y-2 mb-4">
-                {aptPrices.map(({ apt, baseTotal, childTotal2to6, childTotal6to12, touristTax: aptTax, nightBreakdown }) => {
-                  const aptSubtotal = baseTotal + childTotal2to6 + childTotal6to12 + aptTax;
+                {aptPrices.map(({ apt, baseTotal, touristTax: aptTax, nightBreakdown }) => {
+                  const aptSubtotal = baseTotal + aptTax;
                   const isOpen = openApt === apt.id;
                   return (
                     <div key={apt.id} className="border border-stone-100 rounded-xl overflow-hidden">
@@ -346,19 +335,20 @@ export default function BookingCalendar({ apartmentGuests, onBack, onNext }: Pro
                       </button>
                       {isOpen && (
                         <div className="px-4 pb-3 space-y-1.5 text-xs border-t border-stone-100 pt-2">
-                          <div className="flex justify-between text-stone-500">
-                            <span>{apt.adults + apt.teens} fő szállás</span>
-                            <span>{nightBreakdown.map((g, i) => (
-                              <span key={i}>{g.count} éj × {formatCurrency(g.rate)}</span>
-                            ))}</span>
-                          </div>
                           <div className="flex justify-between text-stone-600 font-medium">
-                            <span>Szállás</span><span>{formatCurrency(baseTotal)}</span>
+                            <div>
+                              <p>Szállás</p>
+                              {nightBreakdown.map((g, i) => (
+                                <p key={i} className="text-stone-400 font-normal">{g.count} éj × {formatCurrency(g.rate)}</p>
+                              ))}
+                              <p className="text-stone-400 font-normal">
+                                {apt.adults} felnőtt{apt.children > 0 ? ` + ${apt.children} gyerek` : ""}{apt.babies > 1 ? ` + ${apt.babies - 1} baba` : ""}
+                              </p>
+                            </div>
+                            <span>{formatCurrency(baseTotal)}</span>
                           </div>
-                          {childTotal2to6 > 0 && <div className="flex justify-between text-stone-600"><span>Kisgyerek (2–6 év)</span><span>{formatCurrency(childTotal2to6)}</span></div>}
-                          {childTotal6to12 > 0 && <div className="flex justify-between text-stone-600"><span>Gyerek (6–12 év)</span><span>{formatCurrency(childTotal6to12)}</span></div>}
-                          {apt.babies > 0 && <div className="flex justify-between text-forest-600"><span>Baba ({apt.babies} fő)</span><span>Ingyenes</span></div>}
-                          <div className="flex justify-between text-stone-600"><span>IFA ({apt.adults} fő × {nights} éj)</span><span>{formatCurrency(aptTax)}</span></div>
+                          {apt.babies >= 1 && <div className="flex justify-between text-forest-600"><span>Baba (1 db)</span><span>Ingyenes</span></div>}
+                          <div className="flex justify-between text-stone-600"><span>IFA ({apt.adults} felnőtt × {nights} éj)</span><span>{formatCurrency(aptTax)}</span></div>
                         </div>
                       )}
                     </div>
