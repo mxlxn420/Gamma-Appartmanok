@@ -16,13 +16,16 @@ export async function PATCH(
       const newFrom = new Date(body.dateFrom);
       const newTo   = new Date(body.dateTo);
 
+      // Az átfedés-ellenőrzés csak az ugyanolyan apartmentId scope-on belül
+      const existing = await prisma.pricingRule.findUnique({ where: { id }, select: { apartmentId: true } });
       const overlap = await prisma.pricingRule.findFirst({
         where: {
-          id:       { not: id },
-          isActive:  true,
-          priority:  { gte: 10 },
-          dateFrom:  { not: null },
-          dateTo:    { not: null },
+          id:          { not: id },
+          isActive:    true,
+          priority:    { gte: 10 },
+          apartmentId: existing?.apartmentId ?? null,
+          dateFrom:    { not: null },
+          dateTo:      { not: null },
           AND: [
             { dateFrom: { lte: newTo   } },
             { dateTo:   { gte: newFrom } },

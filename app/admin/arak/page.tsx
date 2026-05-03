@@ -9,9 +9,10 @@ export default async function AdminArak() {
 
   if (!token) redirect("/admin/login");
 
-  const [rules, policies] = await Promise.all([
+  const [rules, policies, apartments] = await Promise.all([
     prisma.pricingRule.findMany({ orderBy: { priority: "desc" } }),
     prisma.bookingPolicy.findMany({ orderBy: { createdAt: "asc" } }),
+    prisma.apartment.findMany({ where: { isActive: true }, orderBy: { name: "asc" }, select: { id: true, name: true, slug: true } }),
   ]);
 
   return (
@@ -29,8 +30,10 @@ export default async function AdminArak() {
           weekendPrice4: (r as any).weekendPrice4 ?? 0,
           dateFrom:      r.dateFrom?.toISOString() ?? null,
           dateTo:        r.dateTo?.toISOString()   ?? null,
+          apartmentId:   r.apartmentId ?? null,
         }))}
         policies={policies.map((p) => ({ id: p.id, name: p.name }))}
+        apartments={apartments}
       />
     </div>
   );

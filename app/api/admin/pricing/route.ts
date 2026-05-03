@@ -12,10 +12,11 @@ export async function POST(req: NextRequest) {
 
       const overlap = await prisma.pricingRule.findFirst({
         where: {
-          isActive:  true,
-          priority:  { gte: 10 },
-          dateFrom:  { not: null },
-          dateTo:    { not: null },
+          isActive:    true,
+          priority:    { gte: 10 },
+          apartmentId: body.apartmentId ?? null,
+          dateFrom:    { not: null },
+          dateTo:      { not: null },
           AND: [
             { dateFrom: { lte: newTo   } },
             { dateTo:   { gte: newFrom } },
@@ -68,7 +69,8 @@ export async function POST(req: NextRequest) {
         extraGuestFrom:  3,
         isActive:        body.isActive ?? true,
         priority:        Number(body.priority)        || 5,
-        policyId:        body.policyId ?? null,
+        policyId:        body.policyId    ?? null,
+        apartmentId:     body.apartmentId ?? null,
       },
     });
 

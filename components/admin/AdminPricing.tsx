@@ -13,9 +13,16 @@ interface PolicyOption {
   name: string;
 }
 
+interface ApartmentOption {
+  id:   string;
+  name: string;
+  slug: string;
+}
+
 interface Props {
-  rules:    PricingRule[];
-  policies: PolicyOption[];
+  rules:      PricingRule[];
+  policies:   PolicyOption[];
+  apartments: ApartmentOption[];
 }
 
 interface EditableRule {
@@ -38,7 +45,7 @@ interface EditableRule {
   policyId:        string | null;
 }
 
-export default function AdminPricing({ rules: initialRules, policies }: Props) {
+export default function AdminPricing({ rules: initialRules, policies, apartments }: Props) {
   const [rules, setRules]         = useState<PricingRule[]>(initialRules);
   const [saving, setSaving]       = useState<string | null>(null);
   const [deleting, setDeleting]   = useState<string | null>(null);
@@ -48,18 +55,25 @@ export default function AdminPricing({ rules: initialRules, policies }: Props) {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editRule, setEditRule]   = useState<EditableRule | null>(null);
   const [openCards, setOpenCards] = useState<Set<string>>(new Set());
+  // null = globális, string = apartmentId
+  const [activeTab, setActiveTab] = useState<string | null>(null);
 
-  const baseRule    = useMemo(() => rules.find((r) => !r.dateFrom && !r.dateTo), [rules]);
+  // Az aktív tab szabályai: globális tab = apartmentId null, apartman tab = adott apartmentId
+  const tabRules = useMemo(() =>
+    rules.filter((r) => (activeTab === null ? !(r as any).apartmentId : (r as any).apartmentId === activeTab)),
+    [rules, activeTab]
+  );
+  const baseRule    = useMemo(() => tabRules.find((r) => !r.dateFrom && !r.dateTo), [tabRules]);
   const basePrice   = baseRule?.pricePerNight ?? 45_000;
   const seasonRules = useMemo(() =>
-    rules
+    tabRules
       .filter((r) => r.dateFrom || r.dateTo)
       .sort((a, b) => {
         const aDate = a.dateFrom ? new Date(a.dateFrom as string).getTime() : 0;
         const bDate = b.dateFrom ? new Date(b.dateFrom as string).getTime() : 0;
         return aDate - bDate;
       }),
-    [rules]
+    [tabRules]
   );
 
   const EMPTY_NEW = {
@@ -84,7 +98,7 @@ export default function AdminPricing({ rules: initialRules, policies }: Props) {
   const [newRule, setNewRule] = useState(EMPTY_NEW);
 
   const existingRanges = useMemo(() => {
-    return seasonRules
+    return tabRules
       .filter((r) => r.dateFrom && r.dateTo && r.isActive && r.id !== editingId)
       .map((r) => ({
         from:     new Date(r.dateFrom as string),
@@ -235,6 +249,7 @@ export default function AdminPricing({ rules: initialRules, policies }: Props) {
           dateTo:         newRule.dateTo   ? format(newRule.dateTo,   "yyyy-MM-dd") : null,
           minAdvanceDays: newRule.minAdvanceDays,
           policyId:       newRule.policyId ?? null,
+          apartmentId:    activeTab ?? null,
         }),
       });
       const data = await res.json();
@@ -254,7 +269,39 @@ export default function AdminPricing({ rules: initialRules, policies }: Props) {
   return (
     <div className="space-y-4">
 
+      {/* Apartman fülek */}
+      <div className="flex flex-wrap gap-2">
+        <button
+          onClick={() => { setActiveTab(null); setShowNew(false); setEditingId(null); setEditRule(null); }}
+          className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
+            activeTab === null
+              ? "bg-forest-600 text-white shadow-sm"
+              : "bg-white border border-stone-200 text-stone-600 hover:bg-stone-50"
+          }`}
+        >
+          Globális (alap)
+        </button>
+        {apartments.map((apt) => (
+          <button
+            key={apt.id}
+            onClick={() => { setActiveTab(apt.id); setShowNew(false); setEditingId(null); setEditRule(null); }}
+            className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
+              activeTab === apt.id
+                ? "bg-forest-600 text-white shadow-sm"
+                : "bg-white border border-stone-200 text-stone-600 hover:bg-stone-50"
+            }`}
+          >
+            {apt.name}
+          </button>
+        ))}
+      </div>
 
+      {activeTab !== null && (
+        <p className="text-xs text-stone-400 -mt-1">
+          Az itt megadott szabályok felülírják a globális árakat ehhez az apartmanhoz.
+          Ha nincs apartman-specifikus szabály, a globális ár érvényes.
+        </p>
+      )}
 
       {/* Szezonok fejléc */}
       <div className="flex justify-between items-center pt-2">
