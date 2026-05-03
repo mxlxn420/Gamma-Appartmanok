@@ -25,14 +25,14 @@ export default function Footer() {
               <p className="text-xs text-cream/50 tracking-[0.25em] uppercase mt-1">Miskolctapolca</p>
             </Link>
             <p className="text-sm leading-relaxed text-cream/60 mb-6">
-              Romantikus vendégház privát és korlátlan jakuzzival, pároknak, kisebb családoknak, 
+              Romantikus vendégház privát és korlátlan jakuzzival, pároknak, kisebb családoknak,
               kisebb baráti társaságoknak Miskolctapolca csendes részén. A tökéletes kikapcsolódás helyszíne.
             </p>
 
             {/* Social média */}
             <div className="flex items-center gap-3">
 
-              <a href="https://www.facebook.com/profile.php?id=100070831690258"
+              <a href="https://www.facebook.com/profile.php?id=100078204042760"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center w-9 h-9 rounded-full border border-cream/20 text-cream/60 hover:text-cream hover:border-cream/50 transition-all duration-200"
@@ -71,19 +71,19 @@ export default function Footer() {
                   className="flex items-start gap-3 text-sm text-cream/60 hover:text-cream transition-colors group"
                 >
                   <MapPin size={16} className="mt-0.5 shrink-0 text-terra-400" />
-                  3519 Miskolctapolca, Bencések útja 117/A
+                  3519 Miskolctapolca, Beregi utca 11.
                 </a>
               </li>
               <li>
-                <a href="tel:+36308454923" className="flex items-center gap-3 text-sm text-cream/60 hover:text-cream transition-colors">
+                <a href="tel:+36203599222" className="flex items-center gap-3 text-sm text-cream/60 hover:text-cream transition-colors">
                   <Phone size={16} className="shrink-0 text-terra-400" />
-                  +36 30 845 4923
+                  +36 20 359 9222
                 </a>
               </li>
               <li>
-                <a href="mailto:milan.kucko117@gmail.com" className="flex items-center gap-3 text-sm text-cream/60 hover:text-cream transition-colors">
+                <a href="mailto:gammaapartmanok@gmail.com" className="flex items-center gap-3 text-sm text-cream/60 hover:text-cream transition-colors">
                   <Mail size={16} className="shrink-0 text-terra-400" />
-                  milan.kucko117@gmail.com
+                  gammaapartmanok@gmail.com
                 </a>
               </li>
             </ul>
@@ -102,7 +102,7 @@ export default function Footer() {
             </Link>
             <div className="mt-5 p-4 rounded-xl border border-cream/10 bg-white/5 text-sm">
               <div className="flex justify-between text-cream/60 mb-1">
-                <span>Érkezés</span><span className="text-cream">15:00–20:00</span>
+                <span>Érkezés</span><span className="text-cream">15:00 – 00:00</span>
               </div>
               <div className="flex justify-between text-cream/60">
                 <span>Távozás</span><span className="text-cream">8:00 – 11:00</span>
