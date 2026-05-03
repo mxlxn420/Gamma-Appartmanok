@@ -980,25 +980,6 @@ export default function AdminBookingsList({ bookings }: Props) {
               ) : (
                 /* ─── Olvasó nézet ─────────────────────────── */
                 <>
-                  {/* Apartmanok */}
-                  {selected.apartments && selected.apartments.length > 0 && (
-                    <section>
-                      <h3 className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-2">Apartmanok</h3>
-                      <div className="flex flex-wrap gap-2">
-                        {selected.apartments.map((a) => (
-                          <div key={a.apartmentId} className="bg-forest-50 border border-forest-100 rounded-xl px-3 py-2 text-sm">
-                            <p className="font-medium text-forest-800">{a.apartment.name}</p>
-                            <p className="text-xs text-stone-500 mt-0.5">
-                              {a.numberOfAdults} felnőtt
-                              {a.numberOfTeens > 0 ? ` + ${a.numberOfTeens} gyerek (2–17)` : ""}
-                              {a.numberOfBabies > 0 ? ` + ${a.numberOfBabies} baba` : ""}
-                            </p>
-                          </div>
-                        ))}
-                      </div>
-                    </section>
-                  )}
-
                   {/* Kapcsolat */}
                   <section>
                     <h3 className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-2">Kapcsolat</h3>
@@ -1031,28 +1012,60 @@ export default function AdminBookingsList({ bookings }: Props) {
                   {/* Vendégek */}
                   <section>
                     <h3 className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-2">Vendégek</h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
-                      <div className="flex justify-between bg-stone-50 rounded-xl px-3 py-2">
-                        <span className="text-stone-500">Felnőtt (18+)</span>
-                        <span className="font-medium text-stone-800">{selected.numberOfAdults} fő</span>
-                      </div>
-                      {selected.numberOfTeens > 0 && (
-                        <div className="flex justify-between bg-stone-50 rounded-xl px-3 py-2">
-                          <span className="text-stone-500">Gyerek (2–17)</span>
-                          <span className="font-medium text-stone-800">{selected.numberOfTeens} fő</span>
+                    {selected.apartments && selected.apartments.length > 0 ? (
+                      <div className="space-y-3">
+                        {selected.apartments.map((a) => (
+                          <div key={a.apartmentId} className="bg-stone-50 rounded-xl p-3">
+                            <p className="text-xs font-semibold text-forest-700 mb-2">{a.apartment.name}</p>
+                            <div className="space-y-1 text-sm">
+                              <div className="flex justify-between">
+                                <span className="text-stone-500">Felnőtt (18+)</span>
+                                <span className="font-medium text-stone-800">{a.numberOfAdults} fő</span>
+                              </div>
+                              {a.numberOfTeens > 0 && (
+                                <div className="flex justify-between">
+                                  <span className="text-stone-500">Gyerek (2–17)</span>
+                                  <span className="font-medium text-stone-800">{a.numberOfTeens} fő</span>
+                                </div>
+                              )}
+                              {a.numberOfBabies > 0 && (
+                                <div className="flex justify-between">
+                                  <span className="text-stone-500">Baba (0–2)</span>
+                                  <span className="font-medium text-forest-600">{a.numberOfBabies} fő</span>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                        <div className="flex justify-between bg-forest-50 rounded-xl px-3 py-2 text-sm">
+                          <span className="text-stone-500">Összesen</span>
+                          <span className="font-semibold text-stone-800">{selected.numberOfGuests} fő</span>
                         </div>
-                      )}
-                      {selected.numberOfBabies > 0 && (
-                        <div className="flex justify-between bg-stone-50 rounded-xl px-3 py-2">
-                          <span className="text-stone-500">Baba (0–2)</span>
-                          <span className="font-medium text-forest-600">{selected.numberOfBabies} fő</span>
-                        </div>
-                      )}
-                      <div className="flex justify-between bg-forest-50 rounded-xl px-3 py-2">
-                        <span className="text-stone-500">Összesen</span>
-                        <span className="font-semibold text-stone-800">{selected.numberOfGuests} fő</span>
                       </div>
-                    </div>
+                    ) : (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+                        <div className="flex justify-between bg-stone-50 rounded-xl px-3 py-2">
+                          <span className="text-stone-500">Felnőtt (18+)</span>
+                          <span className="font-medium text-stone-800">{selected.numberOfAdults} fő</span>
+                        </div>
+                        {selected.numberOfTeens > 0 && (
+                          <div className="flex justify-between bg-stone-50 rounded-xl px-3 py-2">
+                            <span className="text-stone-500">Gyerek (2–17)</span>
+                            <span className="font-medium text-stone-800">{selected.numberOfTeens} fő</span>
+                          </div>
+                        )}
+                        {selected.numberOfBabies > 0 && (
+                          <div className="flex justify-between bg-stone-50 rounded-xl px-3 py-2">
+                            <span className="text-stone-500">Baba (0–2)</span>
+                            <span className="font-medium text-forest-600">{selected.numberOfBabies} fő</span>
+                          </div>
+                        )}
+                        <div className="flex justify-between bg-forest-50 rounded-xl px-3 py-2">
+                          <span className="text-stone-500">Összesen</span>
+                          <span className="font-semibold text-stone-800">{selected.numberOfGuests} fő</span>
+                        </div>
+                      </div>
+                    )}
                   </section>
 
                   {/* Árak */}
