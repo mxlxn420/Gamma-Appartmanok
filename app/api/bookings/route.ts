@@ -32,6 +32,11 @@ export async function GET() {
     const prisma = await getPrisma();
     const bookings = await prisma.booking.findMany({
       orderBy: { createdAt: "desc" },
+      include: {
+        apartments: {
+          include: { apartment: { select: { id: true, name: true, slug: true } } },
+        },
+      },
     });
     return NextResponse.json({ success: true, data: bookings });
   } catch (error: any) {

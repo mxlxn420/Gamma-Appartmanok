@@ -20,7 +20,14 @@ export async function GET(
     return NextResponse.json({ success: false, error: "Nincs jogosultság" }, { status: 401 });
   }
   try {
-    const booking = await prisma.booking.findUnique({ where: { id } });
+    const booking = await prisma.booking.findUnique({
+      where: { id },
+      include: {
+        apartments: {
+          include: { apartment: { select: { id: true, name: true, slug: true } } },
+        },
+      },
+    });
     if (!booking) {
       return NextResponse.json({ success: false, error: "Foglalás nem található" }, { status: 404 });
     }

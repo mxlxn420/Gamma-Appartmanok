@@ -283,7 +283,7 @@ export default function AdminBookingsList({ bookings }: Props) {
         setSaveError(data.error ?? "Mentési hiba");
         return;
       }
-      const updated: Booking = data.data;
+      const updated: Booking = { ...data.data, apartments: selected.apartments };
       setList((prev) => prev.map((b) => b.id === selected.id ? updated : b));
       setSelected(updated);
       setEditing(false);
