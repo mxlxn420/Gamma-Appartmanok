@@ -7,8 +7,9 @@ export async function GET() {
     success: true,
     data: blocked.map((b) => ({
       ...b,
-      dateFrom: b.dateFrom.toISOString(),
-      dateTo:   b.dateTo.toISOString(),
+      dateFrom:    b.dateFrom.toISOString(),
+      dateTo:      b.dateTo.toISOString(),
+      apartmentId: b.apartmentId ?? null,
     })),
   });
 }
@@ -17,7 +18,8 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const { dateFrom, dateTo } = body;
-    const reason = typeof body.reason === "string" ? body.reason.slice(0, 200) : null;
+    const reason      = typeof body.reason      === "string" ? body.reason.slice(0, 200) : null;
+    const apartmentId = typeof body.apartmentId === "string" ? body.apartmentId : null;
 
     if (!dateFrom || !dateTo) {
       return NextResponse.json({ success: false, error: "A dátumok megadása kötelező" }, { status: 400 });
@@ -36,16 +38,18 @@ export async function POST(req: NextRequest) {
 
     const blocked = await prisma.blockedPeriod.create({
       data: {
-        dateFrom: from,
-        dateTo:   to,
-        reason:   reason || null,
+        dateFrom:    from,
+        dateTo:      to,
+        reason:      reason || null,
+        apartmentId: apartmentId || null,
       },
     });
 
     return NextResponse.json({ success: true, data: {
       ...blocked,
-      dateFrom: blocked.dateFrom.toISOString(),
-      dateTo:   blocked.dateTo.toISOString(),
+      dateFrom:    blocked.dateFrom.toISOString(),
+      dateTo:      blocked.dateTo.toISOString(),
+      apartmentId: blocked.apartmentId ?? null,
     }});
   } catch (error: any) {
     return NextResponse.json(

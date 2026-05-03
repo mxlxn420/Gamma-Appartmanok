@@ -11,10 +11,11 @@ export default async function AdminNaptar() {
 
   if (!token) redirect("/admin/login");
 
-  const [bookings, blocked, rules] = await Promise.all([
+  const [bookings, blocked, rules, apartments] = await Promise.all([
     prisma.booking.findMany({
       where:   { status: { in: ["PENDING", "CONFIRMED", "PAID"] } },
-      select:  { checkIn: true, checkOut: true, status: true, guestName: true, id: true },
+      select:  { checkIn: true, checkOut: true, status: true, guestName: true, id: true,
+                 apartments: { select: { apartmentId: true } } },
       orderBy: { checkIn: "asc" },
     }),
     prisma.blockedPeriod.findMany({
@@ -23,6 +24,11 @@ export default async function AdminNaptar() {
     prisma.pricingRule.findMany({
       where:   { isActive: true },
       orderBy: { priority: "desc" },
+    }),
+    prisma.apartment.findMany({
+      where:   { isActive: true },
+      orderBy: { name: "asc" },
+      select:  { id: true, name: true },
     }),
   ]);
 
@@ -35,14 +41,17 @@ export default async function AdminNaptar() {
       <AdminCalendar
         bookings={bookings.map((b) => ({
           ...b,
-          checkIn:  b.checkIn.toISOString(),
-          checkOut: b.checkOut.toISOString(),
+          checkIn:      b.checkIn.toISOString(),
+          checkOut:     b.checkOut.toISOString(),
+          apartmentIds: b.apartments.map(a => a.apartmentId),
         }))}
         blocked={blocked.map((b) => ({
           ...b,
-          dateFrom: b.dateFrom.toISOString(),
-          dateTo:   b.dateTo.toISOString(),
+          dateFrom:    b.dateFrom.toISOString(),
+          dateTo:      b.dateTo.toISOString(),
+          apartmentId: b.apartmentId ?? null,
         }))}
+        apartments={apartments}
       />
       <div className="mt-8">
         <h2 className="font-serif text-xl text-stone-800 mb-4">Foglalások</h2>

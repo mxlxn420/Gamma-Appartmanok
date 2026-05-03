@@ -10,26 +10,34 @@ import { formatDateHu }    from "@/lib/utils";
 import "react-day-picker/dist/style.css";
 
 interface BookingItem {
-  id:        string;
-  checkIn:   string;
-  checkOut:  string;
-  status:    string;
-  guestName: string;
+  id:           string;
+  checkIn:      string;
+  checkOut:     string;
+  status:       string;
+  guestName:    string;
+  apartmentIds: string[];
 }
 
 interface BlockedItem {
-  id:       string;
-  dateFrom: string;
-  dateTo:   string;
-  reason?:  string | null;
+  id:          string;
+  dateFrom:    string;
+  dateTo:      string;
+  reason?:     string | null;
+  apartmentId: string | null;
+}
+
+interface ApartmentOption {
+  id:   string;
+  name: string;
 }
 
 interface Props {
-  bookings: BookingItem[];
-  blocked:  BlockedItem[];
+  bookings:   BookingItem[];
+  blocked:    BlockedItem[];
+  apartments: ApartmentOption[];
 }
 
-export default function AdminCalendar({ bookings, blocked: initialBlocked }: Props) {
+export default function AdminCalendar({ bookings, blocked: initialBlocked, apartments }: Props) {
   const [blocked, setBlocked]   = useState<BlockedItem[]>(initialBlocked);
   const [range, setRange]       = useState<{ from?: Date; to?: Date }>({});
   const [reason, setReason]     = useState("");
@@ -38,6 +46,8 @@ export default function AdminCalendar({ bookings, blocked: initialBlocked }: Pro
   const [isMobile, setIsMobile]   = useState(false);
   const [syncing, setSyncing]     = useState(false);
   const [syncResult, setSyncResult] = useState<string | null>(null);
+  // null = Összes, string = apartmentId
+  const [activeTab, setActiveTab] = useState<string | null>(null);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 640);
@@ -46,8 +56,17 @@ export default function AdminCalendar({ bookings, blocked: initialBlocked }: Pro
     return () => window.removeEventListener("resize", check);
   }, []);
 
+  // Szűrt foglalások és blokkolt időszakok az aktív tab alapján
+  const filteredBookings = activeTab === null
+    ? bookings
+    : bookings.filter(b => b.apartmentIds.includes(activeTab));
+
+  const filteredBlocked = activeTab === null
+    ? blocked
+    : blocked.filter(b => b.apartmentId === null || b.apartmentId === activeTab);
+
   // Foglalt napok
-  const bookedDays = bookings.flatMap(({ checkIn, checkOut }) => {
+  const bookedDays = filteredBookings.flatMap(({ checkIn, checkOut }) => {
     const days = [];
     const cur  = new Date(checkIn);
     const end  = new Date(checkOut);
@@ -59,7 +78,7 @@ export default function AdminCalendar({ bookings, blocked: initialBlocked }: Pro
   });
 
   // Blokkolt napok
-  const blockedDays = blocked.flatMap(({ dateFrom, dateTo }) => {
+  const blockedDays = filteredBlocked.flatMap(({ dateFrom, dateTo }) => {
     const days = [];
     const cur  = new Date(dateFrom);
     const end  = new Date(dateTo);
@@ -78,9 +97,10 @@ export default function AdminCalendar({ bookings, blocked: initialBlocked }: Pro
         method:  "POST",
         headers: { "Content-Type": "application/json" },
         body:    JSON.stringify({
-          dateFrom: format(range.from, "yyyy-MM-dd"),
-          dateTo:   format(range.to,   "yyyy-MM-dd"),
-          reason:   reason || null,
+          dateFrom:    format(range.from, "yyyy-MM-dd"),
+          dateTo:      format(range.to,   "yyyy-MM-dd"),
+          reason:      reason || null,
+          apartmentId: activeTab ?? null,
         }),
       });
       const data = await res.json();
@@ -122,7 +142,9 @@ export default function AdminCalendar({ bookings, blocked: initialBlocked }: Pro
       // Frissítjük a blokkolt periódusokat
       const blockedRes = await fetch("/api/admin/block");
       const blockedData = await blockedRes.json();
-      if (blockedData.success) setBlocked(blockedData.data);
+      if (blockedData.success) setBlocked(blockedData.data.map((b: any) => ({
+        ...b, apartmentId: b.apartmentId ?? null,
+      })));
     } catch {
       setSyncResult("Hiba történt a szinkronizálás során");
     } finally {
@@ -131,6 +153,35 @@ export default function AdminCalendar({ bookings, blocked: initialBlocked }: Pro
   };
 
   return (
+    <div className="space-y-4">
+
+      {/* Apartman fülek */}
+      <div className="flex flex-wrap gap-2">
+        <button
+          onClick={() => { setActiveTab(null); setShowForm(false); setRange({}); }}
+          className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
+            activeTab === null
+              ? "bg-forest-600 text-white shadow-sm"
+              : "bg-white border border-stone-200 text-stone-600 hover:bg-stone-50"
+          }`}
+        >
+          Összes
+        </button>
+        {apartments.map((apt) => (
+          <button
+            key={apt.id}
+            onClick={() => { setActiveTab(apt.id); setShowForm(false); setRange({}); }}
+            className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
+              activeTab === apt.id
+                ? "bg-forest-600 text-white shadow-sm"
+                : "bg-white border border-stone-200 text-stone-600 hover:bg-stone-50"
+            }`}
+          >
+            {apt.name}
+          </button>
+        ))}
+      </div>
+
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
       {/* Naptár */}
@@ -196,7 +247,12 @@ export default function AdminCalendar({ bookings, blocked: initialBlocked }: Pro
             className="bg-white rounded-2xl shadow-card p-5"
           >
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-medium text-stone-800">Napok zárása</h3>
+              <div>
+                <h3 className="font-medium text-stone-800">Napok zárása</h3>
+                <p className="text-xs text-stone-400 mt-0.5">
+                  {activeTab ? apartments.find(a => a.id === activeTab)?.name ?? "" : "Minden apartman"}
+                </p>
+              </div>
               <button onClick={() => { setShowForm(false); setRange({}); }}>
                 <X size={16} className="text-stone-400" />
               </button>
@@ -227,13 +283,13 @@ export default function AdminCalendar({ bookings, blocked: initialBlocked }: Pro
         {/* Blokkolt időszakok listája */}
         <div className="bg-white rounded-2xl shadow-card p-5">
           <h3 className="font-medium text-stone-800 mb-4">Zárt időszakok</h3>
-          {blocked.length === 0 ? (
+          {filteredBlocked.length === 0 ? (
             <p className="text-sm text-stone-400 text-center py-4">
               Nincs zárt időszak
             </p>
           ) : (
             <div className="space-y-2">
-              {blocked.map((b) => (
+              {filteredBlocked.map((b) => (
                 <div key={b.id} className="flex items-center justify-between p-3 bg-terra-50 rounded-xl">
                   <div>
                     <p className="text-sm font-medium text-stone-700">
@@ -256,6 +312,7 @@ export default function AdminCalendar({ bookings, blocked: initialBlocked }: Pro
         </div>
 
       </div>
+    </div>
     </div>
   );
 }
