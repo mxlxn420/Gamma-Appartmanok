@@ -1,12 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { DayPicker } from "react-day-picker";
 import { hu }        from "date-fns/locale";
 import { format }    from "date-fns";
 import { motion }    from "framer-motion";
 import { Plus, Trash2, X, RefreshCw } from "lucide-react";
 import { formatDateHu }    from "@/lib/utils";
+
+// Apartman szín per sorrend (Gamma 1-4)
+const APT_COLORS = ["bg-emerald-500", "bg-orange-400", "bg-sky-500", "bg-violet-500"];
 import "react-day-picker/dist/style.css";
 
 interface BookingItem {
@@ -54,6 +57,57 @@ export default function AdminCalendar({ bookings, blocked: initialBlocked, apart
     check();
     window.addEventListener("resize", check);
     return () => window.removeEventListener("resize", check);
+  }, []);
+
+  // Apartman → szín térkép
+  const aptColorMap = useMemo(() => {
+    const m: Record<string, string> = {};
+    apartments.forEach((apt, i) => { m[apt.id] = APT_COLORS[i % APT_COLORS.length]; });
+    return m;
+  }, [apartments]);
+
+  // Nap → érintett apartman ID-k térkép (csak Összes fülhöz)
+  const dayApartmentMap = useMemo(() => {
+    if (activeTab !== null) return new Map<string, string[]>();
+    const map = new Map<string, string[]>();
+    for (const booking of bookings) {
+      const cur = new Date(booking.checkIn);
+      const end = new Date(booking.checkOut);
+      while (cur < end) {
+        const key = format(cur, "yyyy-MM-dd");
+        const existing = map.get(key) ?? [];
+        for (const aptId of booking.apartmentIds) {
+          if (!existing.includes(aptId)) existing.push(aptId);
+        }
+        map.set(key, existing);
+        cur.setDate(cur.getDate() + 1);
+      }
+    }
+    return map;
+  }, [bookings, activeTab]);
+
+  // Refs hogy a stabil callback hozzáférjen a legfrissebb map-ekhez
+  const dayApartmentMapRef = useRef(dayApartmentMap);
+  dayApartmentMapRef.current = dayApartmentMap;
+  const aptColorMapRef = useRef(aptColorMap);
+  aptColorMapRef.current = aptColorMap;
+
+  // Stabil DayButton – pontok az aktív apartmanokra
+  const CustomDayButton = useCallback(({ day, modifiers, children, ...props }: any) => {
+    const key = format(day.date, "yyyy-MM-dd");
+    const aptIds = dayApartmentMapRef.current.get(key) ?? [];
+    return (
+      <button {...props}>
+        {children}
+        {aptIds.length > 0 && (
+          <span className="flex gap-0.5 justify-center mt-0.5">
+            {aptIds.map((id: string) => (
+              <span key={id} className={`w-1.5 h-1.5 rounded-full inline-block ${aptColorMapRef.current[id] ?? "bg-stone-400"}`} />
+            ))}
+          </span>
+        )}
+      </button>
+    );
   }, []);
 
   // Szűrt foglalások és blokkolt időszakok az aktív tab alapján
@@ -203,20 +257,31 @@ export default function AdminCalendar({ bookings, blocked: initialBlocked, apart
             booked:  { backgroundColor: "#dceade", color: "#1a3a2a" },
             blocked: { backgroundColor: "#f5e6d8", color: "#a86435", textDecoration: "line-through" },
           }}
+          {...(activeTab === null ? { components: { DayButton: CustomDayButton } } : {})}
         />
 
         {/* Jelmagyarázat */}
         <div className="flex flex-wrap gap-5 mt-4 pt-4 border-t border-stone-100">
           {[
-            { color: "bg-forest-900", label: "Kiválasztott"  },
-            { color: "bg-forest-100", label: "Foglalt"        },
-            { color: "bg-terra-100",  label: "Zárva"          },
+            { color: "bg-forest-900", label: "Kiválasztott" },
+            { color: "bg-forest-100", label: "Foglalt"       },
+            { color: "bg-terra-100",  label: "Zárva"         },
           ].map(({ color, label }) => (
             <div key={label} className="flex items-center gap-2 text-xs text-stone-500">
               <span className={`w-4 h-4 rounded-full ${color} inline-block`} />
               {label}
             </div>
           ))}
+          {activeTab === null && apartments.length > 0 && (
+            <div className="flex items-center gap-2 flex-wrap">
+              {apartments.map((apt, i) => (
+                <div key={apt.id} className="flex items-center gap-1 text-xs text-stone-500">
+                  <span className={`w-2.5 h-2.5 rounded-full inline-block ${APT_COLORS[i % APT_COLORS.length]}`} />
+                  {apt.name}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
