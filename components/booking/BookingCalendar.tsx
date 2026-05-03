@@ -68,21 +68,9 @@ function getGlobalApplicableRule(date: Date, rules: PricingRule[]): PricingRule 
 
 function getPriceForNight(date: Date, rule: PricingRule, personCount: number): number {
   const isWeekend = [5, 6].includes(getDay(date));
-  const wkday3 = rule.price3 > 0 ? rule.price3 : rule.pricePerNight;
-  const wkday4 = rule.price4 > 0 ? rule.price4 : wkday3;
-  let tier1to2: number, tier3: number, tier4: number;
-  if (isWeekend) {
-    tier1to2 = rule.weekendPrice  > 0 ? rule.weekendPrice  : rule.pricePerNight;
-    tier3    = rule.weekendPrice3 > 0 ? rule.weekendPrice3 : wkday3;
-    tier4    = rule.weekendPrice4 > 0 ? rule.weekendPrice4 : wkday4;
-  } else {
-    tier1to2 = rule.pricePerNight;
-    tier3    = wkday3;
-    tier4    = wkday4;
-  }
-  if (personCount >= 4) return tier4;
-  if (personCount >= 3) return tier3;
-  return tier1to2;
+  const baseRate  = isWeekend && rule.weekendPrice > 0 ? rule.weekendPrice : rule.pricePerNight;
+  // Per-fős árazás: pricePerNight = egy főre jutó ár/éj
+  return baseRate * personCount;
 }
 
 function calcApartmentPrice(
@@ -282,9 +270,21 @@ export default function BookingCalendar({ apartmentGuests, onBack, onNext }: Pro
               const d = startOfDay(day);
               return d > startOfDay(r.from) && d < startOfDay(r.to);
             }),
+            checkoutOnly: (day) => {
+              const d = startOfDay(day);
+              return bookedRanges.some(r => d.getTime() === startOfDay(r.from).getTime());
+            },
+            tooSoon: (day) => {
+              const d = startOfDay(day);
+              const advance = getGlobalApplicableRule(d, rules)?.minAdvanceDays ?? 2;
+              const earliest = startOfDay(addDays(new Date(), advance));
+              return d >= startOfDay(new Date()) && d < earliest;
+            },
           }}
           modifiersStyles={{
-            booked: { backgroundColor: "#f5e6d8", color: "#a86435", textDecoration: "line-through", cursor: "not-allowed", opacity: 0.7 },
+            booked:       { backgroundColor: "#f5e6d8", color: "#a86435", textDecoration: "line-through", cursor: "not-allowed", opacity: 0.7 },
+            tooSoon:      { backgroundColor: "#f5e6d8", color: "#a86435", textDecoration: "line-through", cursor: "not-allowed", opacity: 0.7 },
+            checkoutOnly: { background: "linear-gradient(135deg, #fff 50%, #f5e6d8 50%)", color: "#a86435", cursor: "pointer" },
           }}
           styles={{ months: { gap: "1rem" } }}
         />
@@ -297,6 +297,9 @@ export default function BookingCalendar({ apartmentGuests, onBack, onNext }: Pro
           </div>
           <div className="flex items-center gap-2 text-xs text-stone-500">
             <span className="w-3.5 h-3.5 rounded-full bg-terra-200 inline-block" /> Foglalt
+          </div>
+          <div className="flex items-center gap-2 text-xs text-stone-500">
+            <span className="w-3.5 h-3.5 rounded-full inline-block" style={{ background: "linear-gradient(135deg, #fff 50%, #f5e6d8 50%)", border: "1px solid #e8c9a8" }} /> Csak távozás
           </div>
         </div>
       </div>
@@ -333,24 +336,28 @@ export default function BookingCalendar({ apartmentGuests, onBack, onNext }: Pro
                           {isOpen ? <ChevronUp size={14} className="text-stone-400" /> : <ChevronDown size={14} className="text-stone-400" />}
                         </div>
                       </button>
-                      {isOpen && (
-                        <div className="px-4 pb-3 space-y-1.5 text-xs border-t border-stone-100 pt-2">
-                          <div className="flex justify-between text-stone-600 font-medium">
-                            <div>
-                              <p>Szállás</p>
-                              {nightBreakdown.map((g, i) => (
-                                <p key={i} className="text-stone-400 font-normal">{g.count} éj × {formatCurrency(g.rate)}</p>
-                              ))}
-                              <p className="text-stone-400 font-normal">
-                                {apt.adults} felnőtt{apt.children > 0 ? ` + ${apt.children} gyerek` : ""}{apt.babies > 1 ? ` + ${apt.babies - 1} baba` : ""}
-                              </p>
+                      {isOpen && (() => {
+                        const personCount = apt.adults + apt.children + Math.max(0, apt.babies - 1);
+                        const ratePerPerson = personCount > 0 ? Math.round(baseTotal / nights / personCount) : 0;
+                        return (
+                          <div className="px-4 pb-3 space-y-1.5 text-xs border-t border-stone-100 pt-2">
+                            <div className="flex justify-between text-stone-600 font-medium">
+                              <div>
+                                <p>Szállás</p>
+                                <p className="text-stone-400 font-normal">
+                                  {personCount} fő × {formatCurrency(ratePerPerson)}/fő/éj × {nights} éj
+                                </p>
+                                <p className="text-stone-400 font-normal">
+                                  ({apt.adults} felnőtt{apt.children > 0 ? ` + ${apt.children} gyerek` : ""}{apt.babies > 0 ? ` + ${apt.babies} baba` : ""})
+                                </p>
+                              </div>
+                              <span>{formatCurrency(baseTotal)}</span>
                             </div>
-                            <span>{formatCurrency(baseTotal)}</span>
+                            {apt.babies >= 1 && <div className="flex justify-between text-forest-600"><span>Baba (1 db ingyenes)</span><span>–</span></div>}
+                            <div className="flex justify-between text-stone-600"><span>IFA ({apt.adults} felnőtt × {nights} éj)</span><span>{formatCurrency(aptTax)}</span></div>
                           </div>
-                          {apt.babies >= 1 && <div className="flex justify-between text-forest-600"><span>Baba (1 db)</span><span>Ingyenes</span></div>}
-                          <div className="flex justify-between text-stone-600"><span>IFA ({apt.adults} felnőtt × {nights} éj)</span><span>{formatCurrency(aptTax)}</span></div>
-                        </div>
-                      )}
+                        );
+                      })()}
                     </div>
                   );
                 })}

@@ -78,7 +78,7 @@ export default function GuestSelector({ apartments, onBack, onNext }: Props) {
   const handleNext = () => {
     for (const g of guestData) {
       if (g.adults < 1) { alert(`${g.name}: legalább 1 felnőtt szükséges!`); return; }
-      if (billableCount(g) > g.maxGuests) { alert(`${g.name}: maximum ${g.maxGuests} fizető vendég!`); return; }
+      if (totalCount(g) > g.maxGuests) { alert(`${g.name}: maximum ${g.maxGuests} fő!`); return; }
     }
     onNext(guestData);
   };
@@ -91,9 +91,8 @@ export default function GuestSelector({ apartments, onBack, onNext }: Props) {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {guestData.map((g, i) => {
-          const billed = billableCount(g);
           const total  = totalCount(g);
-          const atMax  = billed >= g.maxGuests;
+          const atMax  = total >= g.maxGuests;
           return (
             <motion.div
               key={g.id}
@@ -110,13 +109,13 @@ export default function GuestSelector({ apartments, onBack, onNext }: Props) {
                   <h3 className="font-medium text-stone-800">{g.name}</h3>
                 </div>
                 <span className={`text-xs font-semibold px-2 py-1 rounded-full ${atMax ? "bg-terra-100 text-terra-600" : "bg-forest-100 text-forest-700"}`}>
-                  {total} vendég
+                  {total} / {g.maxGuests} fő
                 </span>
               </div>
 
               <Counter
                 label="Felnőtt (18+ év)"
-                sublabel="Szobadíj + IFA (450 Ft/éj)"
+                sublabel="Felnőtt ár + IFA (450 Ft/éj)"
                 value={g.adults}
                 min={1}
                 atMax={atMax}
@@ -124,22 +123,22 @@ export default function GuestSelector({ apartments, onBack, onNext }: Props) {
               />
               <Counter
                 label="Gyerek (2–17 év)"
-                sublabel="Szobadíj, IFA nélkül"
+                sublabel="Felnőtt ár, IFA nélkül"
                 value={g.children}
                 atMax={atMax}
                 onChange={(v) => setField(g.id, "children", v)}
               />
               <Counter
                 label="Baba (0–2 év)"
-                sublabel={g.babies === 0 ? "Az első ingyenes" : g.babies === 1 ? "1 db ingyenes" : "Az első ingyenes, többi szobadíj"}
+                sublabel={g.babies === 0 ? "Az első ingyenes" : g.babies === 1 ? "1 db ingyenes" : "Az első ingyenes, többi felnőtt ár"}
                 value={g.babies}
-                atMax={g.babies >= 1 ? atMax : false}
+                atMax={atMax}
                 onChange={(v) => setField(g.id, "babies", v)}
               />
 
               {g.babies > 1 && (
                 <p className="text-xs text-terra-500 pt-1">
-                  +{g.babies - 1} baba szobadíjat fizet (IFA nélkül)
+                  +{g.babies - 1} baba felnőtt árat fizet (IFA nélkül)
                 </p>
               )}
             </motion.div>

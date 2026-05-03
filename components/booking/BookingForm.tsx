@@ -527,48 +527,28 @@ export default function BookingForm({ bookingData, onBack, onSuccess }: Props) {
         </div>
 
         <div className="border-t border-white/10 pt-4 space-y-2.5 text-sm mb-6">
-          {/* Szállás – hétköznap */}
-          {bookingData.weekdayNights > 0 && (
-            <div className="flex justify-between items-start">
-              <div>
-                <p className="text-cream/80">
-                  {bookingData.weekendNights > 0 ? "Szállás – hétköznap" : `Szállás (${bookingData.nights} éj)`}
-                </p>
-                <p className="text-xs text-cream/40 mt-0.5">
-                  {bookingData.weekdayNights} éj × {formatCurrency(bookingData.weekdayRate)}/éj
-                </p>
+          {/* Szállás – per apartman bontás */}
+          {bookingData.apartmentGuests.map((apt) => {
+            const payingGuests = apt.adults + apt.children + Math.max(0, apt.babies - 1);
+            const ratePerPerson = payingGuests > 0 && bookingData.nights > 0
+              ? Math.round(bookingData.basePrice / bookingData.apartmentGuests.reduce((s, a) => s + a.adults + a.children + Math.max(0, a.babies - 1), 0) / bookingData.nights)
+              : 0;
+            const aptBase = ratePerPerson * payingGuests * bookingData.nights;
+            return (
+              <div key={apt.id} className="flex justify-between items-start">
+                <div>
+                  <p className="text-cream/80">Szállás – {apt.name}</p>
+                  <p className="text-xs text-cream/40 mt-0.5">
+                    {payingGuests} fő × {formatCurrency(ratePerPerson)}/fő/éj × {bookingData.nights} éj
+                  </p>
+                  <p className="text-xs text-cream/40">
+                    ({apt.adults} felnőtt{apt.children > 0 ? ` + ${apt.children} gyerek` : ""}{apt.babies > 0 ? ` + ${apt.babies} baba` : ""})
+                  </p>
+                </div>
+                <span className="shrink-0 ml-3">{formatCurrency(aptBase)}</span>
               </div>
-              <span className="shrink-0 ml-3">{formatCurrency(bookingData.weekdayNights * bookingData.weekdayRate)}</span>
-            </div>
-          )}
-
-          {/* Szállás – hétvége */}
-          {bookingData.weekendNights > 0 && bookingData.weekendRate !== bookingData.weekdayRate && (
-            <div className="flex justify-between items-start">
-              <div>
-                <p className="text-cream/80">
-                  {bookingData.weekdayNights > 0 ? "Szállás – hétvége" : `Szállás (${bookingData.nights} éj)`}
-                </p>
-                <p className="text-xs text-cream/40 mt-0.5">
-                  {bookingData.weekendNights} éj × {formatCurrency(bookingData.weekendRate)}/éj
-                </p>
-              </div>
-              <span className="shrink-0 ml-3">{formatCurrency(bookingData.weekendNights * bookingData.weekendRate)}</span>
-            </div>
-          )}
-
-          {/* Szállás – egységes hétvégi ár */}
-          {bookingData.weekendNights > 0 && bookingData.weekendRate === bookingData.weekdayRate && bookingData.weekdayNights === 0 && (
-            <div className="flex justify-between items-start">
-              <div>
-                <p className="text-cream/80">Szállás ({bookingData.nights} éj)</p>
-                <p className="text-xs text-cream/40 mt-0.5">
-                  {bookingData.nights} éj × {formatCurrency(bookingData.weekdayRate)}/éj
-                </p>
-              </div>
-              <span className="shrink-0 ml-3">{formatCurrency(bookingData.basePrice)}</span>
-            </div>
-          )}
+            );
+          })}
 
 
           {/* IFA */}
