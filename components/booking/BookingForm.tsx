@@ -527,28 +527,21 @@ export default function BookingForm({ bookingData, onBack, onSuccess }: Props) {
         </div>
 
         <div className="border-t border-white/10 pt-4 space-y-2.5 text-sm mb-6">
-          {/* Szállás – per apartman bontás */}
-          {bookingData.apartmentGuests.map((apt) => {
-            const payingGuests = apt.adults + apt.children + Math.max(0, apt.babies - 1);
-            const ratePerPerson = payingGuests > 0 && bookingData.nights > 0
-              ? Math.round(bookingData.basePrice / bookingData.apartmentGuests.reduce((s, a) => s + a.adults + a.children + Math.max(0, a.babies - 1), 0) / bookingData.nights)
-              : 0;
-            const aptBase = ratePerPerson * payingGuests * bookingData.nights;
-            return (
-              <div key={apt.id} className="flex justify-between items-start">
-                <div>
-                  <p className="text-cream/80">Szállás – {apt.name}</p>
-                  <p className="text-xs text-cream/40 mt-0.5">
-                    {payingGuests} fő × {formatCurrency(ratePerPerson)}/fő/éj × {bookingData.nights} éj
+          {/* Szállás */}
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-cream/80">Szállás ({bookingData.nights} éj)</p>
+              {bookingData.apartmentGuests.map((apt) => {
+                const personCount = apt.adults + apt.children + Math.max(0, apt.babies - 1);
+                return (
+                  <p key={apt.id} className="text-xs text-cream/40 mt-0.5">
+                    {apt.name}: {personCount} fő ({apt.adults} felnőtt{apt.children > 0 ? ` + ${apt.children} gyerek` : ""}{apt.babies > 0 ? ` + ${apt.babies} baba` : ""})
                   </p>
-                  <p className="text-xs text-cream/40">
-                    ({apt.adults} felnőtt{apt.children > 0 ? ` + ${apt.children} gyerek` : ""}{apt.babies > 0 ? ` + ${apt.babies} baba` : ""})
-                  </p>
-                </div>
-                <span className="shrink-0 ml-3">{formatCurrency(aptBase)}</span>
-              </div>
-            );
-          })}
+                );
+              })}
+            </div>
+            <span className="shrink-0 ml-3">{formatCurrency(bookingData.basePrice)}</span>
+          </div>
 
 
           {/* IFA */}

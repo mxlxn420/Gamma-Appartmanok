@@ -68,9 +68,21 @@ function getGlobalApplicableRule(date: Date, rules: PricingRule[]): PricingRule 
 
 function getPriceForNight(date: Date, rule: PricingRule, personCount: number): number {
   const isWeekend = [5, 6].includes(getDay(date));
-  const baseRate  = isWeekend && rule.weekendPrice > 0 ? rule.weekendPrice : rule.pricePerNight;
-  // Per-fős árazás: pricePerNight = egy főre jutó ár/éj
-  return baseRate * personCount;
+  const wkday3 = rule.price3 > 0 ? rule.price3 : rule.pricePerNight;
+  const wkday4 = rule.price4 > 0 ? rule.price4 : wkday3;
+  let tier1to2: number, tier3: number, tier4: number;
+  if (isWeekend) {
+    tier1to2 = rule.weekendPrice  > 0 ? rule.weekendPrice  : rule.pricePerNight;
+    tier3    = rule.weekendPrice3 > 0 ? rule.weekendPrice3 : wkday3;
+    tier4    = rule.weekendPrice4 > 0 ? rule.weekendPrice4 : wkday4;
+  } else {
+    tier1to2 = rule.pricePerNight;
+    tier3    = wkday3;
+    tier4    = wkday4;
+  }
+  if (personCount >= 4) return tier4;
+  if (personCount >= 3) return tier3;
+  return tier1to2;
 }
 
 function calcApartmentPrice(
@@ -338,15 +350,13 @@ export default function BookingCalendar({ apartmentGuests, onBack, onNext }: Pro
                       </button>
                       {isOpen && (() => {
                         const personCount = apt.adults + apt.children + Math.max(0, apt.babies - 1);
-                        const ratePerPerson = personCount > 0 ? Math.round(baseTotal / nights / personCount) : 0;
+                        const ratePerNight = personCount > 0 && nights > 0 ? Math.round(baseTotal / nights) : 0;
                         return (
                           <div className="px-4 pb-3 space-y-1.5 text-xs border-t border-stone-100 pt-2">
                             <div className="flex justify-between text-stone-600 font-medium">
                               <div>
-                                <p>Szállás</p>
-                                <p className="text-stone-400 font-normal">
-                                  {personCount} fő × {formatCurrency(ratePerPerson)}/fő/éj × {nights} éj
-                                </p>
+                                <p>Szállás ({personCount} fő)</p>
+                                <p className="text-stone-400 font-normal">{nights} éj × {formatCurrency(ratePerNight)}/éj</p>
                                 <p className="text-stone-400 font-normal">
                                   ({apt.adults} felnőtt{apt.children > 0 ? ` + ${apt.children} gyerek` : ""}{apt.babies > 0 ? ` + ${apt.babies} baba` : ""})
                                 </p>
