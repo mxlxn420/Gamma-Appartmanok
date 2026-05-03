@@ -91,15 +91,19 @@ export async function PATCH(
       return NextResponse.json({ success: false, error: "A távozás napjának az érkezés utánra kell esnie." }, { status: 400 });
     }
 
-    // Ütközésellenőrzés (saját foglalást kizárjuk)
+    // Ütközésellenőrzés – csak az érintett apartmanokban
+    const editedApartmentIds: string[] = Array.isArray(body.apartmentGuests)
+      ? body.apartmentGuests.map((a: any) => a.id).filter(Boolean)
+      : [];
+    const statusFilter = ["PENDING", "CONFIRMED", "PAID", "BLOCKED"] as ("PENDING" | "CONFIRMED" | "PAID" | "BLOCKED")[];
     const conflicts = await prisma.booking.findMany({
       where: {
         id:     { not: id },
-        status: { in: ["PENDING", "CONFIRMED", "PAID", "BLOCKED"] },
-        AND: [
-          { checkIn:  { lt: co } },
-          { checkOut: { gt: ci } },
-        ],
+        status: { in: statusFilter },
+        ...(editedApartmentIds.length > 0
+          ? { apartments: { some: { apartmentId: { in: editedApartmentIds } } } }
+          : {}),
+        AND: [{ checkIn: { lt: co } }, { checkOut: { gt: ci } }],
       },
     });
     if (conflicts.length > 0) {
