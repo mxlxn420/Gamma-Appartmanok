@@ -25,8 +25,8 @@ export default function Footer() {
               <p className="text-xs text-cream/50 tracking-[0.25em] uppercase mt-1">Miskolctapolca</p>
             </Link>
             <p className="text-sm leading-relaxed text-cream/60 mb-6">
-              Romantikus vendégház privát és korlátlan jakuzzival, pároknak, kisebb családoknak,
-              kisebb baráti társaságoknak Miskolctapolca csendes részén. A tökéletes kikapcsolódás helyszíne.
+              4 különálló apartman privát jakuzzival, panorámás terasszal és teljes felszereltséggel –
+              Miskolctapolca szívében, a Bükk természeti kincseitől karnyújtásnyira.
             </p>
 
             {/* Social média */}
