@@ -453,36 +453,6 @@ export default function SeasonForm({
           </p>
         </div>
 
-        {/* Gyerek árak */}
-        <div className="md:col-span-2">
-          <p className="text-xs text-cream/60 uppercase tracking-wider mb-3 pt-2 border-t border-white/10">
-            Gyerek árak
-          </p>
-        </div>
-        <div>
-          <label className="text-xs text-cream/60 uppercase tracking-wider block mb-1.5">
-            Kisgyerek (2–6 év) Ft/éj
-          </label>
-          <input
-            type="number"
-            className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-cream text-sm focus:outline-none focus:border-white/50"
-            placeholder="3000"
-            value={rule.childPrice2to6 || ""}
-            onChange={(e) => setRule({ ...rule, childPrice2to6: Number(e.target.value) })}
-          />
-        </div>
-        <div>
-          <label className="text-xs text-cream/60 uppercase tracking-wider block mb-1.5">
-            Gyerek (6–12 év) Ft/éj
-          </label>
-          <input
-            type="number"
-            className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-cream text-sm focus:outline-none focus:border-white/50"
-            placeholder="5000"
-            value={rule.childPrice6to12 || ""}
-            onChange={(e) => setRule({ ...rule, childPrice6to12: Number(e.target.value) })}
-          />
-        </div>
 
         {/* Előleg / lemondási szabály */}
         {policies.length > 0 && (
