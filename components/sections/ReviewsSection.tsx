@@ -4,35 +4,35 @@ import AnimatedSection from "@/components/ui/AnimatedSection";
 const REVIEWS = [
   {
     name:     "Tamás Gubis",
-    rating:   5,
+    score:    10,
     text:     "Csendre, nyugalomra vágytunk a Párommal. Helyi, és közelben lévő látványosságban nincs hiány, ha valaki szeretné megismerni a Bükk adta gyönyörű látnivalókat. Teljes mértékben elégedettek voltunk a jól felszerelt szálláshellyel.",
     initials: "TG",
     type:     "Páros",
   },
   {
     name:     "Annamari Ujvári",
-    rating:   5,
+    score:    10,
     text:     "Szuper felszereltségű kis ház, minden van, amit az ember csak el tud képzelni!",
     initials: "AU",
     type:     "Páros",
   },
   {
     name:     "Alexandra Deák",
-    rating:   5,
+    score:    9,
     text:     "Gyönyörű szép, tökéletes a pihenésre és csendes. A tulajdonos borzasztóan kedves és aranyos!",
     initials: "AD",
     type:     "Családi",
   },
   {
     name:     "Ilona Molnár",
-    rating:   5,
+    score:    9,
     text:     "Nagyon szép és rendezett minden. Nekünk nagyon tetszett minden, és csak ajánlani tudom mindenkinek.",
     initials: "IM",
     type:     "Páros",
   },
   {
     name:     "Zsolt Mészáros",
-    rating:   5,
+    score:    10,
     text:     "Ha tehetem, visszatérek - kiváló hely, barátságos tulajdonos, nagyszerű elhelyezkedés.",
     initials: "ZM",
     type:     "Páros",
@@ -42,22 +42,6 @@ const REVIEWS = [
 const OVERALL_RATING = 9.4;
 const BOOKING_URL    = "https://www.booking.com/hotel/hu/gamma-apartman.html?ssne=Miskolctapolca&ssne_untouched=Miskolctapolca&highlighted_hotels=7923262&ss=Miskolctapolca&dest_id=7923262&dest_type=hotel&hp_avform=1&origin=hp&do_availability_check=1&label=apartmani-gama-dskenvNUWmVmIb23SSY3cQS631993302664%3Apl%3Ata%3Ap1%3Ap2%3Aac%3Aap%3Aneg%3Afi%3Atikwd-1651362902379%3Alp9062927%3Ali%3Adec%3Adm%3Appccp%3DUmFuZG9tSVYkc2RlIyh9YavywThF4buZMwppv9IhQn0&sid=9a2ad2c4a127b005b0fdbe29517fdac8&aid=319854&lang=hu&sb=1&src_elem=sb&src=hotel&checkin=2026-06-22&checkout=2026-06-24&group_adults=3&no_rooms=1&group_children=0#tab-reviews";
 
-function Stars({ rating, size = 16 }: { rating: number; size?: number }) {
-  return (
-    <div className="flex items-center gap-0.5">
-      {[1, 2, 3, 4, 5].map((star) => (
-        <svg
-          key={star}
-          style={{ width: size, height: size }}
-          className={star <= Math.round(rating) ? "text-terra-400 fill-terra-400" : "text-white/20 fill-white/20"}
-          viewBox="0 0 24 24"
-        >
-          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-        </svg>
-      ))}
-    </div>
-  );
-}
 
 export default function ReviewsSection() {
   return (
@@ -82,7 +66,7 @@ export default function ReviewsSection() {
                 {OVERALL_RATING.toFixed(1)}
               </span>
               <div className="flex flex-col items-start gap-1.5">
-                <span className="text-xs font-semibold text-terra-300 bg-terra-400/20 px-2 py-0.5 rounded-full">/ 10</span>
+                <span className="text-sm font-semibold text-terra-300">/ 10</span>
                 <p className="text-cream/60 text-xs">
                   Booking.com értékelések alapján
                 </p>
@@ -129,7 +113,10 @@ export default function ReviewsSection() {
                       <p className="text-cream/40 text-xs">Booking.com</p>
                     </div>
                   </div>
-                  <Stars rating={review.rating} size={14} />
+                  <div className="flex items-baseline gap-0.5">
+                    <span className="font-serif text-xl font-light text-terra-300">{review.score}</span>
+                    <span className="text-xs text-cream/30">/10</span>
+                  </div>
                 </div>
                 <span className="text-xs text-terra-400/70 bg-terra-400/10 px-2 py-0.5 rounded-full">
                   {review.type}
