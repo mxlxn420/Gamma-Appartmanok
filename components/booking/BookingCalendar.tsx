@@ -460,10 +460,10 @@ export default function BookingCalendar({ apartmentGuests, onBack, onNext }: Pro
                 )}
               </div>
               <div className="border-t border-forest-200 pt-2 space-y-1 text-forest-700">
-                <p>• <strong>Felnőtt (18+):</strong> szobadíj + IFA (450 Ft/éj)</p>
-                <p>• <strong>Gyerek (2–17):</strong> szobadíj, IFA nélkül</p>
-                <p>• <strong>Baba (0–2):</strong> 1 db ingyenes, többi szobadíj</p>
-                <p>• A szobadíj az apartmán teljes éjszakás ára a létszám alapján</p>
+                <p>• <strong>Felnőtt (18+):</strong> felnőtt ár + IFA (450 Ft/éj)</p>
+                <p>• <strong>Gyerek (2–17):</strong> felnőtt ár, IFA nélkül</p>
+                <p>• <strong>Baba (0–2):</strong> 1 db ingyenes, többi felnőtt ár</p>
+                <p>• A felnőtt ár az apartman teljes éjszakás ára a létszám alapján</p>
               </div>
             </div>
           );
