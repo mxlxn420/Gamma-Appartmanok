@@ -191,22 +191,48 @@ export default function AdminBookingsList({ bookings }: Props) {
     const co = new Date(form.checkOut);
     if (co <= ci) return form;
     const usedApts = apts ?? editApartments;
-    // Ha vannak apartmanok, összesített personCount alapján számol
-    const totalAdults   = usedApts.length > 0 ? usedApts.reduce((s, a) => s + a.numberOfAdults, 0) : form.numberOfAdults;
-    const totalChildren = usedApts.length > 0 ? usedApts.reduce((s, a) => s + a.numberOfTeens, 0)  : form.numberOfTeens;
-    const totalBabies   = usedApts.length > 0 ? usedApts.reduce((s, a) => s + a.numberOfBabies, 0) : form.numberOfBabies;
-    const breakdown = calcPriceBreakdown(ci, co, totalAdults, totalChildren, totalBabies, rules);
-    if (!breakdown) return form;
+    const nights = differenceInCalendarDays(co, ci);
+
+    let basePrice = 0;
+    let touristTax = 0;
+    let totalAdults = 0;
+    let totalChildren = 0;
+    let totalBabies = 0;
+
+    if (usedApts.length > 0) {
+      // Per-apartman számítás – minden apartman a saját vendégszáma alapján
+      for (const apt of usedApts) {
+        const pc = apt.numberOfAdults + apt.numberOfTeens + Math.max(0, apt.numberOfBabies - 1);
+        const bd = getAdminNightBreakdown(ci, co, rules, pc);
+        basePrice  += bd.reduce((s, g) => s + g.count * g.rate, 0);
+        touristTax += apt.numberOfAdults * TOURIST_TAX * nights;
+        totalAdults   += apt.numberOfAdults;
+        totalChildren += apt.numberOfTeens;
+        totalBabies   += apt.numberOfBabies;
+      }
+    } else {
+      totalAdults   = form.numberOfAdults;
+      totalChildren = form.numberOfTeens;
+      totalBabies   = form.numberOfBabies;
+      const breakdown = calcPriceBreakdown(ci, co, totalAdults, totalChildren, totalBabies, rules);
+      if (!breakdown) return form;
+      basePrice  = breakdown.basePrice;
+      touristTax = breakdown.touristTax;
+    }
+
+    const cleaningFee    = CLEANING_FEE;
     const extrasTotal    = editExtras.reduce((sum, s) => sum + (s.total ?? 0), 0);
     const discountPercent = form.discountPercent ?? 0;
-    const discountBase   = breakdown.totalPrice - breakdown.touristTax; // szállásdíj IFA nélkül, extrákat kizárva
+    const discountBase   = basePrice + cleaningFee;
     const discountAmount = Math.round(discountBase * discountPercent / 100);
-    const totalPrice     = breakdown.totalPrice + extrasTotal - discountAmount;
+    const totalPrice     = basePrice + cleaningFee + touristTax + extrasTotal - discountAmount;
     const depositRule    = rules.find((r) => r.dateFrom && r.dateTo && new Date(r.dateFrom) <= ci && ci <= new Date(r.dateTo)) ?? rules.find((r) => !r.dateFrom);
     const depositPercent = depositRule?.depositPercent ?? 30;
-    const depositAmount  = Math.round((totalPrice - breakdown.touristTax) * depositPercent / 100);
+    const depositAmount  = Math.round((totalPrice - touristTax) * depositPercent / 100);
     return {
-      ...form, ...breakdown, totalPrice, discountAmount, depositAmount,
+      ...form,
+      basePrice, childPrice2to6: 0, childPrice6to12: 0, guestSurcharge: 0,
+      cleaningFee, touristTax, totalPrice, discountAmount, depositAmount,
       numberOfAdults: totalAdults,
       numberOfTeens:  totalChildren,
       numberOfBabies: totalBabies,
