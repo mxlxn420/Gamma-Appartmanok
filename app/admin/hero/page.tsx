@@ -33,7 +33,7 @@ export default async function AdminHeroPage() {
     titleAfter:    row?.titleAfter    ?? DEFAULTS.titleAfter,
     description:   row?.description   ?? DEFAULTS.description,
     highlights:    (row?.highlights   ?? DEFAULTS.highlights) as { icon: string; label: string }[],
-    slides:        (row?.slides       ?? DEFAULTS.slides)     as { src: string; alt: string }[],
+    slides:        (row?.slides       ?? DEFAULTS.slides)     as { src: string; alt: string; label: string }[],
   };
 
   return (

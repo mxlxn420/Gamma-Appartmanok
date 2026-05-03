@@ -3,8 +3,9 @@ import { prisma } from "@/lib/prisma";
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
     const body = await req.json();
 
@@ -17,7 +18,7 @@ export async function PATCH(
 
       const overlap = await prisma.pricingRule.findFirst({
         where: {
-          id:       { not: params.id },
+          id:       { not: id },
           isActive:  true,
           priority:  { gte: 10 },
           dateFrom:  { not: null },
@@ -38,7 +39,7 @@ export async function PATCH(
     }
 
     const updated = await prisma.pricingRule.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         name:            body.name,
         pricePerNight:   Number(body.pricePerNight),
@@ -87,10 +88,11 @@ export async function PATCH(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
-    await prisma.pricingRule.delete({ where: { id: params.id } });
+    await prisma.pricingRule.delete({ where: { id } });
     return NextResponse.json({ success: true });
   } catch (error: any) {
     return NextResponse.json(

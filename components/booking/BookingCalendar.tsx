@@ -142,11 +142,20 @@ function GuestCounter({
   );
 }
 
-interface Props {
-  onNext: (data: BookingData) => void;
+interface SelectedApartment {
+  id:        string;
+  name:      string;
+  slug:      string;
+  maxGuests: number;
 }
 
-export default function BookingCalendar({ onNext }: Props) {
+interface Props {
+  selectedApartments: SelectedApartment[];
+  onBack: () => void;
+  onNext: (data: Omit<BookingData, "apartments">) => void;
+}
+
+export default function BookingCalendar({ selectedApartments, onBack, onNext }: Props) {
   const store = useBookingStore();
 
   const storeCheckIn = store.checkIn ? new Date(store.checkIn) : null;
@@ -641,13 +650,22 @@ export default function BookingCalendar({ onNext }: Props) {
           </motion.div>
         )}
 
-        <button
-          onClick={handleNext}
-          disabled={totalGuests > MAX_GUESTS}
-          className="btn-primary w-full justify-center disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Tovább az adatokhoz <ArrowRight size={16} />
-        </button>
+        <div className="flex gap-3">
+          <button
+            type="button"
+            onClick={onBack}
+            className="px-6 py-4 rounded-full border border-stone-200 text-stone-600 text-sm font-medium hover:bg-stone-50 transition-colors"
+          >
+            Vissza
+          </button>
+          <button
+            onClick={handleNext}
+            disabled={totalGuests > MAX_GUESTS}
+            className="btn-primary flex-1 justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Tovább az adatokhoz <ArrowRight size={16} />
+          </button>
+        </div>
 
       </div>
     </div>

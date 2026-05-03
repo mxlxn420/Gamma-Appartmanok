@@ -13,8 +13,9 @@ interface Highlight {
 }
 
 interface Slide {
-  src: string;
-  alt: string;
+  src:    string;
+  alt:    string;
+  label?: string;
 }
 
 interface HeroData {
@@ -76,6 +77,13 @@ export default function HeroSection({ data }: Props) {
           <div className="absolute inset-0 bg-hero-overlay" />
         </motion.div>
       </AnimatePresence>
+
+      {/* Slide felirat */}
+      {slides[current]?.label?.trim() && (
+        <div className="absolute bottom-16 right-4 sm:right-6 z-20 px-5 py-2.5 rounded-xl bg-transparent text-white text-2xl sm:text-4xl font-serif font-light tracking-wide" style={{ textShadow: "0 2px 12px rgba(0,0,0,0.9)" }}>
+          {slides[current].label}
+        </div>
+      )}
 
       {/* Tartalom */}
       <motion.div

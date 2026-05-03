@@ -6,43 +6,67 @@ datasource db {
   provider = "postgresql"
 }
 
+model Apartment {
+  id             String             @id @default(cuid())
+  name           String
+  slug           String             @unique
+  description    String?            @db.Text
+  maxGuests      Int                @default(4)
+  isActive       Boolean            @default(true)
+  bookings       BookingApartment[]
+  blockedPeriods BlockedPeriod[]
+  pricingRules   PricingRule[]
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+}
+
+model BookingApartment {
+  bookingId   String
+  apartmentId String
+  booking     Booking   @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  apartment   Apartment @relation(fields: [apartmentId], references: [id])
+
+  @@id([bookingId, apartmentId])
+}
+
 model Booking {
-  id                    String        @id @default(cuid())
+  id                    String             @id @default(cuid())
   guestName             String
   guestEmail            String
   guestPhone            String
   guestAddress          String?
-  numberOfGuests        Int           @default(2)
-  numberOfAdults        Int  @default(2)
-  numberOfTeens         Int  @default(0)   
-  numberOfBabies        Int  @default(0)
-  numberOfChildren2to6  Int  @default(0)
-  numberOfChildren6to12 Int  @default(0)
-  notes                 String?       @db.Text
+  numberOfGuests        Int                @default(2)
+  numberOfAdults        Int                @default(2)
+  numberOfTeens         Int                @default(0)
+  numberOfBabies        Int                @default(0)
+  numberOfChildren2to6  Int                @default(0)
+  numberOfChildren6to12 Int                @default(0)
+  notes                 String?            @db.Text
   checkIn               DateTime
   checkOut              DateTime
   nights                Int
   basePrice             Float
-  childPrice2to6        Float         @default(0)
-  childPrice6to12       Float         @default(0)
-  guestSurcharge        Float         @default(0)
-  cleaningFee           Float         @default(0)
-  touristTax            Float         @default(0)
+  childPrice2to6        Float              @default(0)
+  childPrice6to12       Float              @default(0)
+  guestSurcharge        Float              @default(0)
+  cleaningFee           Float              @default(0)
+  touristTax            Float              @default(0)
   totalPrice            Float
-  depositAmount         Float         @default(0)
+  depositAmount         Float              @default(0)
   depositPaidAt         DateTime?
   depositPaidAmount     Float?
   depositPaidMethod     String?
   extraServices         Json?
-  extraServicesTotal    Float         @default(0)
-  discountPercent       Float         @default(0)
-  discountAmount        Float         @default(0)
+  extraServicesTotal    Float              @default(0)
+  discountPercent       Float              @default(0)
+  discountAmount        Float              @default(0)
   paymentMethod         String?
-  status                BookingStatus @default(PENDING)
-  paymentIntentId       String?       @unique
+  status                BookingStatus      @default(PENDING)
+  paymentIntentId       String?            @unique
   paidAt                DateTime?
-  createdAt             DateTime      @default(now())
-  updatedAt             DateTime      @updatedAt
+  createdAt             DateTime           @default(now())
+  updatedAt             DateTime           @updatedAt
+  apartments            BookingApartment[]
 
   @@index([checkIn, checkOut])
   @@index([status])
@@ -78,6 +102,8 @@ model PricingRule {
   priority        Int            @default(0)
   policyId        String?
   policy          BookingPolicy? @relation(fields: [policyId], references: [id])
+  apartmentId     String?
+  apartment       Apartment?     @relation(fields: [apartmentId], references: [id])
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
 }
@@ -92,11 +118,13 @@ model Admin {
 }
 
 model BlockedPeriod {
-  id        String   @id @default(cuid())
-  dateFrom  DateTime
-  dateTo    DateTime
-  reason    String?
-  createdAt DateTime @default(now())
+  id          String     @id @default(cuid())
+  dateFrom    DateTime
+  dateTo      DateTime
+  reason      String?
+  apartmentId String?
+  apartment   Apartment? @relation(fields: [apartmentId], references: [id])
+  createdAt   DateTime   @default(now())
 }
 
 model BookingPolicy {

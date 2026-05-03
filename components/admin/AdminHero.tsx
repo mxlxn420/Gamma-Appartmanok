@@ -42,8 +42,9 @@ interface Highlight {
 }
 
 interface Slide {
-  src: string;
-  alt: string;
+  src:    string;
+  alt:    string;
+  label?: string;
 }
 
 interface HeroData {
@@ -153,7 +154,21 @@ function SlideUploader({
           <input
             value={slide.alt}
             onChange={(e) => onChange("alt", e.target.value)}
-            placeholder="pl. Milán Kuckó – vendégház kívülről"
+            placeholder="pl. Gamma 1 – nappali"
+            className="w-full border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-forest-500/30"
+          />
+        </div>
+
+        {/* Felirat */}
+        <div>
+          <label className="block text-xs font-medium text-stone-500 mb-1">
+            Felirat (jobb alsó sarok)
+          </label>
+          <input
+            value={slide.label ?? ""}
+            onChange={(e) => onChange("label", e.target.value)}
+            placeholder="pl. Gamma 1"
+            maxLength={40}
             className="w-full border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-forest-500/30"
           />
         </div>
@@ -227,7 +242,7 @@ export default function AdminHero({ initial }: Props) {
           <h2 className="font-medium text-stone-700">Slideshow képek ({form.slides.length})</h2>
           <button
             type="button"
-            onClick={() => setForm((f) => ({ ...f, slides: [...f.slides, { src: "", alt: "" }] }))}
+            onClick={() => setForm((f) => ({ ...f, slides: [...f.slides, { src: "", alt: "", label: "" }] }))}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-stone-200 text-stone-600 text-xs hover:bg-stone-50 transition-colors"
           >
             <Plus size={13} /> Új slot

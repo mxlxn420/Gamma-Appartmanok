@@ -13,13 +13,14 @@ async function isAuthed(): Promise<boolean> {
 // ─── GET – egy foglalás adatai ───────────────────────────────
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   if (!(await isAuthed())) {
     return NextResponse.json({ success: false, error: "Nincs jogosultság" }, { status: 401 });
   }
   try {
-    const booking = await prisma.booking.findUnique({ where: { id: params.id } });
+    const booking = await prisma.booking.findUnique({ where: { id } });
     if (!booking) {
       return NextResponse.json({ success: false, error: "Foglalás nem található" }, { status: 404 });
     }
@@ -32,8 +33,9 @@ export async function GET(
 // ─── PATCH – státusz VAGY teljes szerkesztés ─────────────────
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   if (!(await isAuthed())) {
     return NextResponse.json({ success: false, error: "Nincs jogosultság" }, { status: 401 });
   }
@@ -47,7 +49,7 @@ export async function PATCH(
         return NextResponse.json({ success: false, error: "Érvénytelen státusz" }, { status: 400 });
       }
       const updated = await prisma.booking.update({
-        where: { id: params.id },
+        where: { id },
         data: { status: body.status },
       });
 
@@ -85,7 +87,7 @@ export async function PATCH(
     // Ütközésellenőrzés (saját foglalást kizárjuk)
     const conflicts = await prisma.booking.findMany({
       where: {
-        id:     { not: params.id },
+        id:     { not: id },
         status: { in: ["PENDING", "CONFIRMED", "PAID", "BLOCKED"] },
         AND: [
           { checkIn:  { lt: co } },
@@ -105,7 +107,7 @@ export async function PATCH(
     const numberOfGuests = adults + teens + babies + ch2to6 + ch6to12;
 
     const updated = await prisma.booking.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         guestName:              body.guestName,
         guestEmail:             body.guestEmail,
@@ -147,14 +149,15 @@ export async function PATCH(
 // ─── DELETE – foglalás törlése ────────────────────────────────
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   if (!(await isAuthed())) {
     return NextResponse.json({ success: false, error: "Nincs jogosultság" }, { status: 401 });
   }
   try {
     const body = await req.json().catch(() => ({}));
-    const booking = await prisma.booking.findUnique({ where: { id: params.id } });
+    const booking = await prisma.booking.findUnique({ where: { id } });
     if (booking && body.sendEmail !== false) {
       try {
         const { sendCancellationEmail } = await import("@/lib/email");
@@ -171,7 +174,7 @@ export async function DELETE(
         console.error("Törlési email hiba:", emailErr);
       }
     }
-    await prisma.booking.delete({ where: { id: params.id } });
+    await prisma.booking.delete({ where: { id } });
     return NextResponse.json({ success: true });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error?.message }, { status: 500 });

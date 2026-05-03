@@ -82,7 +82,7 @@ export default async function HomePage() {
     titleAfter:    heroRow?.titleAfter    ?? HERO_DEFAULTS.titleAfter,
     description:   heroRow?.description   ?? HERO_DEFAULTS.description,
     highlights:    (heroRow?.highlights   ?? HERO_DEFAULTS.highlights) as { icon: string; label: string }[],
-    slides:        (heroRow?.slides       ?? HERO_DEFAULTS.slides)     as { src: string; alt: string }[],
+    slides:        (heroRow?.slides       ?? HERO_DEFAULTS.slides)     as { src: string; alt: string; label: string }[],
   };
 
   const aboutData = {
