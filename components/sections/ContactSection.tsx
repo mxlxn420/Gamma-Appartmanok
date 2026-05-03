@@ -58,9 +58,9 @@ export default function ContactSection() {
           <AnimatedSection direction="left" className="space-y-8">
             <div className="space-y-5">
               {[
-                { icon: MapPin, label: "Cím", value: "3519 Miskolctapolca, Bencések útja 117/A" },
-                { icon: Phone, label: "Telefon", value: "+36 30 845 4923" },
-                { icon: Mail, label: "E-mail", value: "milan.kucko117@gmail.com" },
+                { icon: MapPin, label: "Cím", value: "3519 Miskolctapolca, Beregi utca 11." },
+                { icon: Phone, label: "Telefon", value: "+36 20 359 9222" },
+                { icon: Mail, label: "E-mail", value: "gammaapartmanok@gmail.com" },
               ].map(({ icon: Icon, label, value }) => (
                 <div key={label} className="flex items-center gap-4">
                   <div className="w-11 h-11 rounded-xl bg-forest-900/8 flex items-center justify-center shrink-0">
@@ -78,10 +78,10 @@ export default function ContactSection() {
             <div className="bg-forest-900 rounded-2xl p-6 text-cream">
               <p className="text-xs tracking-[0.2em] uppercase text-cream/50 mb-4">Tudnivalók</p>
               <div className="space-y-2 text-sm">
-                <div className="flex justify-between"><span className="text-cream/60">Bejelentkezés</span><span>15:00 – 20:00</span></div>
+                <div className="flex justify-between"><span className="text-cream/60">Bejelentkezés</span><span>15:00 – 00:00</span></div>
                 <div className="flex justify-between"><span className="text-cream/60">Kijelentkezés</span><span>8:00 – 11:00</span></div>
                 <div className="flex justify-between"><span className="text-cream/60">Max. vendég</span><span>4 fő</span></div>
-                <div className="flex justify-between"><span className="text-cream/60">NTAK</span><span>MA25112258</span></div>
+                <div className="flex justify-between"><span className="text-cream/60">NTAK</span><span>MA21027231</span></div>
                 <div className="flex justify-between"><span className="text-cream/60">Háziállat</span><span>Nem tudunk fogadni</span></div>
               </div>
             </div>

@@ -27,7 +27,7 @@ export default function AszfPage() {
             <p>Cím: 3519 Miskolctapolca, Bencések útja 117/A</p>
             <p>Telefon: +36 30 845 4923</p>
             <p>E-mail: milan.kucko117@gmail.com</p>
-            <p>NTAK regisztrációs szám: MA25112258</p>
+            <p>NTAK regisztrációs szám: MA21027231</p>
           </section>
 
           <section>
