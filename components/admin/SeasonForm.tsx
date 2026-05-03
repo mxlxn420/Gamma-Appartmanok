@@ -47,13 +47,14 @@ interface Props {
   datePanel:     string | null;
   setDatePanel:  (p: string | null) => void;
   policies:      PolicyOption[];
+  maxGuests:     number;
 }
 
 export default function SeasonForm({
   rule, setRule, onSave, onCancel,
   isSaving, isNew, disabledDays, overlapError,
   panelPrefix, basePrice, existingRanges,
-  datePanel, setDatePanel, policies,
+  datePanel, setDatePanel, policies, maxGuests,
 }: Props) {
   const formatBtn = (d: Date | null) =>
     d ? format(d, "yyyy. MMMM d.", { locale: hu }) : "Kattints a kiválasztáshoz";
@@ -270,32 +271,36 @@ export default function SeasonForm({
         </div>
 
         {/* Hétköznapi 3 fő */}
-        <div>
-          <label className="text-xs text-cream/60 uppercase tracking-wider block mb-1.5">
-            3 fő
-          </label>
-          <input
-            type="number"
-            className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-cream text-sm focus:outline-none focus:border-white/50"
-            placeholder="Ha üres = 1–2 fő ár"
-            value={rule.price3 || ""}
-            onChange={(e) => setRule({ ...rule, price3: Number(e.target.value) })}
-          />
-        </div>
+        {maxGuests >= 3 && (
+          <div>
+            <label className="text-xs text-cream/60 uppercase tracking-wider block mb-1.5">
+              3 fő
+            </label>
+            <input
+              type="number"
+              className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-cream text-sm focus:outline-none focus:border-white/50"
+              placeholder="Ha üres = 1–2 fő ár"
+              value={rule.price3 || ""}
+              onChange={(e) => setRule({ ...rule, price3: Number(e.target.value) })}
+            />
+          </div>
+        )}
 
         {/* Hétköznapi 4 fő */}
-        <div>
-          <label className="text-xs text-cream/60 uppercase tracking-wider block mb-1.5">
-            4 fő
-          </label>
-          <input
-            type="number"
-            className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-cream text-sm focus:outline-none focus:border-white/50"
-            placeholder="Ha üres = 3 fő ár"
-            value={rule.price4 || ""}
-            onChange={(e) => setRule({ ...rule, price4: Number(e.target.value) })}
-          />
-        </div>
+        {maxGuests >= 4 && (
+          <div>
+            <label className="text-xs text-cream/60 uppercase tracking-wider block mb-1.5">
+              4 fő
+            </label>
+            <input
+              type="number"
+              className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-cream text-sm focus:outline-none focus:border-white/50"
+              placeholder="Ha üres = 3 fő ár"
+              value={rule.price4 || ""}
+              onChange={(e) => setRule({ ...rule, price4: Number(e.target.value) })}
+            />
+          </div>
+        )}
 
         {/* Hétvégi árak fejléc */}
         <div className="md:col-span-2">
@@ -319,32 +324,36 @@ export default function SeasonForm({
         </div>
 
         {/* Hétvégi 3 fő */}
-        <div>
-          <label className="text-xs text-cream/60 uppercase tracking-wider block mb-1.5">
-            3 fő
-          </label>
-          <input
-            type="number"
-            className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-cream text-sm focus:outline-none focus:border-white/50"
-            placeholder="Ha üres = 3 fő hétköznapi"
-            value={rule.weekendPrice3 || ""}
-            onChange={(e) => setRule({ ...rule, weekendPrice3: Number(e.target.value) })}
-          />
-        </div>
+        {maxGuests >= 3 && (
+          <div>
+            <label className="text-xs text-cream/60 uppercase tracking-wider block mb-1.5">
+              3 fő
+            </label>
+            <input
+              type="number"
+              className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-cream text-sm focus:outline-none focus:border-white/50"
+              placeholder="Ha üres = 3 fő hétköznapi"
+              value={rule.weekendPrice3 || ""}
+              onChange={(e) => setRule({ ...rule, weekendPrice3: Number(e.target.value) })}
+            />
+          </div>
+        )}
 
         {/* Hétvégi 4 fő */}
-        <div>
-          <label className="text-xs text-cream/60 uppercase tracking-wider block mb-1.5">
-            4 fő
-          </label>
-          <input
-            type="number"
-            className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-cream text-sm focus:outline-none focus:border-white/50"
-            placeholder="Ha üres = 4 fő hétköznapi"
-            value={rule.weekendPrice4 || ""}
-            onChange={(e) => setRule({ ...rule, weekendPrice4: Number(e.target.value) })}
-          />
-        </div>
+        {maxGuests >= 4 && (
+          <div>
+            <label className="text-xs text-cream/60 uppercase tracking-wider block mb-1.5">
+              4 fő
+            </label>
+            <input
+              type="number"
+              className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-cream text-sm focus:outline-none focus:border-white/50"
+              placeholder="Ha üres = 4 fő hétköznapi"
+              value={rule.weekendPrice4 || ""}
+              onChange={(e) => setRule({ ...rule, weekendPrice4: Number(e.target.value) })}
+            />
+          </div>
+        )}
 
         {/* Min éjszaka */}
         <div>

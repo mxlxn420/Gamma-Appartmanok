@@ -14,9 +14,10 @@ interface PolicyOption {
 }
 
 interface ApartmentOption {
-  id:   string;
-  name: string;
-  slug: string;
+  id:        string;
+  name:      string;
+  slug:      string;
+  maxGuests: number;
 }
 
 interface Props {
@@ -332,6 +333,7 @@ export default function AdminPricing({ rules: initialRules, policies, apartments
             datePanel={datePanel}
             setDatePanel={setDatePanel}
             policies={policies}
+            maxGuests={activeTab ? (apartments.find(a => a.id === activeTab)?.maxGuests ?? 99) : 99}
           />
         )}
       </AnimatePresence>
@@ -367,6 +369,7 @@ export default function AdminPricing({ rules: initialRules, policies, apartments
                   datePanel={datePanel}
                   setDatePanel={setDatePanel}
                   policies={policies}
+                  maxGuests={activeTab ? (apartments.find(a => a.id === activeTab)?.maxGuests ?? 99) : 99}
                 />
               ) : (
                 <motion.div

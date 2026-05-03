@@ -12,7 +12,7 @@ export default async function AdminArak() {
   const [rules, policies, apartments] = await Promise.all([
     prisma.pricingRule.findMany({ orderBy: { priority: "desc" } }),
     prisma.bookingPolicy.findMany({ orderBy: { createdAt: "asc" } }),
-    prisma.apartment.findMany({ where: { isActive: true }, orderBy: { name: "asc" }, select: { id: true, name: true, slug: true } }),
+    prisma.apartment.findMany({ where: { isActive: true }, orderBy: { name: "asc" }, select: { id: true, name: true, slug: true, maxGuests: true } }),
   ]);
 
   return (
