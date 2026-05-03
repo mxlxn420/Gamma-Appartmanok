@@ -430,6 +430,45 @@ export default function BookingCalendar({ apartmentGuests, onBack, onNext }: Pro
           </button>
         </div>
 
+        {/* Díjszabás segítség */}
+        {!loadingRules && rules.length > 0 && (() => {
+          const today = new Date();
+          const refRule = getGlobalApplicableRule(today, rules);
+          if (!refRule) return null;
+          const p1 = refRule.pricePerNight;
+          const p3 = (refRule as any).price3 > 0 ? (refRule as any).price3 : null;
+          const p4 = (refRule as any).price4 > 0 ? (refRule as any).price4 : null;
+          return (
+            <div className="bg-forest-50 rounded-2xl p-4 space-y-2 text-xs text-forest-800">
+              <p className="font-semibold text-forest-900 text-sm">Díjszabás</p>
+              <div className="space-y-1">
+                <div className="flex justify-between">
+                  <span>1–2 fő / éj</span>
+                  <span className="font-semibold">{formatCurrency(p1)}</span>
+                </div>
+                {p3 && (
+                  <div className="flex justify-between">
+                    <span>3 fő / éj</span>
+                    <span className="font-semibold">{formatCurrency(p3)}</span>
+                  </div>
+                )}
+                {p4 && (
+                  <div className="flex justify-between">
+                    <span>4 fő / éj</span>
+                    <span className="font-semibold">{formatCurrency(p4)}</span>
+                  </div>
+                )}
+              </div>
+              <div className="border-t border-forest-200 pt-2 space-y-1 text-forest-700">
+                <p>• <strong>Felnőtt (18+):</strong> szobadíj + IFA (450 Ft/éj)</p>
+                <p>• <strong>Gyerek (2–17):</strong> szobadíj, IFA nélkül</p>
+                <p>• <strong>Baba (0–2):</strong> 1 db ingyenes, többi szobadíj</p>
+                <p>• A szobadíj az apartmán teljes éjszakás ára a létszám alapján</p>
+              </div>
+            </div>
+          );
+        })()}
+
       </div>
     </div>
   );
