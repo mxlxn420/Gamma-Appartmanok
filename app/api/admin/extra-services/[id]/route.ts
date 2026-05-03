@@ -1,7 +1,7 @@
 import { NextResponse }  from "next/server";
 import { cookies }       from "next/headers";
 import { prisma }        from "@/lib/prisma";
-import { createClient }  from "@supabase/supabase-js";
+import { deleteFromR2 }  from "@/lib/r2";
 
 async function isAuthed() {
   const store = await cookies();
@@ -9,13 +9,6 @@ async function isAuthed() {
 }
 
 const BUCKET = "extra-services";
-
-function getSupabase() {
-  const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !key) throw new Error("Supabase env változók nincsenek beállítva!");
-  return createClient(url, key);
-}
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   if (!(await isAuthed())) return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
@@ -47,16 +40,9 @@ export async function DELETE(_req: Request, { params }: { params: Promise<{ id: 
 
   const service = await prisma.extraService.findUnique({ where: { id }, select: { imageUrl: true } });
 
-  // Supabase Storage képtörlés
   if (service?.imageUrl) {
     try {
-      const supabase = getSupabase();
-      const url      = new URL(service.imageUrl);
-      // URL formátum: .../storage/v1/object/public/extra-services/filename.jpg
-      const parts    = url.pathname.split(`/object/public/${BUCKET}/`);
-      if (parts.length === 2) {
-        await supabase.storage.from(BUCKET).remove([parts[1]]);
-      }
+      await deleteFromR2(BUCKET, service.imageUrl);
     } catch {
       // nem blokkolja a törlést ha a kép már nem létezik
     }

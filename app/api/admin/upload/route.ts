@@ -1,7 +1,7 @@
-import { NextResponse }  from "next/server";
-import { cookies }       from "next/headers";
-import { createClient }  from "@supabase/supabase-js";
-import { randomBytes }   from "crypto";
+import { NextResponse } from "next/server";
+import { cookies }      from "next/headers";
+import { randomBytes }  from "crypto";
+import { getR2Client, getBucketName, getPublicUrl, PutObjectCommand } from "@/lib/r2";
 
 async function isAuthed() {
   const store = await cookies();
@@ -18,16 +18,9 @@ function detectImageType(buf: Buffer): string | null {
   return null;
 }
 
-const ALLOWED_TYPES  = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
-const MAX_SIZE_MB    = 20;
+const ALLOWED_TYPES   = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+const MAX_SIZE_MB     = 20;
 const ALLOWED_BUCKETS = ["extra-services", "hero", "about", "gallery"];
-
-function getSupabase() {
-  const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !key) throw new Error("Supabase env változók nincsenek beállítva!");
-  return createClient(url, key);
-}
 
 export async function POST(req: Request) {
   if (!(await isAuthed())) return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
@@ -46,9 +39,7 @@ export async function POST(req: Request) {
   if (!ALLOWED_TYPES.includes(file.type)) return NextResponse.json({ success: false, error: "Csak JPG, PNG vagy WebP képet lehet feltölteni!" }, { status: 400 });
   if (file.size > MAX_SIZE_MB * 1024 * 1024) return NextResponse.json({ success: false, error: `A kép maximum ${MAX_SIZE_MB} MB lehet!` }, { status: 400 });
 
-  const buffer   = Buffer.from(await file.arrayBuffer());
-
-  // Magic bytes ellenőrzés — kliens oldali file.type nem megbízható
+  const buffer     = Buffer.from(await file.arrayBuffer());
   const actualType = detectImageType(buffer);
   if (!actualType) {
     return NextResponse.json({ success: false, error: "Érvénytelen képfájl (nem JPG, PNG vagy WebP)" }, { status: 400 });
@@ -57,15 +48,18 @@ export async function POST(req: Request) {
   const ext      = actualType === "image/png" ? "png" : actualType === "image/webp" ? "webp" : "jpg";
   const filename = `${randomBytes(12).toString("hex")}.${ext}`;
 
-  const supabase = getSupabase();
-  const { error } = await supabase.storage.from(bucket).upload(filename, buffer, {
-    contentType: file.type,
-    upsert:      false,
-  });
+  try {
+    const r2 = getR2Client();
+    await r2.send(new PutObjectCommand({
+      Bucket:      getBucketName(bucket),
+      Key:         filename,
+      Body:        buffer,
+      ContentType: actualType,
+    }));
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : "Ismeretlen hiba";
+    return NextResponse.json({ success: false, error: msg }, { status: 500 });
+  }
 
-  if (error) return NextResponse.json({ success: false, error: error.message }, { status: 500 });
-
-  const { data: { publicUrl } } = supabase.storage.from(bucket).getPublicUrl(filename);
-
-  return NextResponse.json({ success: true, url: publicUrl });
+  return NextResponse.json({ success: true, url: getPublicUrl(bucket, filename) });
 }

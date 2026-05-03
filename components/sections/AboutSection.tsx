@@ -41,29 +41,33 @@ export default function AboutSection({ data }: { data: AboutData }) {
 
           {/* Képek */}
           <AnimatedSection direction="left" className="relative lg:sticky lg:top-24">
-            <div className="relative aspect-[4/5] rounded-3xl overflow-hidden shadow-luxury">
-              <Image
-                src={data.mainImage.src}
-                alt={data.mainImage.alt}
-                fill sizes="(max-width:1024px) 100vw, 50vw"
-                className="object-cover"
-              />
+            <div className="relative aspect-[4/5] rounded-3xl overflow-hidden shadow-luxury bg-forest-100">
+              {data.mainImage.src && (
+                <Image
+                  src={data.mainImage.src}
+                  alt={data.mainImage.alt}
+                  fill sizes="(max-width:1024px) 100vw, 50vw"
+                  className="object-cover"
+                />
+              )}
             </div>
             {/* Lebegő kép */}
-            <motion.div
-              className="absolute -bottom-8 -right-4 w-44 h-52 rounded-2xl overflow-hidden shadow-luxury border-4 border-cream"
-              initial={{ opacity: 0, scale: 0.8, rotate: 3 }}
-              whileInView={{ opacity: 1, scale: 1, rotate: 3 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: 0.3 }}
-            >
-              <Image
-                src={data.floatImage.src}
-                alt={data.floatImage.alt}
-                fill sizes="176px"
-                className="object-cover"
-              />
-            </motion.div>
+            {data.floatImage.src && (
+              <motion.div
+                className="absolute -bottom-8 -right-4 w-44 h-52 rounded-2xl overflow-hidden shadow-luxury border-4 border-cream"
+                initial={{ opacity: 0, scale: 0.8, rotate: 3 }}
+                whileInView={{ opacity: 1, scale: 1, rotate: 3 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7, delay: 0.3 }}
+              >
+                <Image
+                  src={data.floatImage.src}
+                  alt={data.floatImage.alt}
+                  fill sizes="176px"
+                  className="object-cover"
+                />
+              </motion.div>
+            )}
             {/* Értékelés badge */}
             <motion.div
               className="absolute -top-4 -left-4 bg-white rounded-2xl shadow-card px-5 py-4"

@@ -13,7 +13,7 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "*.supabase.co",
+        hostname: "*.r2.dev",
       },
     ],
     deviceSizes: [640, 1080, 1920],
