@@ -105,19 +105,15 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Max. kapacitás ellenőrzés (babák nem számítanak)
     const adults        = Number(body.numberOfAdults        ?? 0);
     const teens         = Number(body.numberOfTeens         ?? 0);
     const babies        = Number(body.numberOfBabies        ?? 0);
     const children2to6  = Number(body.numberOfChildren2to6  ?? 0);
     const children6to12 = Number(body.numberOfChildren6to12 ?? 0);
-    const paidGuests    = adults + teens + babies + children2to6 + children6to12;
-    if (paidGuests > 4) {
-      return NextResponse.json(
-        { success: false, error: "Maximum 4 fő foglalható!" },
-        { status: 400 }
-      );
-    }
+
+    // apartmentGuests: [{ id, adults, teens, babies, children2to6, children6to12 }]
+    const apartmentGuests: { id: string; adults: number; teens: number; babies: number; children2to6: number; children6to12: number }[] =
+      Array.isArray(body.apartmentGuests) ? body.apartmentGuests : [];
 
     // Dátum-only string (yyyy-MM-dd) → UTC éjfél, timezone-mentes összehasonlításhoz
     const checkInDate  = new Date(checkIn  + "T00:00:00Z");
@@ -154,16 +150,28 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Ütközés ellenőrzés
-    const conflict = await prisma.booking.findFirst({
-      where: {
-        status: { in: ["PENDING", "CONFIRMED", "PAID"] },
-        AND: [
-          { checkIn: { lt: checkOutDate } },
-          { checkOut: { gt: checkInDate } },
-        ],
-      },
-    });
+    // Ütközés ellenőrzés — csak a kiválasztott apartmanokra
+    const selectedApartmentIds = apartmentGuests.map(a => a.id);
+    const conflict = selectedApartmentIds.length > 0
+      ? await prisma.booking.findFirst({
+          where: {
+            status: { in: ["PENDING", "CONFIRMED", "PAID"] },
+            apartments: { some: { apartmentId: { in: selectedApartmentIds } } },
+            AND: [
+              { checkIn:  { lt: checkOutDate } },
+              { checkOut: { gt: checkInDate  } },
+            ],
+          },
+        })
+      : await prisma.booking.findFirst({
+          where: {
+            status: { in: ["PENDING", "CONFIRMED", "PAID"] },
+            AND: [
+              { checkIn:  { lt: checkOutDate } },
+              { checkOut: { gt: checkInDate  } },
+            ],
+          },
+        });
 
     if (conflict) {
       return NextResponse.json(
@@ -250,6 +258,21 @@ export async function POST(req: NextRequest) {
         status: "PENDING",
       },
     });
+
+    // BookingApartment rekordok mentése
+    if (apartmentGuests.length > 0) {
+      await prisma.bookingApartment.createMany({
+        data: apartmentGuests.map(a => ({
+          bookingId:             bookingRef,
+          apartmentId:           a.id,
+          numberOfAdults:        Number(a.adults)        || 0,
+          numberOfTeens:         Number(a.teens)         || 0,
+          numberOfBabies:        Number(a.babies)        || 0,
+          numberOfChildren2to6:  Number(a.children2to6)  || 0,
+          numberOfChildren6to12: Number(a.children6to12) || 0,
+        })),
+      });
+    }
 
     // Email (opcionális, nem töri el a foglalást)
     try {

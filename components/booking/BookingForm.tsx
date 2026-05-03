@@ -115,6 +115,14 @@ export default function BookingForm({ bookingData, onBack, onSuccess }: Props) {
           discountAmount: bookingData.discountAmount,
           extraServices: selected,
           extraServicesTotal: extrasTotal,
+          apartmentGuests: bookingData.apartmentGuests.map(a => ({
+            id:            a.id,
+            adults:        a.adults,
+            teens:         a.teens,
+            babies:        a.babies,
+            children2to6:  a.children2to6,
+            children6to12: a.children6to12,
+          })),
         }),
       });
 
