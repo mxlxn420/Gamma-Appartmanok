@@ -10,15 +10,22 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { BookingStatus } from "@/types";
 
 interface BookingItem {
-  id:        string;
-  guestName: string;
-  checkIn:   string;
-  checkOut:  string;
-  status:    BookingStatus;
+  id:           string;
+  guestName:    string;
+  checkIn:      string;
+  checkOut:     string;
+  status:       BookingStatus;
+  apartmentIds?: string[];
+}
+
+interface ApartmentOption {
+  id:   string;
+  name: string;
 }
 
 interface Props {
-  bookings: BookingItem[];
+  bookings:   BookingItem[];
+  apartments: ApartmentOption[];
 }
 
 const STATUS_CONFIG: Record<BookingStatus, { label: string; border: string }> = {
@@ -52,15 +59,20 @@ function getDayBookings(day: Date, bookings: BookingItem[]): { booking: BookingI
   return [...checkingOut, ...staying, ...checkingIn];
 }
 
-export default function AdminBookingCalendar({ bookings }: Props) {
+export default function AdminBookingCalendar({ bookings, apartments }: Props) {
   const today = new Date();
   const [month, setMonth]       = useState(() => startOfMonth(today));
   const [selected, setSelected] = useState<BookingItem | null>(null);
+  const [activeTab, setActiveTab] = useState<string | null>(null);
+
+  const filteredBookings = activeTab === null
+    ? bookings
+    : bookings.filter(b => b.apartmentIds?.includes(activeTab) ?? false);
 
   const days = eachDayOfInterval({ start: startOfMonth(month), end: endOfMonth(month) });
   const firstDayOffset = (getDay(days[0]) + 6) % 7;
 
-  const monthBookings = bookings.filter((b) => {
+  const monthBookings = filteredBookings.filter((b) => {
     if (b.status === "CANCELLED") return false;
     const checkIn  = new Date(b.checkIn);
     const checkOut = new Date(b.checkOut);
@@ -91,6 +103,24 @@ export default function AdminBookingCalendar({ bookings }: Props) {
   );
 
   return (
+    <div className="space-y-3">
+    <div className="flex flex-wrap gap-2">
+      <button
+        onClick={() => { setActiveTab(null); setSelected(null); }}
+        className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${activeTab === null ? "bg-forest-600 text-white shadow-sm" : "bg-white border border-stone-200 text-stone-600 hover:bg-stone-50"}`}
+      >
+        Összes
+      </button>
+      {apartments.map((apt) => (
+        <button
+          key={apt.id}
+          onClick={() => { setActiveTab(apt.id); setSelected(null); }}
+          className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${activeTab === apt.id ? "bg-forest-600 text-white shadow-sm" : "bg-white border border-stone-200 text-stone-600 hover:bg-stone-50"}`}
+        >
+          {apt.name}
+        </button>
+      ))}
+    </div>
     <div className="bg-white rounded-2xl shadow-card p-6">
 
       {/* ── Mobil lista nézet ── */}
@@ -136,7 +166,7 @@ export default function AdminBookingCalendar({ bookings }: Props) {
             <div key={`empty-${i}`} className="min-h-[90px]" />
           ))}
           {days.map((day) => {
-            const dayBookings = getDayBookings(day, bookings);
+            const dayBookings = getDayBookings(day, filteredBookings);
             const isToday     = isSameDay(day, today);
             return (
               <div
@@ -191,6 +221,7 @@ export default function AdminBookingCalendar({ bookings }: Props) {
         )}
       </div>
 
+    </div>
     </div>
   );
 }

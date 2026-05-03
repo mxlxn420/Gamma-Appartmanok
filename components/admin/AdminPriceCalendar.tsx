@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   getDay, addWeeks, subWeeks, startOfWeek, addDays,
   format, isSameDay, startOfDay,
@@ -10,8 +10,14 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import type { PricingRule } from "@/types";
 
+interface ApartmentOption {
+  id:   string;
+  name: string;
+}
+
 interface Props {
-  rules: PricingRule[];
+  rules:      PricingRule[];
+  apartments: ApartmentOption[];
 }
 
 function getApplicableRule(date: Date, rules: PricingRule[]): PricingRule | null {
@@ -43,15 +49,19 @@ const BASE_COLOR = { bg: "bg-stone-50", border: "border-stone-200", text: "text-
 
 interface BookedRange { from: Date; to: Date; }
 
-export default function AdminPriceCalendar({ rules }: Props) {
+export default function AdminPriceCalendar({ rules, apartments }: Props) {
   const today = new Date();
   const [weekStart, setWeekStart] = useState(() =>
     startOfWeek(today, { weekStartsOn: 1 })
   );
   const [bookedRanges, setBookedRanges] = useState<BookedRange[]>([]);
+  const [activeTab, setActiveTab] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("/api/availability")
+    const url = activeTab
+      ? `/api/availability?apartmentIds=${activeTab}`
+      : "/api/availability";
+    fetch(url)
       .then((r) => r.json())
       .then((data) => {
         if (data.success) {
@@ -62,35 +72,61 @@ export default function AdminPriceCalendar({ rules }: Props) {
         }
       })
       .catch(() => {});
-  }, []);
+  }, [activeTab]);
+
+  // Aktív tab: globális + apt-specifikus szabályok (vagy csak globális)
+  const filteredRules = useMemo(() =>
+    activeTab === null
+      ? rules
+      : rules.filter(r => !(r as any).apartmentId || (r as any).apartmentId === activeTab),
+    [rules, activeTab]
+  );
 
   const isBooked = (day: Date) => {
     const d = startOfDay(day);
     return bookedRanges.some((r) => d >= startOfDay(r.from) && d < startOfDay(r.to));
   };
 
-  const seasonRules = rules.filter((r) => r.dateFrom || r.dateTo);
+  const seasonRules = filteredRules.filter((r) => r.dateFrom || r.dateTo);
   const ruleColorMap: Record<string, typeof BASE_COLOR> = {};
   seasonRules.forEach((r, i) => {
     ruleColorMap[r.id] = RULE_COLORS[i % RULE_COLORS.length];
   });
-  const baseRule = rules.find((r) => !r.dateFrom && !r.dateTo);
+  const baseRule = filteredRules.find((r) => !r.dateFrom && !r.dateTo);
   if (baseRule) ruleColorMap[baseRule.id] = BASE_COLOR;
 
   const days = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
   const weekEnd = days[6];
 
   return (
+    <div className="space-y-3">
+    <div className="flex flex-wrap gap-2">
+      <button
+        onClick={() => setActiveTab(null)}
+        className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${activeTab === null ? "bg-forest-600 text-white shadow-sm" : "bg-white border border-stone-200 text-stone-600 hover:bg-stone-50"}`}
+      >
+        Globális
+      </button>
+      {apartments.map((apt) => (
+        <button
+          key={apt.id}
+          onClick={() => setActiveTab(apt.id)}
+          className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${activeTab === apt.id ? "bg-forest-600 text-white shadow-sm" : "bg-white border border-stone-200 text-stone-600 hover:bg-stone-50"}`}
+        >
+          {apt.name}
+        </button>
+      ))}
+    </div>
     <div className="bg-white rounded-2xl shadow-card p-6">
 
       {/* ── Mobil lista nézet ── */}
       <div className="sm:hidden">
         <h2 className="font-serif text-xl text-stone-800 mb-4">Árazási szabályok</h2>
-        {rules.length === 0 ? (
+        {filteredRules.length === 0 ? (
           <p className="text-center text-sm text-stone-400 py-6">Nincs aktív árazási szabály.</p>
         ) : (
           <div className="space-y-3">
-            {rules.map((rule) => {
+            {filteredRules.map((rule) => {
               const colors = ruleColorMap[rule.id] ?? BASE_COLOR;
               return (
                 <div key={rule.id} className={`rounded-2xl border p-4 ${colors.bg} ${colors.border}`}>
@@ -170,7 +206,7 @@ export default function AdminPriceCalendar({ rules }: Props) {
         {/* Heti rács */}
         <div className="grid grid-cols-7 gap-2">
           {days.map((day) => {
-            const rule    = getApplicableRule(day, rules);
+            const rule    = getApplicableRule(day, filteredRules);
             const price   = rule ? getPriceForDay(day, rule) : null;
             const colors  = rule ? (ruleColorMap[rule.id] ?? BASE_COLOR) : BASE_COLOR;
             const weekend = [5, 6].includes(getDay(day));
@@ -248,9 +284,9 @@ export default function AdminPriceCalendar({ rules }: Props) {
         </div>
 
         {/* Jelmagyarázat */}
-        {rules.length > 0 && (
+        {filteredRules.length > 0 && (
           <div className="flex flex-wrap gap-3 mt-5 pt-4 border-t border-stone-100">
-            {rules.map((rule) => {
+            {filteredRules.map((rule) => {
               const colors = ruleColorMap[rule.id] ?? BASE_COLOR;
               return (
                 <div key={rule.id} className={`flex items-center gap-1.5 text-xs px-2 py-1 rounded-full ${colors.badge}`}>
@@ -265,6 +301,7 @@ export default function AdminPriceCalendar({ rules }: Props) {
         )}
       </div>
 
+    </div>
     </div>
   );
 }

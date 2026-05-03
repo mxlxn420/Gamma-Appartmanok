@@ -56,26 +56,29 @@ export default async function AdminNaptar() {
       <div className="mt-8">
         <h2 className="font-serif text-xl text-stone-800 mb-4">Foglalások</h2>
         <AdminBookingCalendar
+          apartments={apartments}
           bookings={[
             ...bookings.map((b) => ({
               ...b,
-              checkIn:  b.checkIn.toISOString(),
-              checkOut: b.checkOut.toISOString(),
-              status:   b.status as "PENDING" | "CONFIRMED" | "PAID" | "CANCELLED" | "BLOCKED",
+              checkIn:      b.checkIn.toISOString(),
+              checkOut:     b.checkOut.toISOString(),
+              status:       b.status as "PENDING" | "CONFIRMED" | "PAID" | "CANCELLED" | "BLOCKED",
+              apartmentIds: b.apartments.map(a => a.apartmentId),
             })),
             ...blocked.map((b) => ({
-              id:       b.id,
-              guestName: b.reason || "Zárva",
-              checkIn:  b.dateFrom.toISOString(),
-              checkOut: b.dateTo.toISOString(),
-              status:   "BLOCKED" as const,
+              id:           b.id,
+              guestName:    b.reason || "Zárva",
+              checkIn:      b.dateFrom.toISOString(),
+              checkOut:     b.dateTo.toISOString(),
+              status:       "BLOCKED" as const,
+              apartmentIds: b.apartmentId ? [b.apartmentId] : [],
             })),
           ]}
         />
       </div>
       <div className="mt-8">
         <h2 className="font-serif text-xl text-stone-800 mb-4">Árak és szabályok</h2>
-        <AdminPriceCalendar rules={rules
+        <AdminPriceCalendar apartments={apartments} rules={rules
           .filter((r) => r.dateFrom && r.dateTo)
           .map((r) => ({
             ...r,
