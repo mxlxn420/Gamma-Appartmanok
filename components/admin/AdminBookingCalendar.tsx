@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   startOfMonth, endOfMonth, eachDayOfInterval, addMonths, subMonths,
   isSameDay, format, getDay, startOfDay,
@@ -27,6 +27,13 @@ interface Props {
   bookings:   BookingItem[];
   apartments: ApartmentOption[];
 }
+
+const APT_COLORS: Record<number, string> = {
+  0: "bg-emerald-500",
+  1: "bg-orange-400",
+  2: "bg-sky-500",
+  3: "bg-violet-500",
+};
 
 const STATUS_CONFIG: Record<BookingStatus, { label: string; border: string }> = {
   PENDING:   { label: "Előlegre vár", border: "border-yellow-400" },
@@ -64,6 +71,13 @@ export default function AdminBookingCalendar({ bookings, apartments }: Props) {
   const [month, setMonth]       = useState(() => startOfMonth(today));
   const [selected, setSelected] = useState<BookingItem | null>(null);
   const [activeTab, setActiveTab] = useState<string | null>(null);
+
+  // apartmentId → szín index térkép
+  const aptColorIndex = useMemo(() => {
+    const m: Record<string, number> = {};
+    apartments.forEach((apt, i) => { m[apt.id] = i; });
+    return m;
+  }, [apartments]);
 
   const filteredBookings = activeTab === null
     ? bookings
@@ -136,9 +150,18 @@ export default function AdminBookingCalendar({ bookings, apartments }: Props) {
                 <div key={b.id} className={`rounded-xl border-l-4 ${cfg.border} bg-stone-50 p-4`}>
                   <div className="flex items-start justify-between gap-2">
                     <p className="font-medium text-stone-800">{b.guestName}</p>
-                    <span className="shrink-0 text-xs font-medium text-stone-500 bg-white border border-stone-200 px-2 py-0.5 rounded-full">
-                      {cfg.label}
-                    </span>
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      {activeTab === null && b.apartmentIds && b.apartmentIds.length > 0 && (
+                        <span className="flex gap-0.5 items-center">
+                          {b.apartmentIds.map((id) => (
+                            <span key={id} className={`w-2 h-2 rounded-full inline-block ${APT_COLORS[aptColorIndex[id] ?? 0] ?? "bg-stone-400"}`} />
+                          ))}
+                        </span>
+                      )}
+                      <span className="text-xs font-medium text-stone-500 bg-white border border-stone-200 px-2 py-0.5 rounded-full">
+                        {cfg.label}
+                      </span>
+                    </div>
                   </div>
                   <p className="text-sm text-stone-500 mt-1">
                     {format(new Date(b.checkIn), "yyyy. MM. dd.")} – {format(new Date(b.checkOut), "MM. dd.")}
@@ -189,6 +212,13 @@ export default function AdminBookingCalendar({ bookings, apartments }: Props) {
                     >
                       <p className="text-[10px] font-semibold leading-tight truncate">{b.guestName}</p>
                       <p className="text-[9px] opacity-60 leading-tight">{isCO ? "Távozik" : status.label}</p>
+                      {activeTab === null && b.apartmentIds && b.apartmentIds.length > 0 && (
+                        <span className="flex gap-0.5 mt-0.5">
+                          {b.apartmentIds.map((id) => (
+                            <span key={id} className={`w-1.5 h-1.5 rounded-full inline-block ${APT_COLORS[aptColorIndex[id] ?? 0] ?? "bg-stone-400"}`} />
+                          ))}
+                        </span>
+                      )}
                     </button>
                   );
                 })}
@@ -213,6 +243,12 @@ export default function AdminBookingCalendar({ bookings, apartments }: Props) {
         <div className="flex flex-wrap gap-4 mt-5 pt-4 border-t border-stone-100 text-xs text-stone-500">
           {Object.entries(STATUS_CONFIG).map(([key, cfg]) => (
             <span key={key} className={`border-l-2 pl-1.5 ${cfg.border}`}>{cfg.label}</span>
+          ))}
+          {activeTab === null && apartments.map((apt, i) => (
+            <span key={apt.id} className="flex items-center gap-1">
+              <span className={`w-2 h-2 rounded-full inline-block ${APT_COLORS[i] ?? "bg-stone-400"}`} />
+              {apt.name}
+            </span>
           ))}
         </div>
 
