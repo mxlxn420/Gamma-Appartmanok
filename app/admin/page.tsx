@@ -16,6 +16,11 @@ export default async function AdminDashboard() {
     prisma.booking.findMany({
       orderBy: { createdAt: "desc" },
       take: 10,
+      include: {
+        apartments: {
+          include: { apartment: { select: { id: true, name: true, slug: true } } },
+        },
+      },
     }),
     prisma.booking.count({
       where: { status: "PENDING" },
