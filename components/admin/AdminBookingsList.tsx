@@ -346,6 +346,15 @@ export default function AdminBookingsList({ bookings }: Props) {
                 <span className="text-stone-500">{formatDateHu(booking.checkIn)} – {formatDateHu(booking.checkOut)}</span>
                 <span className="font-semibold text-stone-800">{formatCurrency(booking.totalPrice)}</span>
               </div>
+              {booking.apartments && booking.apartments.length > 0 && (
+                <div className="flex flex-wrap gap-1 mt-2">
+                  {booking.apartments.map(a => (
+                    <span key={a.apartmentId} className="inline-flex px-2 py-0.5 rounded-full text-xs bg-forest-100 text-forest-700 font-medium">
+                      {a.apartment.name}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
           );
         })}
@@ -375,6 +384,15 @@ export default function AdminBookingsList({ bookings }: Props) {
                     <td className="px-5 py-4">
                       <p className="font-medium text-stone-800">{booking.guestName}</p>
                       <p className="text-xs text-stone-400">{booking.guestEmail}</p>
+                      {booking.apartments && booking.apartments.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mt-1">
+                          {booking.apartments.map(a => (
+                            <span key={a.apartmentId} className="inline-flex px-1.5 py-0.5 rounded-full text-[10px] bg-forest-100 text-forest-700 font-medium">
+                              {a.apartment.name}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                     </td>
                     <td className="px-5 py-4 text-stone-600">{formatDateHu(booking.checkIn)}</td>
                     <td className="px-5 py-4 text-stone-600">{formatDateHu(booking.checkOut)}</td>

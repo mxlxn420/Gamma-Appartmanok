@@ -1,5 +1,15 @@
 export type BookingStatus = "PENDING" | "CONFIRMED" | "PAID" | "CANCELLED" | "BLOCKED";
 
+export interface BookingApartmentEntry {
+  apartmentId: string;
+  apartment: { id: string; name: string; slug: string };
+  numberOfAdults: number;
+  numberOfTeens: number;
+  numberOfBabies: number;
+  numberOfChildren2to6: number;
+  numberOfChildren6to12: number;
+}
+
 export interface Booking {
   id: string;
   guestName: string;
@@ -37,6 +47,7 @@ export interface Booking {
   paidAt?: Date | string | null;
   createdAt: Date | string;
   updatedAt: Date | string;
+  apartments?: BookingApartmentEntry[];
 }
 
 export interface CreateBookingPayload {

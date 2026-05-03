@@ -11,6 +11,11 @@ export default async function AdminFoglalasok() {
 
   const bookings = await prisma.booking.findMany({
     orderBy: { createdAt: "desc" },
+    include: {
+      apartments: {
+        include: { apartment: { select: { id: true, name: true, slug: true } } },
+      },
+    },
   });
 
   return (
