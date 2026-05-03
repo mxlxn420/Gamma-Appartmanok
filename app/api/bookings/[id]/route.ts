@@ -147,6 +147,24 @@ export async function PATCH(
       },
     });
 
+    // BookingApartment rekordok frissítése
+    const apartmentGuests: { id: string; adults: number; teens: number; babies: number }[] =
+      Array.isArray(body.apartmentGuests) ? body.apartmentGuests : [];
+    if (apartmentGuests.length > 0) {
+      await prisma.bookingApartment.deleteMany({ where: { bookingId: id } });
+      await prisma.bookingApartment.createMany({
+        data: apartmentGuests.map(a => ({
+          bookingId:             id,
+          apartmentId:           a.id,
+          numberOfAdults:        Number(a.adults)  || 0,
+          numberOfTeens:         Number(a.teens)   || 0,
+          numberOfBabies:        Number(a.babies)  || 0,
+          numberOfChildren2to6:  0,
+          numberOfChildren6to12: 0,
+        })),
+      });
+    }
+
     return NextResponse.json({ success: true, data: updated });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error?.message }, { status: 500 });

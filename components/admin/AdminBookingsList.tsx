@@ -99,6 +99,15 @@ export default function AdminBookingsList({ bookings }: Props) {
     price: number | null;
   }
 
+  interface EditApartment {
+    apartmentId:   string;
+    name:          string;
+    numberOfAdults: number;
+    numberOfTeens:  number;
+    numberOfBabies: number;
+  }
+
+  const [editApartments, setEditApartments] = useState<EditApartment[]>([]);
   const [editExtras, setEditExtras]         = useState<ExtraSvc[]>([]);
   const [availableServices, setAvailableServices] = useState<AvailableService[]>([]);
   const [showAddPanel, setShowAddPanel]     = useState(false);
@@ -162,17 +171,31 @@ export default function AdminBookingsList({ bookings }: Props) {
     };
     setEditForm(initial);
     setEditExtras((booking.extraServices ?? []) as ExtraSvc[]);
+    setEditApartments(
+      (booking.apartments ?? []).map(a => ({
+        apartmentId:    a.apartmentId,
+        name:           a.apartment.name,
+        numberOfAdults: a.numberOfAdults,
+        numberOfTeens:  a.numberOfTeens,
+        numberOfBabies: a.numberOfBabies,
+      }))
+    );
     setShowAddPanel(false);
     setEditing(true);
     setSaveError(null);
   };
 
-  const recalc = useCallback((form: EditForm) => {
+  const recalc = useCallback((form: EditForm, apts?: EditApartment[]) => {
     if (!form.checkIn || !form.checkOut || !rules.length) return form;
     const ci = new Date(form.checkIn);
     const co = new Date(form.checkOut);
     if (co <= ci) return form;
-    const breakdown = calcPriceBreakdown(ci, co, form.numberOfAdults, form.numberOfTeens, form.numberOfBabies, rules);
+    const usedApts = apts ?? editApartments;
+    // Ha vannak apartmanok, összesített personCount alapján számol
+    const totalAdults   = usedApts.length > 0 ? usedApts.reduce((s, a) => s + a.numberOfAdults, 0) : form.numberOfAdults;
+    const totalChildren = usedApts.length > 0 ? usedApts.reduce((s, a) => s + a.numberOfTeens, 0)  : form.numberOfTeens;
+    const totalBabies   = usedApts.length > 0 ? usedApts.reduce((s, a) => s + a.numberOfBabies, 0) : form.numberOfBabies;
+    const breakdown = calcPriceBreakdown(ci, co, totalAdults, totalChildren, totalBabies, rules);
     if (!breakdown) return form;
     const extrasTotal    = editExtras.reduce((sum, s) => sum + (s.total ?? 0), 0);
     const discountPercent = form.discountPercent ?? 0;
@@ -182,14 +205,19 @@ export default function AdminBookingsList({ bookings }: Props) {
     const depositRule    = rules.find((r) => r.dateFrom && r.dateTo && new Date(r.dateFrom) <= ci && ci <= new Date(r.dateTo)) ?? rules.find((r) => !r.dateFrom);
     const depositPercent = depositRule?.depositPercent ?? 30;
     const depositAmount  = Math.round((totalPrice - breakdown.touristTax) * depositPercent / 100);
-    return { ...form, ...breakdown, totalPrice, discountAmount, depositAmount };
-  }, [rules, editExtras]);
+    return {
+      ...form, ...breakdown, totalPrice, discountAmount, depositAmount,
+      numberOfAdults: totalAdults,
+      numberOfTeens:  totalChildren,
+      numberOfBabies: totalBabies,
+    };
+  }, [rules, editExtras, editApartments]);
 
   const setField = <K extends keyof EditForm>(key: K, value: EditForm[K]) => {
     setEditForm((prev) => {
       if (!prev) return prev;
       const next = { ...prev, [key]: value };
-      if (["checkIn", "checkOut", "numberOfAdults", "numberOfTeens", "numberOfChildren2to6", "numberOfChildren6to12", "discountPercent"].includes(key)) {
+      if (["checkIn", "checkOut", "discountPercent"].includes(key)) {
         return recalc(next);
       }
       return next;
@@ -265,6 +293,14 @@ export default function AdminBookingsList({ bookings }: Props) {
           totalPrice: editForm.totalPrice,
           extraServices: editExtras,
           extraServicesTotal: extrasTotal,
+          apartmentGuests: editApartments.map(a => ({
+            id:       a.apartmentId,
+            adults:   a.numberOfAdults,
+            teens:    a.numberOfTeens,
+            babies:   a.numberOfBabies,
+            children2to6:  0,
+            children6to12: 0,
+          })),
         }),
       });
       const data = await res.json();
@@ -272,7 +308,18 @@ export default function AdminBookingsList({ bookings }: Props) {
         setSaveError(data.error ?? "Mentési hiba");
         return;
       }
-      const updated: Booking = { ...data.data, apartments: selected.apartments };
+      const mergedApartments = editApartments.length > 0
+        ? editApartments.map(a => ({
+            apartmentId: a.apartmentId,
+            apartment:   selected.apartments?.find(x => x.apartmentId === a.apartmentId)?.apartment ?? { id: a.apartmentId, name: a.name, slug: "" },
+            numberOfAdults:        a.numberOfAdults,
+            numberOfTeens:         a.numberOfTeens,
+            numberOfBabies:        a.numberOfBabies,
+            numberOfChildren2to6:  0,
+            numberOfChildren6to12: 0,
+          }))
+        : selected.apartments ?? [];
+      const updated: Booking = { ...data.data, apartments: mergedApartments };
       setList((prev) => prev.map((b) => b.id === selected.id ? updated : b));
       setSelected(updated);
       setEditing(false);
@@ -541,25 +588,62 @@ export default function AdminBookingsList({ bookings }: Props) {
                   {/* Vendégek */}
                   <section>
                     <h3 className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-3">Vendégek</h3>
-                    <div className="grid grid-cols-3 gap-2">
-                      {([
-                        ["Felnőtt (18+)", "numberOfAdults"],
-                        ["Gyerek (2–17)", "numberOfTeens"],
-                        ["Baba (0–2)",    "numberOfBabies"],
-                      ] as [string, keyof EditForm][]).map(([label, key]) => (
-                        <div key={key}>
-                          <label className="text-xs text-stone-400 mb-1 block">{label}</label>
-                          <input
-                            type="number"
-                            min={0}
-                            value={editForm[key] as number}
-                            onChange={(e) => setField(key, Number(e.target.value))}
-                            className="w-full px-3 py-2 rounded-xl border border-stone-200 text-sm focus:outline-none focus:ring-2 focus:ring-forest-400"
-                          />
+                    {editApartments.length > 0 ? (
+                      <div className="space-y-3">
+                        {editApartments.map((apt, idx) => (
+                          <div key={apt.apartmentId} className="bg-stone-50 rounded-xl p-3">
+                            <p className="text-xs font-semibold text-forest-700 mb-2">{apt.name}</p>
+                            <div className="grid grid-cols-3 gap-2">
+                              {([
+                                ["Felnőtt (18+)", "numberOfAdults"],
+                                ["Gyerek (2–17)", "numberOfTeens"],
+                                ["Baba (0–2)",    "numberOfBabies"],
+                              ] as [string, keyof EditApartment][]).map(([label, key]) => (
+                                <div key={String(key)}>
+                                  <label className="text-xs text-stone-400 mb-1 block">{label}</label>
+                                  <input
+                                    type="number"
+                                    min={0}
+                                    value={apt[key] as number}
+                                    onChange={(e) => {
+                                      const next = editApartments.map((a, i) =>
+                                        i === idx ? { ...a, [key]: Number(e.target.value) } : a
+                                      );
+                                      setEditApartments(next);
+                                      setEditForm((prev) => prev ? recalc(prev, next) : prev);
+                                    }}
+                                    className="w-full px-3 py-2 rounded-xl border border-stone-200 text-sm focus:outline-none focus:ring-2 focus:ring-forest-400"
+                                  />
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+                        <p className="text-xs text-stone-400">Gyerek = felnőtt ár, IFA nélkül · Baba: 1 db ingyenes, többi felnőtt ár</p>
+                      </div>
+                    ) : (
+                      <>
+                        <div className="grid grid-cols-3 gap-2">
+                          {([
+                            ["Felnőtt (18+)", "numberOfAdults"],
+                            ["Gyerek (2–17)", "numberOfTeens"],
+                            ["Baba (0–2)",    "numberOfBabies"],
+                          ] as [string, keyof EditForm][]).map(([label, key]) => (
+                            <div key={String(key)}>
+                              <label className="text-xs text-stone-400 mb-1 block">{label}</label>
+                              <input
+                                type="number"
+                                min={0}
+                                value={editForm[key] as number}
+                                onChange={(e) => setField(key, Number(e.target.value))}
+                                className="w-full px-3 py-2 rounded-xl border border-stone-200 text-sm focus:outline-none focus:ring-2 focus:ring-forest-400"
+                              />
+                            </div>
+                          ))}
                         </div>
-                      ))}
-                    </div>
-                    <p className="text-xs text-stone-400 mt-2">Gyerek = felnőtt ár, IFA nélkül · Baba: 1 db ingyenes, többi felnőtt ár</p>
+                        <p className="text-xs text-stone-400 mt-2">Gyerek = felnőtt ár, IFA nélkül · Baba: 1 db ingyenes, többi felnőtt ár</p>
+                      </>
+                    )}
                   </section>
 
                   {/* Megjegyzés */}
@@ -601,25 +685,49 @@ export default function AdminBookingsList({ bookings }: Props) {
                       }
                       const weekdayNights = editNights - weekendNights;
 
-                      const personCount = editForm.numberOfAdults + editForm.numberOfTeens + Math.max(0, editForm.numberOfBabies - 1);
-                      const nightBreakdown = ci && co ? getAdminNightBreakdown(ci, co, rules, personCount) : [];
-
                       return (
                         <div className="space-y-2 text-sm">
 
-                          {/* Szállás – éjszakánként csoportosítva */}
-                          {nightBreakdown.map((g, i) => (
-                            <div key={i} className="flex justify-between items-start text-stone-600">
-                              <div>
-                                <span>Szállás</span>
-                                <p className="text-xs text-stone-400">{g.count} éj × {formatCurrency(g.rate)}/éj</p>
+                          {/* Szállás – per-apartman */}
+                          {editApartments.length > 0 ? editApartments.map((apt) => {
+                            const pc = apt.numberOfAdults + apt.numberOfTeens + Math.max(0, apt.numberOfBabies - 1);
+                            const bd = ci && co ? getAdminNightBreakdown(ci, co, rules, pc) : [];
+                            const aptBase = bd.reduce((s, g) => s + g.count * g.rate, 0);
+                            const aptTax  = apt.numberOfAdults * editNights * TOURIST_TAX;
+                            return (
+                              <div key={apt.apartmentId} className="border border-stone-100 rounded-xl overflow-hidden">
+                                <div className="bg-stone-50 px-3 py-2 text-xs font-semibold text-forest-700">{apt.name} ({pc} fő)</div>
+                                <div className="px-3 py-2 space-y-1">
+                                  <div className="flex justify-between text-stone-600">
+                                    <div>
+                                      <span>Szállás</span>
+                                      {bd.map((g, i) => <p key={i} className="text-xs text-stone-400">{g.count} éj × {formatCurrency(g.rate)}/éj</p>)}
+                                    </div>
+                                    <span>{formatCurrency(aptBase)}</span>
+                                  </div>
+                                  <div className="flex justify-between text-stone-500 text-xs">
+                                    <span>IFA ({apt.numberOfAdults} felnőtt × {editNights} éj × {TOURIST_TAX} Ft)</span>
+                                    <span>{formatCurrency(aptTax)}</span>
+                                  </div>
+                                </div>
                               </div>
-                              <span className="shrink-0 ml-2">{formatCurrency(g.count * g.rate)}</span>
-                            </div>
-                          ))}
+                            );
+                          }) : (() => {
+                            const pc = editForm.numberOfAdults + editForm.numberOfTeens + Math.max(0, editForm.numberOfBabies - 1);
+                            const bd = ci && co ? getAdminNightBreakdown(ci, co, rules, pc) : [];
+                            return bd.map((g, i) => (
+                              <div key={i} className="flex justify-between items-start text-stone-600">
+                                <div>
+                                  <span>Szállás</span>
+                                  <p className="text-xs text-stone-400">{g.count} éj × {formatCurrency(g.rate)}/éj</p>
+                                </div>
+                                <span className="shrink-0 ml-2">{formatCurrency(g.count * g.rate)}</span>
+                              </div>
+                            ));
+                          })()}
 
-                          {/* IFA */}
-                          {editForm.touristTax > 0 && (
+                          {/* IFA – csak ha nincs per-apartman bontás */}
+                          {editApartments.length === 0 && editForm.touristTax > 0 && (
                             <div className="flex justify-between items-start text-stone-600">
                               <div>
                                 <span>IFA</span>
