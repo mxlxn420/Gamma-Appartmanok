@@ -39,8 +39,8 @@ const REVIEWS = [
   },
 ];
 
-const OVERALL_RATING = 9.6;
-const BOOKING_URL    = "https://www.booking.com";
+const OVERALL_RATING = 9.4;
+const BOOKING_URL    = "https://www.booking.com/hotel/hu/gamma-apartman.html?ssne=Miskolctapolca&ssne_untouched=Miskolctapolca&highlighted_hotels=7923262&ss=Miskolctapolca&dest_id=7923262&dest_type=hotel&hp_avform=1&origin=hp&do_availability_check=1&label=apartmani-gama-dskenvNUWmVmIb23SSY3cQS631993302664%3Apl%3Ata%3Ap1%3Ap2%3Aac%3Aap%3Aneg%3Afi%3Atikwd-1651362902379%3Alp9062927%3Ali%3Adec%3Adm%3Appccp%3DUmFuZG9tSVYkc2RlIyh9YavywThF4buZMwppv9IhQn0&sid=9a2ad2c4a127b005b0fdbe29517fdac8&aid=319854&lang=hu&sb=1&src_elem=sb&src=hotel&checkin=2026-06-22&checkout=2026-06-24&group_adults=3&no_rooms=1&group_children=0#tab-reviews";
 
 function Stars({ rating, size = 16 }: { rating: number; size?: number }) {
   return (
