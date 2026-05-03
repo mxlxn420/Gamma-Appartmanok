@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image                   from "next/image";
 import { motion }              from "framer-motion";
 import { Check, Home }         from "lucide-react";
 
@@ -10,6 +11,7 @@ interface Apartment {
   slug:        string;
   maxGuests:   number;
   description: string | null;
+  coverImage:  string | null;
 }
 
 interface Props {
@@ -76,12 +78,18 @@ export default function ApartmentSelector({ onNext }: Props) {
                 {isSelected && <Check size={13} className="text-white" strokeWidth={3} />}
               </div>
 
-              <div className="flex items-center gap-3 mb-3">
-                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
-                  isSelected ? "bg-forest-900" : "bg-stone-100"
-                }`}>
-                  <Home size={18} className={isSelected ? "text-white" : "text-stone-500"} />
+              {/* Borítókép */}
+              {apt.coverImage ? (
+                <div className="relative w-full h-36 rounded-xl overflow-hidden mb-4 -mx-0">
+                  <Image src={apt.coverImage} alt={apt.name} fill sizes="(max-width:640px) 100vw, 50vw" className="object-cover" />
                 </div>
+              ) : (
+                <div className={`w-full h-36 rounded-xl mb-4 flex items-center justify-center ${isSelected ? "bg-forest-100" : "bg-stone-100"}`}>
+                  <Home size={28} className={isSelected ? "text-forest-400" : "text-stone-300"} />
+                </div>
+              )}
+
+              <div className="flex items-center justify-between">
                 <div>
                   <h3 className="font-serif text-lg font-light text-forest-900">{apt.name}</h3>
                   <p className="text-xs text-stone-400">Max. {apt.maxGuests} fő</p>
@@ -89,7 +97,7 @@ export default function ApartmentSelector({ onNext }: Props) {
               </div>
 
               {apt.description && (
-                <p className="text-sm text-stone-500 leading-relaxed">{apt.description}</p>
+                <p className="text-sm text-stone-500 leading-relaxed mt-2">{apt.description}</p>
               )}
             </motion.button>
           );

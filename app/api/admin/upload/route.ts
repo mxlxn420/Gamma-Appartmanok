@@ -20,7 +20,7 @@ function detectImageType(buf: Buffer): string | null {
 
 const ALLOWED_TYPES   = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 const MAX_SIZE_MB     = 20;
-const ALLOWED_BUCKETS = ["extra-services", "hero", "about", "gallery"];
+const ALLOWED_BUCKETS = ["extra-services", "hero", "about", "gallery", "apartments"];
 
 export async function POST(req: Request) {
   if (!(await isAuthed())) return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });

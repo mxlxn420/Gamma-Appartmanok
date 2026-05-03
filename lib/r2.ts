@@ -5,6 +5,7 @@ const BUCKET_NAMES: Record<string, string> = {
   "gallery":        "gamma-gallery",
   "about":          "gamma-about",
   "extra-services": "gamma-extra-services",
+  "apartments":     "gamma-apartments",
 };
 
 const PUBLIC_URLS: Record<string, string | undefined> = {
@@ -12,6 +13,7 @@ const PUBLIC_URLS: Record<string, string | undefined> = {
   "gallery":        process.env.NEXT_PUBLIC_R2_GALLERY_URL,
   "about":          process.env.NEXT_PUBLIC_R2_ABOUT_URL,
   "extra-services": process.env.NEXT_PUBLIC_R2_EXTRA_SERVICES_URL,
+  "apartments":     process.env.NEXT_PUBLIC_R2_APARTMENTS_URL,
 };
 
 export function getR2Client() {

@@ -69,7 +69,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="hu" className={`${playfair.variable} ${jost.variable}`}>
+    <html lang="hu" className={`${playfair.variable} ${jost.variable}`} data-scroll-behavior="smooth">
       <head>
         <script
           type="application/ld+json"

@@ -12,6 +12,7 @@ model Apartment {
   slug           String             @unique
   description    String?            @db.Text
   maxGuests      Int                @default(4)
+  coverImage     String?
   isActive       Boolean            @default(true)
   bookings       BookingApartment[]
   blockedPeriods BlockedPeriod[]

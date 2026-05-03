@@ -5,11 +5,12 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard, Calendar, Settings, LogOut, Home,
-  ScrollText, Sparkles, Tag, Image, Info, CheckSquare, Images, Menu, X,
+  ScrollText, Sparkles, Tag, Image, Info, CheckSquare, Images, Menu, X, Building2,
 } from "lucide-react";
 
 const LINKS = [
   { href: "/admin",                        icon: LayoutDashboard, label: "Áttekintés"          },
+  { href: "/admin/apartmanok",              icon: Building2,       label: "Apartmanok"           },
   { href: "/admin/foglalasok",             icon: Calendar,        label: "Foglalások"           },
   { href: "/admin/naptar",                 icon: Calendar,        label: "Naptár"               },
   { href: "/admin/arak",                   icon: Settings,        label: "Árak"                 },
