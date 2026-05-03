@@ -1022,18 +1022,14 @@ export default function AdminBookingsList({ bookings }: Props) {
                                 <span className="text-stone-500">Felnőtt (18+)</span>
                                 <span className="font-medium text-stone-800">{a.numberOfAdults} fő</span>
                               </div>
-                              {a.numberOfTeens > 0 && (
-                                <div className="flex justify-between">
-                                  <span className="text-stone-500">Gyerek (2–17)</span>
-                                  <span className="font-medium text-stone-800">{a.numberOfTeens} fő</span>
-                                </div>
-                              )}
-                              {a.numberOfBabies > 0 && (
-                                <div className="flex justify-between">
-                                  <span className="text-stone-500">Baba (0–2)</span>
-                                  <span className="font-medium text-forest-600">{a.numberOfBabies} fő</span>
-                                </div>
-                              )}
+                              <div className="flex justify-between">
+                                <span className="text-stone-500">Gyerek (2–17)</span>
+                                <span className="font-medium text-stone-800">{a.numberOfTeens} fő</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-stone-500">Baba (0–2)</span>
+                                <span className="font-medium text-stone-800">{a.numberOfBabies} fő</span>
+                              </div>
                             </div>
                           </div>
                         ))}
@@ -1043,23 +1039,19 @@ export default function AdminBookingsList({ bookings }: Props) {
                         </div>
                       </div>
                     ) : (
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+                      <div className="space-y-2 text-sm">
                         <div className="flex justify-between bg-stone-50 rounded-xl px-3 py-2">
                           <span className="text-stone-500">Felnőtt (18+)</span>
                           <span className="font-medium text-stone-800">{selected.numberOfAdults} fő</span>
                         </div>
-                        {selected.numberOfTeens > 0 && (
-                          <div className="flex justify-between bg-stone-50 rounded-xl px-3 py-2">
-                            <span className="text-stone-500">Gyerek (2–17)</span>
-                            <span className="font-medium text-stone-800">{selected.numberOfTeens} fő</span>
-                          </div>
-                        )}
-                        {selected.numberOfBabies > 0 && (
-                          <div className="flex justify-between bg-stone-50 rounded-xl px-3 py-2">
-                            <span className="text-stone-500">Baba (0–2)</span>
-                            <span className="font-medium text-forest-600">{selected.numberOfBabies} fő</span>
-                          </div>
-                        )}
+                        <div className="flex justify-between bg-stone-50 rounded-xl px-3 py-2">
+                          <span className="text-stone-500">Gyerek (2–17)</span>
+                          <span className="font-medium text-stone-800">{selected.numberOfTeens} fő</span>
+                        </div>
+                        <div className="flex justify-between bg-stone-50 rounded-xl px-3 py-2">
+                          <span className="text-stone-500">Baba (0–2)</span>
+                          <span className="font-medium text-stone-800">{selected.numberOfBabies} fő</span>
+                        </div>
                         <div className="flex justify-between bg-forest-50 rounded-xl px-3 py-2">
                           <span className="text-stone-500">Összesen</span>
                           <span className="font-semibold text-stone-800">{selected.numberOfGuests} fő</span>
@@ -1074,64 +1066,56 @@ export default function AdminBookingsList({ bookings }: Props) {
                     {(() => {
                       const ci = new Date(selected.checkIn);
                       const co = new Date(selected.checkOut);
-                      const personCount = selected.numberOfAdults + selected.numberOfTeens;
-                      const nightBreakdown = rules.length ? getAdminNightBreakdown(ci, co, rules, personCount) : [];
+                      const apartments = selected.apartments ?? [];
 
                       return (
                         <div className="space-y-2 text-sm">
-                          {/* Szállás – éjszakánként csoportosítva */}
-                          {nightBreakdown.length > 0 ? nightBreakdown.map((g, i) => (
-                            <div key={i} className="flex justify-between items-start text-stone-600">
-                              <div>
-                                <span>Szállás</span>
-                                <p className="text-xs text-stone-400">{g.count} éj × {formatCurrency(g.rate)}/éj</p>
-                              </div>
-                              <span className="shrink-0 ml-2">{formatCurrency(g.count * g.rate)}</span>
-                            </div>
-                          )) : (
-                            <div className="flex justify-between text-stone-600">
-                              <span>Szállás ({selected.nights} éj)</span>
-                              <span>{formatCurrency(selected.basePrice)}</span>
-                            </div>
-                          )}
-
-                          {/* Kisgyerek 2–6 */}
-                          {selected.numberOfChildren2to6 > 0 && selected.childPrice2to6 > 0 && (
-                            <div className="flex justify-between items-start text-stone-600">
-                              <div>
-                                <span>Kisgyerek (2–6 év)</span>
-                                <p className="text-xs text-stone-400">{selected.numberOfChildren2to6} fő × {selected.nights} éj × {formatCurrency(selected.childPrice2to6)}/éj</p>
-                              </div>
-                              <span className="shrink-0 ml-2">{formatCurrency(selected.childPrice2to6 * selected.numberOfChildren2to6 * selected.nights)}</span>
-                            </div>
-                          )}
-
-                          {/* Gyerek 6–12 */}
-                          {selected.numberOfChildren6to12 > 0 && selected.childPrice6to12 > 0 && (
-                            <div className="flex justify-between items-start text-stone-600">
-                              <div>
-                                <span>Gyerek (6–12 év)</span>
-                                <p className="text-xs text-stone-400">{selected.numberOfChildren6to12} fő × {selected.nights} éj × {formatCurrency(selected.childPrice6to12)}/éj</p>
-                              </div>
-                              <span className="shrink-0 ml-2">{formatCurrency(selected.childPrice6to12 * selected.numberOfChildren6to12 * selected.nights)}</span>
-                            </div>
-                          )}
-
-                          {/* IFA */}
-                          {(() => {
-                            const ifa = selected.touristTax > 0
-                              ? selected.touristTax
-                              : selected.numberOfAdults * selected.nights * 450;
-                            return ifa > 0 ? (
-                              <div className="flex justify-between items-start text-stone-600">
-                                <div>
-                                  <span>IFA</span>
-                                  <p className="text-xs text-stone-400">{selected.numberOfAdults} felnőtt × {selected.nights} éj × 450 Ft/éj</p>
+                          {/* Per-apartman szállás bontás */}
+                          {apartments.length > 0 ? apartments.map((a) => {
+                            const personCount = a.numberOfAdults + a.numberOfTeens + Math.max(0, a.numberOfBabies - 1);
+                            const breakdown = rules.length ? getAdminNightBreakdown(ci, co, rules, personCount) : [];
+                            const aptBase = breakdown.reduce((s, g) => s + g.count * g.rate, 0) || selected.basePrice / Math.max(apartments.length, 1);
+                            const aptTax = a.numberOfAdults * selected.nights * 450;
+                            return (
+                              <div key={a.apartmentId} className="border border-stone-100 rounded-xl overflow-hidden">
+                                <div className="bg-stone-50 px-3 py-2 text-xs font-semibold text-forest-700">{a.apartment.name}</div>
+                                <div className="px-3 py-2 space-y-1">
+                                  <div className="flex justify-between text-stone-600">
+                                    <div>
+                                      <span>Szállás ({personCount} fő)</span>
+                                      {breakdown.map((g, i) => (
+                                        <p key={i} className="text-xs text-stone-400">{g.count} éj × {formatCurrency(g.rate)}/éj</p>
+                                      ))}
+                                    </div>
+                                    <span className="shrink-0 ml-2">{formatCurrency(aptBase)}</span>
+                                  </div>
+                                  <div className="flex justify-between text-stone-500 text-xs">
+                                    <span>IFA ({a.numberOfAdults} felnőtt × {selected.nights} éj × 450 Ft)</span>
+                                    <span>{formatCurrency(aptTax)}</span>
+                                  </div>
                                 </div>
-                                <span className="shrink-0 ml-2">{formatCurrency(ifa)}</span>
                               </div>
-                            ) : null;
-                          })()}
+                            );
+                          }) : (
+                            <>
+                              <div className="flex justify-between text-stone-600">
+                                <span>Szállás ({selected.nights} éj)</span>
+                                <span>{formatCurrency(selected.basePrice)}</span>
+                              </div>
+                              {(() => {
+                                const ifa = selected.touristTax > 0 ? selected.touristTax : selected.numberOfAdults * selected.nights * 450;
+                                return ifa > 0 ? (
+                                  <div className="flex justify-between items-start text-stone-600">
+                                    <div>
+                                      <span>IFA</span>
+                                      <p className="text-xs text-stone-400">{selected.numberOfAdults} felnőtt × {selected.nights} éj × 450 Ft/éj</p>
+                                    </div>
+                                    <span className="shrink-0 ml-2">{formatCurrency(ifa)}</span>
+                                  </div>
+                                ) : null;
+                              })()}
+                            </>
+                          )}
 
                           {/* Pótdíj */}
                           {selected.guestSurcharge > 0 && (
