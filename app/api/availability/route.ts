@@ -1,24 +1,35 @@
-import { NextResponse } from "next/server";
-import { prisma }       from "@/lib/prisma";
+import { NextRequest, NextResponse } from "next/server";
+import { prisma }                    from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
+    const { searchParams } = new URL(req.url);
+    const aptParam = searchParams.get("apartmentIds");
+    const apartmentIds = aptParam ? aptParam.split(",").filter(Boolean) : [];
+
     const [bookings, blocked] = await Promise.all([
       prisma.booking.findMany({
         where: {
           status:   { in: ["PENDING", "CONFIRMED", "PAID", "BLOCKED"] },
           checkOut: { gte: new Date() },
+          ...(apartmentIds.length > 0 ? {
+            apartments: { some: { apartmentId: { in: apartmentIds } } },
+          } : {}),
         },
-        select: {
-          checkIn:  true,
-          checkOut: true,
-          status:   true,
-        },
+        select: { checkIn: true, checkOut: true, status: true },
       }),
       prisma.blockedPeriod.findMany({
-        where: { dateTo: { gte: new Date() } },
+        where: {
+          dateTo: { gte: new Date() },
+          ...(apartmentIds.length > 0 ? {
+            OR: [
+              { apartmentId: { in: apartmentIds } },
+              { apartmentId: null },
+            ],
+          } : {}),
+        },
         select: { dateFrom: true, dateTo: true },
       }),
     ]);

@@ -28,6 +28,7 @@ export async function GET() {
       minAdvanceDays:  r.minAdvanceDays,
       isActive:        r.isActive,
       priority:        r.priority,
+      apartmentId:     r.apartmentId ?? null,
       depositPercent:  (r as any).policy?.depositPercent ?? 30,
     }));
 

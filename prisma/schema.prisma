@@ -22,10 +22,15 @@ model Apartment {
 }
 
 model BookingApartment {
-  bookingId   String
-  apartmentId String
-  booking     Booking   @relation(fields: [bookingId], references: [id], onDelete: Cascade)
-  apartment   Apartment @relation(fields: [apartmentId], references: [id])
+  bookingId             String
+  apartmentId           String
+  numberOfAdults        Int    @default(0)
+  numberOfTeens         Int    @default(0)
+  numberOfBabies        Int    @default(0)
+  numberOfChildren2to6  Int    @default(0)
+  numberOfChildren6to12 Int    @default(0)
+  booking               Booking   @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  apartment             Apartment @relation(fields: [apartmentId], references: [id])
 
   @@id([bookingId, apartmentId])
 }
