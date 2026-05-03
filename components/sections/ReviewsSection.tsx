@@ -39,8 +39,8 @@ const REVIEWS = [
   },
 ];
 
-const OVERALL_RATING  = 5.0;
-const GOOGLE_MAPS_URL = "https://www.google.com/travel/search?gsas=1&ts=EggKAggDCgIIAxocEhoSFAoHCOoPEAMYHRIHCOoPEAMYHxgCMgIQAA&qs=MhNDZ29JemVTQnRmYmVzZGtTRUFFOAI&ap=ugEHcmV2aWV3cw&ictx=111&biw=1920&bih=951&hl=hu-HU&ved=0CAAQ5JsGahcKEwiogPq7wrSTAxUAAAAAHQAAAAAQBA";
+const OVERALL_RATING = 9.6;
+const BOOKING_URL    = "https://www.booking.com";
 
 function Stars({ rating, size = 16 }: { rating: number; size?: number }) {
   return (
@@ -82,14 +82,14 @@ export default function ReviewsSection() {
                 {OVERALL_RATING.toFixed(1)}
               </span>
               <div className="flex flex-col items-start gap-1.5">
-                <Stars rating={OVERALL_RATING} size={20} />
+                <span className="text-xs font-semibold text-terra-300 bg-terra-400/20 px-2 py-0.5 rounded-full">/ 10</span>
                 <p className="text-cream/60 text-xs">
-                  Google-értékelések alapján
+                  Booking.com értékelések alapján
                 </p>
               </div>
             </div>
             
-              <a href={GOOGLE_MAPS_URL}
+              <a href={BOOKING_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="text-xs text-terra-300 hover:text-terra-200 transition-colors"
@@ -126,7 +126,7 @@ export default function ReviewsSection() {
                       <p className="text-cream text-sm font-medium leading-none mb-0.5">
                         {review.name}
                       </p>
-                      <p className="text-cream/40 text-xs">Google</p>
+                      <p className="text-cream/40 text-xs">Booking.com</p>
                     </div>
                   </div>
                   <Stars rating={review.rating} size={14} />
@@ -139,15 +139,14 @@ export default function ReviewsSection() {
           ))}
         </div>
 
-        {/* Google attribúció */}
+        {/* Booking.com attribúció */}
         <div className="mt-10 text-center">
-          
-            <a href="https://www.google.com"
+          <a href={BOOKING_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="text-xs text-cream/30 hover:text-cream/50 transition-colors"
           >
-            Powered by Google
+            Powered by Booking.com
           </a>
         </div>
 
