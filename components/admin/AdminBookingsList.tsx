@@ -51,23 +51,20 @@ function toDateInput(date: Date | string): string {
   return format(d, "yyyy-MM-dd");
 }
 
-// basePrice = teljes szállásdíj (hétvégi ár figyelembevételével, felnőttek × éjszakák)
-// childPrice2to6 / childPrice6to12 = per-child-per-night ráta (DB-vel egyező)
-// touristTax = csak felnőttek, 450 Ft/fő/éj (BookingCalendar-ral egyező)
+// Tier-alapú flat rate: adults + children(2-17) + max(0, babies-1) = personCount
+// touristTax = csak felnőttek (18+), 450 Ft/fő/éj
 function calcPriceBreakdown(
   checkIn: Date,
   checkOut: Date,
   adults: number,
-  teens: number,
-  ch2to6: number,
-  ch6to12: number,
+  children: number,
+  babies: number,
   rules: PricingRule[]
 ): Pick<EditForm, "basePrice" | "childPrice2to6" | "childPrice6to12" | "guestSurcharge" | "cleaningFee" | "touristTax" | "totalPrice" | "depositAmount"> | null {
   const nights = differenceInCalendarDays(checkOut, checkIn);
   if (nights <= 0) return null;
-  const personCount = adults + teens;
+  const personCount = adults + children + Math.max(0, babies - 1);
 
-  // Szállásdíj: éjszakánként a megfelelő szezon ára
   let basePrice = 0;
   const cur = new Date(checkIn);
   while (cur < checkOut) {
@@ -76,24 +73,16 @@ function calcPriceBreakdown(
     cur.setDate(cur.getDate() + 1);
   }
 
-  // Gyerekárak és egyebek: az érkezés napjára vonatkozó szabály alapján
   const rule = getApplicablePricingRule(checkIn, checkOut, rules);
   if (!rule && basePrice === 0) return null;
 
-  const childPrice2to6  = rule?.childPrice2to6  ?? 0;
-  const childPrice6to12 = rule?.childPrice6to12 ?? 0;
-  const childTotal2to6  = childPrice2to6  * ch2to6  * nights;
-  const childTotal6to12 = childPrice6to12 * ch6to12 * nights;
-  const totalGuests     = adults + teens + ch2to6 + ch6to12;
-  const extraGuests     = Math.max(0, totalGuests - ((rule.extraGuestFrom ?? 3) - 1));
-  const guestSurcharge  = extraGuests * (rule.extraGuestFee ?? 0) * nights;
-  const touristTax      = adults * TOURIST_TAX * nights;  // csak felnőttek fizetnek IFA-t
-  const cleaningFee     = CLEANING_FEE;
-  const totalPrice      = basePrice + childTotal2to6 + childTotal6to12 + guestSurcharge + cleaningFee + touristTax;
-  const depositPercent  = rule.depositPercent ?? 30;
-  const depositAmount   = Math.round((totalPrice - touristTax) * depositPercent / 100);
+  const touristTax   = adults * TOURIST_TAX * nights;
+  const cleaningFee  = CLEANING_FEE;
+  const totalPrice   = basePrice + cleaningFee + touristTax;
+  const depositPercent = rule?.depositPercent ?? 30;
+  const depositAmount  = Math.round((totalPrice - touristTax) * depositPercent / 100);
 
-  return { basePrice, childPrice2to6, childPrice6to12, guestSurcharge, cleaningFee, touristTax, totalPrice, depositAmount };
+  return { basePrice, childPrice2to6: 0, childPrice6to12: 0, guestSurcharge: 0, cleaningFee, touristTax, totalPrice, depositAmount };
 }
 
 export default function AdminBookingsList({ bookings }: Props) {
@@ -183,7 +172,7 @@ export default function AdminBookingsList({ bookings }: Props) {
     const ci = new Date(form.checkIn);
     const co = new Date(form.checkOut);
     if (co <= ci) return form;
-    const breakdown = calcPriceBreakdown(ci, co, form.numberOfAdults, form.numberOfTeens, form.numberOfChildren2to6, form.numberOfChildren6to12, rules);
+    const breakdown = calcPriceBreakdown(ci, co, form.numberOfAdults, form.numberOfTeens, form.numberOfBabies, rules);
     if (!breakdown) return form;
     const extrasTotal    = editExtras.reduce((sum, s) => sum + (s.total ?? 0), 0);
     const discountPercent = form.discountPercent ?? 0;
@@ -552,13 +541,11 @@ export default function AdminBookingsList({ bookings }: Props) {
                   {/* Vendégek */}
                   <section>
                     <h3 className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-3">Vendégek</h3>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                    <div className="grid grid-cols-3 gap-2">
                       {([
                         ["Felnőtt (18+)", "numberOfAdults"],
-                        ["Fiatal (12–18)", "numberOfTeens"],
-                        ["Baba (0–2)", "numberOfBabies"],
-                        ["Kisgyerek (2–6)", "numberOfChildren2to6"],
-                        ["Gyerek (6–12)", "numberOfChildren6to12"],
+                        ["Gyerek (2–17)", "numberOfTeens"],
+                        ["Baba (0–2)",    "numberOfBabies"],
                       ] as [string, keyof EditForm][]).map(([label, key]) => (
                         <div key={key}>
                           <label className="text-xs text-stone-400 mb-1 block">{label}</label>
@@ -572,7 +559,7 @@ export default function AdminBookingsList({ bookings }: Props) {
                         </div>
                       ))}
                     </div>
-                    <p className="text-xs text-stone-400 mt-2">Fiatal = szobadíj/fő, IFA nélkül · Baba = ingyenes</p>
+                    <p className="text-xs text-stone-400 mt-2">Gyerek = felnőtt ár, IFA nélkül · Baba: 1 db ingyenes, többi felnőtt ár</p>
                   </section>
 
                   {/* Megjegyzés */}
@@ -614,7 +601,7 @@ export default function AdminBookingsList({ bookings }: Props) {
                       }
                       const weekdayNights = editNights - weekendNights;
 
-                      const personCount = editForm.numberOfAdults + editForm.numberOfTeens;
+                      const personCount = editForm.numberOfAdults + editForm.numberOfTeens + Math.max(0, editForm.numberOfBabies - 1);
                       const nightBreakdown = ci && co ? getAdminNightBreakdown(ci, co, rules, personCount) : [];
 
                       return (
@@ -630,28 +617,6 @@ export default function AdminBookingsList({ bookings }: Props) {
                               <span className="shrink-0 ml-2">{formatCurrency(g.count * g.rate)}</span>
                             </div>
                           ))}
-
-                          {/* Gyerek 2–6 */}
-                          {editForm.numberOfChildren2to6 > 0 && editForm.childPrice2to6 > 0 && (
-                            <div className="flex justify-between items-start text-stone-600">
-                              <div>
-                                <span>Kisgyerek (2–6 év)</span>
-                                <p className="text-xs text-stone-400">{editForm.numberOfChildren2to6} fő × {editNights} éj × {formatCurrency(editForm.childPrice2to6)}/éj</p>
-                              </div>
-                              <span className="shrink-0 ml-2">{formatCurrency(editForm.childPrice2to6 * editForm.numberOfChildren2to6 * editNights)}</span>
-                            </div>
-                          )}
-
-                          {/* Gyerek 6–12 */}
-                          {editForm.numberOfChildren6to12 > 0 && editForm.childPrice6to12 > 0 && (
-                            <div className="flex justify-between items-start text-stone-600">
-                              <div>
-                                <span>Gyerek (6–12 év)</span>
-                                <p className="text-xs text-stone-400">{editForm.numberOfChildren6to12} fő × {editNights} éj × {formatCurrency(editForm.childPrice6to12)}/éj</p>
-                              </div>
-                              <span className="shrink-0 ml-2">{formatCurrency(editForm.childPrice6to12 * editForm.numberOfChildren6to12 * editNights)}</span>
-                            </div>
-                          )}
 
                           {/* IFA */}
                           {editForm.touristTax > 0 && (
