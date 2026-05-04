@@ -4,7 +4,6 @@ import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
-import BookingWidget from "@/components/booking/BookingWidget";
 import { ICON_MAP } from "@/components/admin/AdminHero";
 
 interface Highlight {
@@ -144,14 +143,6 @@ export default function HeroSection({ data }: Props) {
           </div>
         </div>
 
-        {/* Booking widget */}
-        <motion.div
-          className="container-custom pb-16 lg:pb-0"
-          initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.6 }}
-        >
-          <BookingWidget />
-        </motion.div>
       </motion.div>
 
       {/* Slideshow pontok + Görgessen – EGYÜTT ALUL */}
