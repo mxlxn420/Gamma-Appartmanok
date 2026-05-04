@@ -1,5 +1,5 @@
-import { prisma }   from "@/lib/prisma";
-import Link         from "next/link";
+import { prisma } from "@/lib/prisma";
+import Link from "next/link";
 import { Check, ArrowRight } from "lucide-react";
 import AnimatedSection from "@/components/ui/AnimatedSection";
 
@@ -10,8 +10,8 @@ export default async function PricingSection() {
   const rules = await prisma.pricingRule.findMany({
     where: {
       isActive: true,
-      dateFrom:  { not: null },
-      dateTo:    { gte: today },
+      dateFrom: { not: null },
+      dateTo: { gte: today },
     },
     orderBy: { priority: "asc" },
   });
@@ -85,6 +85,14 @@ export default async function PricingSection() {
             <div className="flex justify-between py-3 text-sm">
               <span className="text-stone-600">Háziállat</span>
               <span className="font-medium text-stone-800">Nem tudunk fogadni</span>
+            </div>
+            <div className="flex justify-between py-3 text-sm">
+              <span className="text-stone-600">Dohányzás</span>
+              <span className="font-medium text-stone-800">Nem megengedett</span>
+            </div>
+            <div className="flex justify-between py-3 text-sm">
+              <span className="text-stone-600">Bulik, rendezvények</span>
+              <span className="font-medium text-stone-800">Nem engedélyezett</span>
             </div>
           </div>
         </AnimatedSection>

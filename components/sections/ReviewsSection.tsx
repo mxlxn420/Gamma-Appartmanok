@@ -3,44 +3,51 @@ import AnimatedSection from "@/components/ui/AnimatedSection";
 
 const REVIEWS = [
   {
-    name:     "Tamás Gubis",
-    score:    10,
-    text:     "Csendre, nyugalomra vágytunk a Párommal. Helyi, és közelben lévő látványosságban nincs hiány, ha valaki szeretné megismerni a Bükk adta gyönyörű látnivalókat. Teljes mértékben elégedettek voltunk a jól felszerelt szálláshellyel.",
-    initials: "TG",
-    type:     "Páros",
+    name: "Andrea",
+    score: 10,
+    text: "Mindenkinek ajánlom ha kettesben ha családdal! Szuper szállas! Tökéletesen felszerelt! Háztartási gépekkel kialakított konyha! Tányérok evőeszközök poharak stb minden volt! Nespresso kávégép!! Gyönyörű szobák! Klima redőnyök, minden napszakban beárnyékolható szobák! Közel a strand és minden látnivaló! Normál méretű hűtő fagyasztóval,nyáron nem utolsó szempont! Meseszép kilátás a cuki teraszról!",
+    initials: "A",
+    type: "Család",
   },
   {
-    name:     "Annamari Ujvári",
-    score:    10,
-    text:     "Szuper felszereltségű kis ház, minden van, amit az ember csak el tud képzelni!",
-    initials: "AU",
-    type:     "Páros",
+    name: "Eva",
+    score: 10,
+    text: "Nagyon elégedettek vagyunk barátokkal voltunk, nagyon tetszett, tiszta volt kényelmes, minden ugyan olyan ahogyan az a képen is leírták, panoráma és friss levegő ideális. Mi ide a családdal még visszatérünk.",
+    initials: "E",
+    type: "Csoport",
   },
   {
-    name:     "Alexandra Deák",
-    score:    9,
-    text:     "Gyönyörű szép, tökéletes a pihenésre és csendes. A tulajdonos borzasztóan kedves és aranyos!",
-    initials: "AD",
-    type:     "Családi",
+    name: "Krisztina",
+    score: 10,
+    text: "Minden kényelmet kielégítő, modern, tágas apartman.Jól felszerelt konyha. Gyönyörű környezetben. Annyira tetszett, hogy kértünk még egy plusz éjszakát:). Gabriella nagyon kedves, segítőkész. Csak ajánlani tudom!",
+    initials: "K",
+    type: "Család",
   },
   {
-    name:     "Ilona Molnár",
-    score:    9,
-    text:     "Nagyon szép és rendezett minden. Nekünk nagyon tetszett minden, és csak ajánlani tudom mindenkinek.",
-    initials: "IM",
-    type:     "Páros",
+    name: "Bernadett",
+    score: 10,
+    text: "Összeségében minden! Nagyon szép helyen van, csendes nyugodt. A kilátás a jakuzziból este páratlan. :) Tiszta felszerelt kényelmes.",
+    initials: "B",
+    type: "Család",
   },
   {
-    name:     "Zsolt Mészáros",
-    score:    10,
-    text:     "Ha tehetem, visszatérek - kiváló hely, barátságos tulajdonos, nagyszerű elhelyezkedés.",
-    initials: "ZM",
-    type:     "Páros",
+    name: "Andi",
+    score: 10,
+    text: "Kiváló szállás kiváló helyen! Nagyon szép,tiszta apartman fantasztikusan szép helyen😊 Visszatérünk",
+    initials: "A",
+    type: "Család",
+  },
+  {
+    name: "Szilvia",
+    score: 10,
+    text: "Szívesen visszatérünk máskor is. Minden igényt kielégítő, modern , szép apartman. A kert és a kilátás csodálatos. Nyugalom szigete.",
+    initials: "Sz",
+    type: "Család",
   },
 ];
 
 const OVERALL_RATING = 9.4;
-const BOOKING_URL    = "https://www.booking.com/hotel/hu/gamma-apartman.html?ssne=Miskolctapolca&ssne_untouched=Miskolctapolca&highlighted_hotels=7923262&ss=Miskolctapolca&dest_id=7923262&dest_type=hotel&hp_avform=1&origin=hp&do_availability_check=1&label=apartmani-gama-dskenvNUWmVmIb23SSY3cQS631993302664%3Apl%3Ata%3Ap1%3Ap2%3Aac%3Aap%3Aneg%3Afi%3Atikwd-1651362902379%3Alp9062927%3Ali%3Adec%3Adm%3Appccp%3DUmFuZG9tSVYkc2RlIyh9YavywThF4buZMwppv9IhQn0&sid=9a2ad2c4a127b005b0fdbe29517fdac8&aid=319854&lang=hu&sb=1&src_elem=sb&src=hotel&checkin=2026-06-22&checkout=2026-06-24&group_adults=3&no_rooms=1&group_children=0#tab-reviews";
+const BOOKING_URL = "https://www.booking.com/hotel/hu/gamma-apartman.html?ssne=Miskolctapolca&ssne_untouched=Miskolctapolca&highlighted_hotels=7923262&ss=Miskolctapolca&dest_id=7923262&dest_type=hotel&hp_avform=1&origin=hp&do_availability_check=1&label=apartmani-gama-dskenvNUWmVmIb23SSY3cQS631993302664%3Apl%3Ata%3Ap1%3Ap2%3Aac%3Aap%3Aneg%3Afi%3Atikwd-1651362902379%3Alp9062927%3Ali%3Adec%3Adm%3Appccp%3DUmFuZG9tSVYkc2RlIyh9YavywThF4buZMwppv9IhQn0&sid=9a2ad2c4a127b005b0fdbe29517fdac8&aid=319854&lang=hu&sb=1&src_elem=sb&src=hotel&checkin=2026-06-22&checkout=2026-06-24&group_adults=3&no_rooms=1&group_children=0#tab-reviews";
 
 
 export default function ReviewsSection() {
@@ -72,8 +79,8 @@ export default function ReviewsSection() {
                 </p>
               </div>
             </div>
-            
-              <a href={BOOKING_URL}
+
+            <a href={BOOKING_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="text-xs text-terra-300 hover:text-terra-200 transition-colors"
