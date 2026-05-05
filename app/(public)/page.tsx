@@ -17,7 +17,7 @@ const DEFAULT_SLIDES = [
 ] as { src: string; alt: string }[];
 
 const HERO_DEFAULTS = {
-  subtitle:      "Bencések útja 117/A, Miskolctapolca",
+  subtitle:      "Beregi utca 11, Miskolctapolca",
   titleBefore:   "A tökéletes ",
   titleEmphasis: "kikapcsolódás",
   titleAfter:    "csak rád vár.",

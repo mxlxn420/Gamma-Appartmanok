@@ -24,9 +24,9 @@ export default function AszfPage() {
           <section>
             <h2 className="font-serif text-xl text-forest-900 mb-3">1. A szolgáltató adatai</h2>
             <p>Szolgáltató neve: Gamma Apartmanok és Jakuzzi</p>
-            <p>Cím: 3519 Miskolctapolca, Bencések útja 117/A</p>
-            <p>Telefon: +36 30 845 4923</p>
-            <p>E-mail: milan.kucko117@gmail.com</p>
+            <p>Cím: 3519 Miskolctapolca, Beregi utca 11</p>
+            <p>Telefon: +36 20 359 9222</p>
+            <p>E-mail: gammaapartmanok@gmail.com</p>
             <p>NTAK regisztrációs szám: MA21027231</p>
           </section>
 
@@ -81,7 +81,7 @@ export default function AszfPage() {
               Késői lemondás esetén az előleg megtartásra kerülhet.
             </p>
             <p>
-              Lemondani telefonon (+36 30 845 4923) vagy e-mailben (milan.kucko117@gmail.com) lehetséges.
+              Lemondani telefonon (+36 20 359 9222) vagy e-mailben (gammaapartmanok@gmail.com) lehetséges.
             </p>
           </section>
 
@@ -130,8 +130,8 @@ export default function AszfPage() {
               Amennyiben a vendégnek kifogása merül fel a szolgáltatással kapcsolatban, azt kérjük jelezze
               a tartózkodás ideje alatt személyesen, vagy utólag az alábbi elérhetőségeken:
             </p>
-            <p className="mt-2">Telefon: +36 30 845 4923</p>
-            <p>E-mail: milan.kucko117@gmail.com</p>
+            <p className="mt-2">Telefon: +36 20 359 9222</p>
+            <p>E-mail: gammaapartmanok@gmail.com</p>
             <p className="mt-3">
               A szóbeli panaszokat haladéktalanul, az írásbeli panaszokat 30 napon belül vizsgáljuk ki és válaszoljuk meg.
             </p>

@@ -717,7 +717,8 @@ export default function AdminBookingsList({ bookings }: Props) {
                           {/* Szállás – per-apartman */}
                           {editApartments.length > 0 ? editApartments.map((apt) => {
                             const pc = apt.numberOfAdults + apt.numberOfTeens + Math.max(0, apt.numberOfBabies - 1);
-                            const bd = ci && co ? getAdminNightBreakdown(ci, co, rules, pc) : [];
+                            const aptRules = rules.filter(r => r.apartmentId === apt.apartmentId || !r.apartmentId);
+                            const bd = ci && co ? getAdminNightBreakdown(ci, co, aptRules, pc) : [];
                             const aptBase = bd.reduce((s, g) => s + g.count * g.rate, 0);
                             const aptTax  = apt.numberOfAdults * editNights * TOURIST_TAX;
                             return (
@@ -1172,7 +1173,8 @@ export default function AdminBookingsList({ bookings }: Props) {
                           {/* Per-apartman szállás bontás */}
                           {apartments.length > 0 ? apartments.map((a) => {
                             const personCount = a.numberOfAdults + a.numberOfTeens + Math.max(0, a.numberOfBabies - 1);
-                            const breakdown = rules.length ? getAdminNightBreakdown(ci, co, rules, personCount) : [];
+                            const aptRules = rules.filter(r => r.apartmentId === a.apartmentId || !r.apartmentId);
+                            const breakdown = aptRules.length ? getAdminNightBreakdown(ci, co, aptRules, personCount) : [];
                             const aptBase = breakdown.reduce((s, g) => s + g.count * g.rate, 0) || selected.basePrice / Math.max(apartments.length, 1);
                             const aptTax = a.numberOfAdults * selected.nights * 450;
                             return (

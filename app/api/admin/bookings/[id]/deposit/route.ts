@@ -8,7 +8,14 @@ export async function POST(
 ) {
   const { id } = await params;
   try {
-    const booking = await prisma.booking.findUnique({ where: { id } });
+    const booking = await prisma.booking.findUnique({
+      where: { id },
+      include: {
+        apartments: {
+          include: { apartment: { select: { name: true } } },
+        },
+      },
+    });
     if (!booking) {
       return NextResponse.json({ success: false, error: "Foglalás nem található" }, { status: 404 });
     }
@@ -97,6 +104,27 @@ export async function POST(
         discountPercent:       booking.discountPercent  ?? undefined,
         discountAmount:        booking.discountAmount   ?? undefined,
         notes:                 booking.notes,
+        apartments:            booking.apartments.length > 0
+          ? await (async () => {
+              const { getAdminNightBreakdown } = await import("@/lib/utils");
+              const allRules = await prisma.pricingRule.findMany({ where: { isActive: true } });
+              const ci = new Date(booking.checkIn);
+              const co = new Date(booking.checkOut);
+              const TOURIST_TAX = 450;
+              return booking.apartments.map(a => {
+                const adultCount = a.numberOfAdults;
+                const teenCount  = a.numberOfTeens;
+                const babyCount  = a.numberOfBabies;
+                const numberOfGuests = adultCount + teenCount + babyCount + a.numberOfChildren2to6 + a.numberOfChildren6to12;
+                const pc = adultCount + teenCount + Math.max(0, babyCount - 1);
+                const aptRules = allRules.filter((r: any) => r.apartmentId === a.apartmentId || !r.apartmentId);
+                const breakdown = getAdminNightBreakdown(ci, co, aptRules as any, pc);
+                const aptBasePrice = breakdown.reduce((s, g) => s + g.count * g.rate, 0);
+                const aptTouristTax = adultCount * booking.nights * TOURIST_TAX;
+                return { name: a.apartment.name, numberOfGuests, numberOfAdults: adultCount, breakdown, aptBasePrice, aptTouristTax };
+              });
+            })()
+          : undefined,
       });
       emailSent = true;
     } catch (err: any) {

@@ -24,9 +24,9 @@ export default function AdatvedelemPage() {
           <section>
             <h2 className="font-serif text-xl text-forest-900 mb-3">1. Az adatkezelő adatai</h2>
             <p>Adatkezelő neve: Gamma Apartmanok és Jakuzzi</p>
-            <p>Cím: 3519 Miskolctapolca, Bencések útja 117/A</p>
-            <p>Telefon: +36 30 845 4923</p>
-            <p>E-mail: milan.kucko117@gmail.com</p>
+            <p>Cím: 3519 Miskolctapolca, Beregi utca 11</p>
+            <p>Telefon: +36 20 359 9222</p>
+            <p>E-mail: gammaapartmanok@gmail.com</p>
           </section>
 
           <section>
@@ -104,8 +104,8 @@ export default function AdatvedelemPage() {
             <p className="mt-3">
               Jogai gyakorlásához forduljon hozzánk az alábbi elérhetőségeken:
             </p>
-            <p>E-mail: milan.kucko117@gmail.com</p>
-            <p>Telefon: +36 30 845 4923</p>
+            <p>E-mail: gammaapartmanok@gmail.com</p>
+            <p>Telefon: +36 20 359 9222</p>
           </section>
 
           <section>

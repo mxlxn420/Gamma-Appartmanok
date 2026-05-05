@@ -265,6 +265,7 @@ export async function POST(req: NextRequest) {
     });
 
     // BookingApartment rekordok mentése
+    let emailApartments: { name: string; numberOfGuests: number; numberOfAdults: number; breakdown: { count: number; rate: number }[]; aptBasePrice: number; aptTouristTax: number }[] = [];
     if (apartmentGuests.length > 0) {
       await prisma.bookingApartment.createMany({
         data: apartmentGuests.map(a => ({
@@ -276,6 +277,30 @@ export async function POST(req: NextRequest) {
           numberOfChildren2to6:  Number(a.children2to6)  || 0,
           numberOfChildren6to12: Number(a.children6to12) || 0,
         })),
+      });
+
+      // Apartman nevek + árlebontás lekérése az emailhez
+      const aptRecords = await prisma.apartment.findMany({
+        where: { id: { in: apartmentGuests.map(a => a.id) } },
+        select: { id: true, name: true },
+      });
+      const { getAdminNightBreakdown } = await import("@/lib/utils");
+      const allRulesForEmail = await prisma.pricingRule.findMany({ where: { isActive: true } });
+      const TOURIST_TAX = 450;
+      emailApartments = apartmentGuests.map(a => {
+        const apt = aptRecords.find(r => r.id === a.id);
+        const adultCount   = Number(a.adults)       || 0;
+        const teenCount    = Number(a.teens)         || 0;
+        const babyCount    = Number(a.babies)        || 0;
+        const child2Count  = Number(a.children2to6)  || 0;
+        const child6Count  = Number(a.children6to12) || 0;
+        const numberOfGuests = adultCount + teenCount + babyCount + child2Count + child6Count;
+        const pc = adultCount + teenCount + Math.max(0, babyCount - 1);
+        const aptRules = allRulesForEmail.filter((r: any) => r.apartmentId === a.id || !r.apartmentId);
+        const breakdown = getAdminNightBreakdown(checkInDate, checkOutDate, aptRules as any, pc);
+        const aptBasePrice = breakdown.reduce((s, g) => s + g.count * g.rate, 0);
+        const aptTouristTax = adultCount * nights * TOURIST_TAX;
+        return { name: apt?.name ?? a.id, numberOfGuests, numberOfAdults: adultCount, breakdown, aptBasePrice, aptTouristTax };
       });
     }
 
@@ -320,6 +345,7 @@ export async function POST(req: NextRequest) {
         numberOfChildren6to12: children6to12,
         childPrice2to6:        Number(body.childPrice2to6)  || 0,
         childPrice6to12:       Number(body.childPrice6to12) || 0,
+        apartments:            emailApartments.length > 0 ? emailApartments : undefined,
       });
     } catch (emailErr) {
       console.error("Email hiba (foglalás mentve):", emailErr);

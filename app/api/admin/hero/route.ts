@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 
 const DEFAULTS = {
   id:            "singleton",
-  subtitle:      "Bencések útja 117/A, Miskolctapolca",
+  subtitle:      "Beregi utca 11, Miskolctapolca",
   titleBefore:   "A tökéletes ",
   titleEmphasis: "kikapcsolódás",
   titleAfter:    "csak rád vár.",

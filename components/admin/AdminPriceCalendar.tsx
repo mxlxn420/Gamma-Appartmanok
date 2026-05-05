@@ -140,13 +140,61 @@ export default function AdminPriceCalendar({ rules, apartments }: Props) {
                   </div>
                   <div className="grid grid-cols-2 gap-2 text-sm">
                     <div>
-                      <p className="text-xs text-stone-400">Hétköznap/éj</p>
+                      <p className="text-xs text-stone-400">1–2 fő/éj</p>
                       <p className={`font-semibold ${colors.text}`}>{formatCurrency(rule.pricePerNight)}</p>
                     </div>
+                    {(rule as any).price3 > 0 && (
+                      <div>
+                        <p className="text-xs text-stone-400">3 fő/éj</p>
+                        <p className={`font-semibold ${colors.text}`}>{formatCurrency((rule as any).price3)}</p>
+                      </div>
+                    )}
+                    {(rule as any).price4 > 0 && (
+                      <div>
+                        <p className="text-xs text-stone-400">4 fő/éj</p>
+                        <p className={`font-semibold ${colors.text}`}>{formatCurrency((rule as any).price4)}</p>
+                      </div>
+                    )}
+                    {(rule as any).price5 > 0 && (
+                      <div>
+                        <p className="text-xs text-stone-400">5 fő/éj</p>
+                        <p className={`font-semibold ${colors.text}`}>{formatCurrency((rule as any).price5)}</p>
+                      </div>
+                    )}
+                    {(rule as any).price6 > 0 && (
+                      <div>
+                        <p className="text-xs text-stone-400">6 fő/éj</p>
+                        <p className={`font-semibold ${colors.text}`}>{formatCurrency((rule as any).price6)}</p>
+                      </div>
+                    )}
                     {rule.weekendPrice > 0 && (
                       <div>
-                        <p className="text-xs text-stone-400">Hétvége/éj</p>
+                        <p className="text-xs text-stone-400">Hétvége 1–2 fő</p>
                         <p className={`font-semibold ${colors.text}`}>{formatCurrency(rule.weekendPrice)}</p>
+                      </div>
+                    )}
+                    {(rule as any).weekendPrice3 > 0 && (
+                      <div>
+                        <p className="text-xs text-stone-400">Hétvége 3 fő</p>
+                        <p className={`font-semibold ${colors.text}`}>{formatCurrency((rule as any).weekendPrice3)}</p>
+                      </div>
+                    )}
+                    {(rule as any).weekendPrice4 > 0 && (
+                      <div>
+                        <p className="text-xs text-stone-400">Hétvége 4 fő</p>
+                        <p className={`font-semibold ${colors.text}`}>{formatCurrency((rule as any).weekendPrice4)}</p>
+                      </div>
+                    )}
+                    {(rule as any).weekendPrice5 > 0 && (
+                      <div>
+                        <p className="text-xs text-stone-400">Hétvége 5 fő</p>
+                        <p className={`font-semibold ${colors.text}`}>{formatCurrency((rule as any).weekendPrice5)}</p>
+                      </div>
+                    )}
+                    {(rule as any).weekendPrice6 > 0 && (
+                      <div>
+                        <p className="text-xs text-stone-400">Hétvége 6 fő</p>
+                        <p className={`font-semibold ${colors.text}`}>{formatCurrency((rule as any).weekendPrice6)}</p>
                       </div>
                     )}
                     {rule.childPrice2to6 > 0 && (
@@ -235,11 +283,34 @@ export default function AdminPriceCalendar({ rules, apartments }: Props) {
                 {rule ? (
                   <>
                     <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-full w-fit ${colors.badge}`}>{rule.name}</span>
-                    <div className="mt-0.5">
-                      <p className="text-[10px] text-stone-400 leading-none">Szállás/éj</p>
-                      <p className={`text-xs font-bold ${colors.text}`}>{formatCurrency(price!)}</p>
-                      {rule.weekendPrice > 0 && !weekend && (
-                        <p className="text-[10px] text-stone-400">hétvégén: {formatCurrency(rule.weekendPrice)}</p>
+                    <div className="mt-0.5 space-y-0.5">
+                      <div>
+                        <p className="text-[10px] text-stone-400 leading-none">1–2 fő/éj</p>
+                        <p className={`text-xs font-bold ${colors.text}`}>{formatCurrency(price!)}</p>
+                      </div>
+                      {(rule as any).price3 > 0 && (
+                        <div>
+                          <p className="text-[10px] text-stone-400 leading-none">3 fő/éj</p>
+                          <p className={`text-xs font-semibold ${colors.text}`}>{formatCurrency(weekend && (rule as any).weekendPrice3 > 0 ? (rule as any).weekendPrice3 : (rule as any).price3)}</p>
+                        </div>
+                      )}
+                      {(rule as any).price4 > 0 && (
+                        <div>
+                          <p className="text-[10px] text-stone-400 leading-none">4 fő/éj</p>
+                          <p className={`text-xs font-semibold ${colors.text}`}>{formatCurrency(weekend && (rule as any).weekendPrice4 > 0 ? (rule as any).weekendPrice4 : (rule as any).price4)}</p>
+                        </div>
+                      )}
+                      {(rule as any).price5 > 0 && (
+                        <div>
+                          <p className="text-[10px] text-stone-400 leading-none">5 fő/éj</p>
+                          <p className={`text-xs font-semibold ${colors.text}`}>{formatCurrency(weekend && (rule as any).weekendPrice5 > 0 ? (rule as any).weekendPrice5 : (rule as any).price5)}</p>
+                        </div>
+                      )}
+                      {(rule as any).price6 > 0 && (
+                        <div>
+                          <p className="text-[10px] text-stone-400 leading-none">6 fő/éj</p>
+                          <p className={`text-xs font-semibold ${colors.text}`}>{formatCurrency(weekend && (rule as any).weekendPrice6 > 0 ? (rule as any).weekendPrice6 : (rule as any).price6)}</p>
+                        </div>
                       )}
                     </div>
                     {(rule.childPrice2to6 > 0 || rule.childPrice6to12 > 0) && (

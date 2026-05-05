@@ -37,6 +37,97 @@ interface BookingEmailData {
   numberOfChildren6to12?: number;
   childPrice2to6?: number;
   childPrice6to12?: number;
+  apartments?: Array<{
+    name: string;
+    numberOfGuests: number;
+    numberOfAdults: number;
+    breakdown: { count: number; rate: number }[];
+    aptBasePrice: number;
+    aptTouristTax: number;
+  }>;
+}
+
+type ApartmentEmailEntry = {
+  name: string;
+  numberOfGuests: number;
+  numberOfAdults: number;
+  breakdown: { count: number; rate: number }[];
+  aptBasePrice: number;
+  aptTouristTax: number;
+};
+
+function apartmentDescriptionHtml(apts?: ApartmentEmailEntry[]): string {
+  if (!apts || apts.length === 0) return "";
+
+  const has12 = apts.some(a => /Gamma [12]$/.test(a.name));
+  const has34 = apts.some(a => /Gamma [34]$/.test(a.name));
+  const names12 = apts.filter(a => /Gamma [12]$/.test(a.name)).map(a => a.name);
+  const names34 = apts.filter(a => /Gamma [34]$/.test(a.name)).map(a => a.name);
+
+  const blocks: string[] = [];
+
+  if (has12) {
+    const title = names12.join(" + ");
+    blocks.push(`
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f0e8;border-radius:12px;margin-bottom:16px;">
+      <tr><td style="padding:20px 24px;">
+        <p style="font-family:sans-serif;font-size:13px;font-weight:700;color:#1a3a2a;margin:0 0 10px;">${escapeHtml(title)}</p>
+        <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;line-height:1.8;margin:0 0 8px;">
+          54 nm-es, 4 fős apartman. 1 hálószoba 180×200-as ággyal + nappali kihúzhatós kanapéval (140×200), teljesen felszerelt konyha étkező résszel, fürdőszoba, gardrób és kertkapcsolatos 20 nm-es terasszal.
+        </p>
+        <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;line-height:1.8;margin:0 0 8px;">
+          Közös tetőteraszon egy 5 férőhelyes jakuzzi, amit a megjelölt 1,5 órában 11–23 óra között privát tudnak használni.
+        </p>
+        <p style="font-family:sans-serif;font-size:13px;font-weight:600;color:#1a3a2a;margin:0;">Parkolás ingyenes!</p>
+      </td></tr>
+    </table>`);
+  }
+
+  if (has34) {
+    const title = names34.join(" + ");
+    blocks.push(`
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f0e8;border-radius:12px;margin-bottom:16px;">
+      <tr><td style="padding:20px 24px;">
+        <p style="font-family:sans-serif;font-size:13px;font-weight:700;color:#1a3a2a;margin:0 0 10px;">${escapeHtml(title)}</p>
+        <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;line-height:1.8;margin:0 0 8px;">
+          64 nm-es, 6 fős apartman. 2 hálószoba (160 és 180 cm-es ágyak) + nappali kihúzható kanapéval (200×200), fürdőszoba, teljesen felszerelt konyha étkező résszel és erkély.
+        </p>
+        <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;line-height:1.8;margin:0 0 8px;">
+          Közös tetőteraszon napozóterasz és 5 férőhelyes jakuzzi található, amit a megjelölt 1,5 órában 11–22 óra között privát tudnak használni.
+        </p>
+        <p style="font-family:sans-serif;font-size:13px;font-weight:600;color:#1a3a2a;margin:0;">Parkoló ingyenes!</p>
+      </td></tr>
+    </table>`);
+  }
+
+  return blocks.join("");
+}
+
+function apartmentPriceRowsHtml(apts: ApartmentEmailEntry[]): string {
+  return apts.map(a => `
+    <tr>
+      <td colspan="2" style="font-family:sans-serif;font-size:12px;font-weight:700;color:#1a3a2a;padding:8px 0 2px;border-bottom:1px solid #e8d9b5;">
+        ${escapeHtml(a.name)} – ${a.numberOfGuests} fő
+      </td>
+    </tr>
+    ${a.breakdown.map(g => `
+    <tr>
+      <td style="font-family:sans-serif;font-size:13px;color:#525252;padding:3px 0 3px 12px;border-bottom:1px solid #e8d9b5;">
+        Szállás: ${g.count} éj × ${formatHuf(g.rate)}/éj
+      </td>
+      <td style="font-family:sans-serif;font-size:13px;color:#2a2a2a;font-weight:500;text-align:right;padding:3px 0;border-bottom:1px solid #e8d9b5;">
+        ${formatHuf(g.count * g.rate)}
+      </td>
+    </tr>`).join("")}
+    <tr>
+      <td style="font-family:sans-serif;font-size:13px;color:#525252;padding:3px 0 6px 12px;border-bottom:1px solid #d4c9a8;">
+        IFA (${a.numberOfAdults} felnőtt × 450 Ft)
+      </td>
+      <td style="font-family:sans-serif;font-size:13px;color:#2a2a2a;font-weight:500;text-align:right;padding:3px 0 6px;border-bottom:1px solid #d4c9a8;">
+        ${formatHuf(a.aptTouristTax)}
+      </td>
+    </tr>
+  `).join("");
 }
 
 function formatHuf(amount: number): string {
@@ -109,7 +200,7 @@ function guestEmailHtml(data: BookingEmailData): string {
       <tr>
         <td style="background:#1a3a2a;padding:36px 40px;text-align:center;">
           <p style="color:#f5f0e8;font-size:28px;font-weight:300;margin:0;letter-spacing:-0.02em;">Gamma Apartmanok</p>
-          <p style="color:rgba(245,240,232,0.6);font-size:11px;margin:8px 0 0;font-family:sans-serif;letter-spacing:0.2em;text-transform:uppercase;">Miskolctapolca · Bencések útja 117/A</p>
+          <p style="color:rgba(245,240,232,0.6);font-size:11px;margin:8px 0 0;font-family:sans-serif;letter-spacing:0.2em;text-transform:uppercase;">Miskolctapolca · Beregi utca 11</p>
         </td>
       </tr>
 
@@ -123,28 +214,21 @@ function guestEmailHtml(data: BookingEmailData): string {
         </p>
 
         <!-- Ingatlan leírás -->
-        <table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f0e8;border-radius:12px;margin-bottom:24px;">
-          <tr><td style="padding:20px 24px;">
-            <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;line-height:1.8;margin:0 0 12px;">
-              A kuckó amerikai konyhás nappalival és egy hálószobával rendelkezik, zuhanyzós fürdővel és külön helyiségben lévő toalettel. A férőhelyek az alábbiak:
-            </p>
-            <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;margin:0 0 6px;">&#8226; <strong>Hálószoba:</strong> 2 felnőtt részére 180×200-as méretű franciaágyon</p>
-            <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;margin:0 0 12px;">&#8226; <strong>Nappali:</strong> 2 felnőtt/2 gyerek részére 160×200-as kanapéágyon</p>
-            <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;line-height:1.8;margin:0 0 12px;">
-              Felszerelt konyha, étkező, fedett terasz 3 személyes jakuzzival, erkély, kert.
-            </p>
-            <p style="font-family:sans-serif;font-size:13px;font-weight:600;color:#1a3a2a;margin:0;">Csak Önök vannak.</p>
-          </td></tr>
-        </table>
+        ${apartmentDescriptionHtml(data.apartments)}
 
         <!-- Foglalás részletei -->
         <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e8d9b5;border-radius:12px;margin-bottom:24px;">
           <tr><td style="padding:20px 24px;">
             <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#1a3a2a;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 14px;">Foglalás részletei</p>
             <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;margin:0 0 4px;"><strong>Gamma Apartmanok Miskolctapolca</strong></p>
-            <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 4px;">Cím: 3519 Miskolctapolca, Bencések útja 117/A</p>
-            <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 4px;">Telefonszám: +36/30 845 4923</p>
-            <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 16px;">E-mail: milan.kucko117@gmail.com</p>
+            <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 4px;">Cím: 3519 Miskolctapolca, Beregi utca 11</p>
+            <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 4px;">Telefonszám: +36 20 359 9222</p>
+            <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 16px;">E-mail: gammaapartmanok@gmail.com</p>
+            ${data.apartments && data.apartments.length > 0 ? `
+            <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;margin:0 0 4px;">
+              <strong>Apartman${data.apartments.length > 1 ? "ok" : ""}:</strong>
+              ${data.apartments.map(a => `${escapeHtml(a.name)} (${a.numberOfGuests} fő)`).join(", ")}
+            </p>` : ""}
             <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;margin:0 0 4px;">
               <strong>Dátum:</strong> ${formatDateWithDay(data.checkIn)} – ${formatDateWithDay(data.checkOut)} (${data.nights} éjszaka)
             </p>
@@ -177,6 +261,9 @@ function guestEmailHtml(data: BookingEmailData): string {
           <tr><td style="padding:20px 24px;">
             <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#1a3a2a;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 14px;">Ár összesítő</p>
             <table width="100%" cellpadding="0" cellspacing="0">
+              ${data.apartments && data.apartments.length > 0
+                ? apartmentPriceRowsHtml(data.apartments)
+                : `
               ${data.basePrice ? `
               <tr>
                 <td style="font-family:sans-serif;font-size:13px;color:#525252;padding:5px 0;border-bottom:1px solid #e8d9b5;">
@@ -188,39 +275,28 @@ function guestEmailHtml(data: BookingEmailData): string {
               </tr>` : ""}
               ${(data.numberOfBabies ?? 0) > 0 ? `
               <tr>
-                <td style="font-family:sans-serif;font-size:13px;color:#525252;padding:5px 0;border-bottom:1px solid #e8d9b5;">
-                  Baba (0–2 év): ${data.numberOfBabies} fő
-                </td>
-                <td style="font-family:sans-serif;font-size:13px;color:#2a2a2a;font-weight:500;text-align:right;padding:5px 0;border-bottom:1px solid #e8d9b5;">
-                  ingyenes
-                </td>
+                <td style="font-family:sans-serif;font-size:13px;color:#525252;padding:5px 0;border-bottom:1px solid #e8d9b5;">Baba (0–2 év): ${data.numberOfBabies} fő</td>
+                <td style="font-family:sans-serif;font-size:13px;color:#2a2a2a;font-weight:500;text-align:right;padding:5px 0;border-bottom:1px solid #e8d9b5;">ingyenes</td>
               </tr>` : ""}
               ${(data.numberOfChildren6to12 ?? 0) > 0 && (data.childPrice6to12 ?? 0) > 0 ? `
               <tr>
-                <td style="font-family:sans-serif;font-size:13px;color:#525252;padding:5px 0;border-bottom:1px solid #e8d9b5;">
-                  Gyerek (6–12 év): ${data.numberOfChildren6to12} fő × ${data.nights} éj × ${formatHuf(data.childPrice6to12!)}
-                </td>
-                <td style="font-family:sans-serif;font-size:13px;color:#2a2a2a;font-weight:500;text-align:right;padding:5px 0;border-bottom:1px solid #e8d9b5;">
-                  ${formatHuf(data.childPrice6to12! * data.numberOfChildren6to12! * data.nights)}
-                </td>
+                <td style="font-family:sans-serif;font-size:13px;color:#525252;padding:5px 0;border-bottom:1px solid #e8d9b5;">Gyerek (6–12 év): ${data.numberOfChildren6to12} fő × ${data.nights} éj × ${formatHuf(data.childPrice6to12!)}</td>
+                <td style="font-family:sans-serif;font-size:13px;color:#2a2a2a;font-weight:500;text-align:right;padding:5px 0;border-bottom:1px solid #e8d9b5;">${formatHuf(data.childPrice6to12! * data.numberOfChildren6to12! * data.nights)}</td>
               </tr>` : ""}
               ${(data.numberOfChildren2to6 ?? 0) > 0 && (data.childPrice2to6 ?? 0) > 0 ? `
               <tr>
-                <td style="font-family:sans-serif;font-size:13px;color:#525252;padding:5px 0;border-bottom:1px solid #e8d9b5;">
-                  Kisgyerek (2–6 év): ${data.numberOfChildren2to6} fő × ${data.nights} éj × ${formatHuf(data.childPrice2to6!)}
-                </td>
-                <td style="font-family:sans-serif;font-size:13px;color:#2a2a2a;font-weight:500;text-align:right;padding:5px 0;border-bottom:1px solid #e8d9b5;">
-                  ${formatHuf(data.childPrice2to6! * data.numberOfChildren2to6! * data.nights)}
-                </td>
+                <td style="font-family:sans-serif;font-size:13px;color:#525252;padding:5px 0;border-bottom:1px solid #e8d9b5;">Kisgyerek (2–6 év): ${data.numberOfChildren2to6} fő × ${data.nights} éj × ${formatHuf(data.childPrice2to6!)}</td>
+                <td style="font-family:sans-serif;font-size:13px;color:#2a2a2a;font-weight:500;text-align:right;padding:5px 0;border-bottom:1px solid #e8d9b5;">${formatHuf(data.childPrice2to6! * data.numberOfChildren2to6! * data.nights)}</td>
               </tr>` : ""}
+              ${data.touristTax && data.touristTax > 0 ? `
+              <tr>
+                <td style="font-family:sans-serif;font-size:13px;color:#525252;padding:5px 0;border-bottom:1px solid #e8d9b5;">Helyi idegenforgalmi adó (IFA: 450 Ft/felnőtt/éj) (${adults} fő/${data.nights} éj)</td>
+                <td style="font-family:sans-serif;font-size:13px;color:#2a2a2a;font-weight:500;text-align:right;padding:5px 0;border-bottom:1px solid #e8d9b5;">${formatHuf(data.touristTax)}</td>
+              </tr>` : ""}`}
               ${data.discountAmount && data.discountAmount > 0 ? `
               <tr>
-                <td style="font-family:sans-serif;font-size:13px;color:#1a5c2a;padding:5px 0;border-bottom:1px solid #e8d9b5;">
-                  Kedvezmény (${data.discountPercent}%)
-                </td>
-                <td style="font-family:sans-serif;font-size:13px;color:#1a5c2a;font-weight:500;text-align:right;padding:5px 0;border-bottom:1px solid #e8d9b5;">
-                  &minus;${formatHuf(data.discountAmount)}
-                </td>
+                <td style="font-family:sans-serif;font-size:13px;color:#1a5c2a;padding:5px 0;border-bottom:1px solid #e8d9b5;">Kedvezmény (${data.discountPercent}%)</td>
+                <td style="font-family:sans-serif;font-size:13px;color:#1a5c2a;font-weight:500;text-align:right;padding:5px 0;border-bottom:1px solid #e8d9b5;">&minus;${formatHuf(data.discountAmount)}</td>
               </tr>` : ""}
               ${extras.map(s => {
     const detail = s.price != null && s.quantity && s.quantity > 0
@@ -234,15 +310,6 @@ function guestEmailHtml(data: BookingEmailData): string {
                 <td style="font-family:sans-serif;font-size:13px;color:#2a2a2a;font-weight:500;text-align:right;padding:5px 0;border-bottom:1px solid #e8d9b5;">${formatHuf(s.total)}</td>
               </tr>`;
   }).join("")}
-              ${data.touristTax && data.touristTax > 0 ? `
-              <tr>
-                <td style="font-family:sans-serif;font-size:13px;color:#525252;padding:5px 0;border-bottom:1px solid #e8d9b5;">
-                  Helyi idegenforgalmi adó (IFA: 450 Ft/felnőtt/éj) (${adults} fő/${data.nights} éj)
-                </td>
-                <td style="font-family:sans-serif;font-size:13px;color:#2a2a2a;font-weight:500;text-align:right;padding:5px 0;border-bottom:1px solid #e8d9b5;">
-                  ${formatHuf(data.touristTax)}
-                </td>
-              </tr>` : ""}
               <tr>
                 <td style="font-family:sans-serif;font-size:15px;font-weight:700;color:#1a3a2a;padding:10px 0 0;">Ár összesen (ÁFA-val)</td>
                 <td style="font-family:sans-serif;font-size:17px;font-weight:700;color:#1a3a2a;text-align:right;padding:10px 0 0;">${formatHuf(data.totalPrice)}</td>
@@ -293,7 +360,7 @@ function guestEmailHtml(data: BookingEmailData): string {
             <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#1a3a2a;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 10px;">Számlázási cím</p>
             <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;margin:0 0 3px;">Név: ${escapeHtml(data.guestName)}</p>
             <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 6px;">Cím: ${escapeHtml(data.guestAddress)}</p>
-            <p style="font-family:sans-serif;font-size:12px;color:#a8a8a8;margin:0;">(Ha Szép Kártyával szeretne fizetni, akkor a Gamma Apartmanok Miskolctapolca, 3519 Miskolctapolca, Bencések útja 117/A. elfogadóhelyet kell megkeresnie az előleg utalásnál.)</p>
+            <p style="font-family:sans-serif;font-size:12px;color:#a8a8a8;margin:0;">(Ha Szép Kártyával szeretne fizetni, akkor a Gamma Apartmanok Miskolctapolca, 3519 Miskolctapolca, Beregi utca 11. elfogadóhelyet kell megkeresnie az előleg utalásnál.)</p>
             <p style="font-family:sans-serif;font-size:12px;color:#a8a8a8;margin:0;">(Ha a számla kiállítását más névre és címre kéri, vagy adószám feltüntetését is kéri, kérem legyen szíves megírni!)</p>
           </td></tr>
         </table>` : ""}
@@ -303,22 +370,19 @@ function guestEmailHtml(data: BookingEmailData): string {
           <tr><td style="padding:20px 24px;">
             <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#1a3a2a;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 12px;">Az ár tartalmazza</p>
             ${[
-      "Önellátás",
-      "Szállás Gamma Apartmanok teljes ház (" + data.nights + " éj), csak Önök vannak a szálláson",
-      "Jakuzzi korlátlan használat",
-      "Klíma használat",
-      "Internethasználat",
-      "Díjmentes, zárt, kamerával megfigyelt parkoló",
-      "Ágyneműhasználat",
-      "1 db nagy- és 1 db kisméretű törölköző használat/fő",
-      "1 db fürdőköpeny használat/felnőtt",
-      "Hajszárító használat",
-      "Felszerelt konyha használat (fagyasztós hűtő, 2 zónás főzőlap, minisütő, mosogatógép, mikrohullámú sütő, vízforraló, kenyérpirító, melegszendvics sütő, Nespresso kapszulás kávéfőző és őrölt kávés kávéfőző)",
-      "Kávé és tea bekészítés",
-      "Üdvözlőital (behűtött 1 üveg bor)",
-      "Grillezési/bográcsozási/szalonnasütési lehetőség faszén és tűzifa bekészítéssel",
-      "Mosogatószer, mosogatógép tabletta, konyharuha biztosítása",
-      "Igény esetén kiságy (1 db), kiskád, etetőszék, bili, wc szűkítő, fellépő stb. biztosítása",
+      "Extra gyors ingyenes WiFi",
+      "Automata redőnyök",
+      "Központi porszívó",
+      "Padló- és mennyezeti hűtés/fűtés",
+      "Kapszulás kávéfőző + hagyományos kávéfőző (kávékapszulával)",
+      "Teafőző, kenyérpirító",
+      "Beépített hűtő + mélyhűtő",
+      "Beépített sütő + főzőlap + mikrosütő",
+      "Nagyméretű TV",
+      "Vasalószoba",
+      "Szúnyogháló",
+      "Mosókonyha (térítés ellenében)",
+      "Tetőteraszon közös jakuzzi és napozóterasz – előre egyeztetett időpontban napi 1,5 óra, privát és térítésmentes",
     ].map(item => `<p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;margin:3px 0;">&#8226; ${item}</p>`).join("")}
           </td></tr>
         </table>
@@ -348,11 +412,11 @@ function guestEmailHtml(data: BookingEmailData): string {
           Üdvözlettel: <strong>Beáta</strong>
         </p>
         <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 4px;">Gamma Apartmanok Vendégház</p>
-        <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 16px;">+36 30 845 4923</p>
+        <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 16px;">+36 20 359 9222</p>
 
         <p style="font-family:sans-serif;font-size:12px;color:#a8a8a8;line-height:1.6;margin:0;">
-          Kérdése esetén hívjon minket a <strong>+36 30 845 4923</strong> számon
-          vagy írjon az <strong>milan.kucko117@gmail.com</strong> címre.
+          Kérdése esetén hívjon minket a <strong>+36 20 359 9222</strong> számon
+          vagy írjon az <strong>gammaapartmanok@gmail.com</strong> címre.
         </p>
 
       </td></tr>
@@ -361,7 +425,7 @@ function guestEmailHtml(data: BookingEmailData): string {
       <tr>
         <td style="background:#f5f0e8;padding:20px 40px;text-align:center;border-top:1px solid #e8d9b5;">
           <p style="font-family:sans-serif;font-size:12px;color:#a8a8a8;margin:0;">
-            Gamma Apartmanok · milan.kucko117@gmail.com · +36 30 845 4923
+            Gamma Apartmanok · gammaapartmanok@gmail.com · +36 20 359 9222
           </p>
           <p style="font-family:sans-serif;font-size:11px;color:#d4d4d4;margin:4px 0 0;">
             Azonosító: ${data.bookingId}
@@ -460,6 +524,13 @@ function adminEmailHtml(data: BookingEmailData): string {
               ${adminAdults} felnőtt${(data.numberOfTeens ?? 0) > 0 ? `, ${data.numberOfTeens} tinédzser` : ""}${(data.numberOfBabies ?? 0) > 0 ? `, ${data.numberOfBabies} baba` : ""}${(data.numberOfChildren6to12 ?? 0) > 0 ? `, ${data.numberOfChildren6to12} gyerek (6–12 év)` : ""}${(data.numberOfChildren2to6 ?? 0) > 0 ? `, ${data.numberOfChildren2to6} kisgyerek (2–6 év)` : ""}
             </td>
           </tr>
+          ${data.apartments && data.apartments.length > 0 ? `
+          <tr>
+            <td style="color:#737373;padding:5px 0;vertical-align:top;">Apartman${data.apartments.length > 1 ? "ok" : ""}</td>
+            <td style="color:#2a2a2a;padding:5px 0;text-align:right;">
+              ${data.apartments.map(a => `${escapeHtml(a.name)} (${a.numberOfGuests} fő)`).join("<br>")}
+            </td>
+          </tr>` : ""}
         </table>
 
         <!-- Ár összesítő -->
@@ -600,7 +671,7 @@ function depositConfirmationHtml(data: BookingEmailData & { depositAmount: numbe
       <tr>
         <td style="background:#1a3a2a;padding:36px 40px;text-align:center;">
           <p style="color:#f5f0e8;font-size:28px;font-weight:300;margin:0;letter-spacing:-0.02em;">Gamma Apartmanok</p>
-          <p style="color:rgba(245,240,232,0.6);font-size:11px;margin:8px 0 0;font-family:sans-serif;letter-spacing:0.2em;text-transform:uppercase;">Miskolctapolca · Bencések útja 117/A</p>
+          <p style="color:rgba(245,240,232,0.6);font-size:11px;margin:8px 0 0;font-family:sans-serif;letter-spacing:0.2em;text-transform:uppercase;">Miskolctapolca · Beregi utca 11</p>
         </td>
       </tr>
 
@@ -616,14 +687,22 @@ function depositConfirmationHtml(data: BookingEmailData & { depositAmount: numbe
           Köszönjük hogy minket választott, foglalását megkaptuk.
         </p>
 
+        <!-- Ingatlan leírás -->
+        ${apartmentDescriptionHtml(data.apartments)}
+
         <!-- Foglalás részletei -->
         <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e8d9b5;border-radius:12px;margin-bottom:24px;">
           <tr><td style="padding:20px 24px;">
             <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#1a3a2a;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 14px;">Foglalás részletei</p>
             <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;margin:0 0 4px;"><strong>Gamma Apartmanok Miskolctapolca</strong></p>
-            <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 4px;">Cím: 3519 Miskolctapolca, Bencések útja 117/A</p>
-            <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 4px;">Telefonszám: +36/30 845 4923</p>
-            <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 16px;">E-mail: milan.kucko117@gmail.com</p>
+            <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 4px;">Cím: 3519 Miskolctapolca, Beregi utca 11</p>
+            <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 4px;">Telefonszám: +36 20 359 9222</p>
+            <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 16px;">E-mail: gammaapartmanok@gmail.com</p>
+            ${data.apartments && data.apartments.length > 0 ? `
+            <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;margin:0 0 4px;">
+              <strong>Apartman${data.apartments.length > 1 ? "ok" : ""}:</strong>
+              ${data.apartments.map(a => `${escapeHtml(a.name)} (${a.numberOfGuests} fő)`).join(", ")}
+            </p>` : ""}
             <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;margin:0 0 4px;">
               <strong>Dátum:</strong> ${formatDateWithDay(data.checkIn)} – ${formatDateWithDay(data.checkOut)} (${data.nights} éjszaka)
             </p>
@@ -653,50 +732,38 @@ function depositConfirmationHtml(data: BookingEmailData & { depositAmount: numbe
           <tr><td style="padding:20px 24px;">
             <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#1a3a2a;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 14px;">Ár összesítő</p>
             <table width="100%" cellpadding="0" cellspacing="0">
+              ${data.apartments && data.apartments.length > 0
+                ? apartmentPriceRowsHtml(data.apartments)
+                : `
               ${data.basePrice ? `
               <tr>
-                <td style="font-family:sans-serif;font-size:13px;color:#525252;padding:5px 0;border-bottom:1px solid #e8d9b5;">
-                  Ár: ${adults} felnőtt${(data.numberOfTeens ?? 0) > 0 ? ` + ${data.numberOfTeens} fiatal` : ""} részére
-                </td>
-                <td style="font-family:sans-serif;font-size:13px;color:#2a2a2a;font-weight:500;text-align:right;padding:5px 0;border-bottom:1px solid #e8d9b5;">
-                  ${formatHuf(data.basePrice)} / ${data.nights} éj
-                </td>
+                <td style="font-family:sans-serif;font-size:13px;color:#525252;padding:5px 0;border-bottom:1px solid #e8d9b5;">Ár: ${adults} felnőtt${(data.numberOfTeens ?? 0) > 0 ? ` + ${data.numberOfTeens} fiatal` : ""} részére</td>
+                <td style="font-family:sans-serif;font-size:13px;color:#2a2a2a;font-weight:500;text-align:right;padding:5px 0;border-bottom:1px solid #e8d9b5;">${formatHuf(data.basePrice)} / ${data.nights} éj</td>
               </tr>` : ""}
               ${(data.numberOfBabies ?? 0) > 0 ? `
               <tr>
-                <td style="font-family:sans-serif;font-size:13px;color:#525252;padding:5px 0;border-bottom:1px solid #e8d9b5;">
-                  Baba (0–2 év): ${data.numberOfBabies} fő
-                </td>
-                <td style="font-family:sans-serif;font-size:13px;color:#2a2a2a;font-weight:500;text-align:right;padding:5px 0;border-bottom:1px solid #e8d9b5;">
-                  ingyenes
-                </td>
+                <td style="font-family:sans-serif;font-size:13px;color:#525252;padding:5px 0;border-bottom:1px solid #e8d9b5;">Baba (0–2 év): ${data.numberOfBabies} fő</td>
+                <td style="font-family:sans-serif;font-size:13px;color:#2a2a2a;font-weight:500;text-align:right;padding:5px 0;border-bottom:1px solid #e8d9b5;">ingyenes</td>
               </tr>` : ""}
               ${(data.numberOfChildren6to12 ?? 0) > 0 && (data.childPrice6to12 ?? 0) > 0 ? `
               <tr>
-                <td style="font-family:sans-serif;font-size:13px;color:#525252;padding:5px 0;border-bottom:1px solid #e8d9b5;">
-                  Gyerek (6–12 év): ${data.numberOfChildren6to12} fő × ${data.nights} éj × ${formatHuf(data.childPrice6to12!)}
-                </td>
-                <td style="font-family:sans-serif;font-size:13px;color:#2a2a2a;font-weight:500;text-align:right;padding:5px 0;border-bottom:1px solid #e8d9b5;">
-                  ${formatHuf(data.childPrice6to12! * data.numberOfChildren6to12! * data.nights)}
-                </td>
+                <td style="font-family:sans-serif;font-size:13px;color:#525252;padding:5px 0;border-bottom:1px solid #e8d9b5;">Gyerek (6–12 év): ${data.numberOfChildren6to12} fő × ${data.nights} éj × ${formatHuf(data.childPrice6to12!)}</td>
+                <td style="font-family:sans-serif;font-size:13px;color:#2a2a2a;font-weight:500;text-align:right;padding:5px 0;border-bottom:1px solid #e8d9b5;">${formatHuf(data.childPrice6to12! * data.numberOfChildren6to12! * data.nights)}</td>
               </tr>` : ""}
               ${(data.numberOfChildren2to6 ?? 0) > 0 && (data.childPrice2to6 ?? 0) > 0 ? `
               <tr>
-                <td style="font-family:sans-serif;font-size:13px;color:#525252;padding:5px 0;border-bottom:1px solid #e8d9b5;">
-                  Kisgyerek (2–6 év): ${data.numberOfChildren2to6} fő × ${data.nights} éj × ${formatHuf(data.childPrice2to6!)}
-                </td>
-                <td style="font-family:sans-serif;font-size:13px;color:#2a2a2a;font-weight:500;text-align:right;padding:5px 0;border-bottom:1px solid #e8d9b5;">
-                  ${formatHuf(data.childPrice2to6! * data.numberOfChildren2to6! * data.nights)}
-                </td>
+                <td style="font-family:sans-serif;font-size:13px;color:#525252;padding:5px 0;border-bottom:1px solid #e8d9b5;">Kisgyerek (2–6 év): ${data.numberOfChildren2to6} fő × ${data.nights} éj × ${formatHuf(data.childPrice2to6!)}</td>
+                <td style="font-family:sans-serif;font-size:13px;color:#2a2a2a;font-weight:500;text-align:right;padding:5px 0;border-bottom:1px solid #e8d9b5;">${formatHuf(data.childPrice2to6! * data.numberOfChildren2to6! * data.nights)}</td>
               </tr>` : ""}
+              ${data.touristTax && data.touristTax > 0 ? `
+              <tr>
+                <td style="font-family:sans-serif;font-size:13px;color:#525252;padding:5px 0;border-bottom:1px solid #e8d9b5;">Helyi idegenforgalmi adó (IFA: 450 Ft/felnőtt/éj) (${adults} fő/${data.nights} éj)</td>
+                <td style="font-family:sans-serif;font-size:13px;color:#2a2a2a;font-weight:500;text-align:right;padding:5px 0;border-bottom:1px solid #e8d9b5;">${formatHuf(data.touristTax)}</td>
+              </tr>` : ""}`}
               ${data.discountAmount && data.discountAmount > 0 ? `
               <tr>
-                <td style="font-family:sans-serif;font-size:13px;color:#1a5c2a;padding:5px 0;border-bottom:1px solid #e8d9b5;">
-                  Kedvezmény (${data.discountPercent}%)
-                </td>
-                <td style="font-family:sans-serif;font-size:13px;color:#1a5c2a;font-weight:500;text-align:right;padding:5px 0;border-bottom:1px solid #e8d9b5;">
-                  &minus;${formatHuf(data.discountAmount)}
-                </td>
+                <td style="font-family:sans-serif;font-size:13px;color:#1a5c2a;padding:5px 0;border-bottom:1px solid #e8d9b5;">Kedvezmény (${data.discountPercent}%)</td>
+                <td style="font-family:sans-serif;font-size:13px;color:#1a5c2a;font-weight:500;text-align:right;padding:5px 0;border-bottom:1px solid #e8d9b5;">&minus;${formatHuf(data.discountAmount)}</td>
               </tr>` : ""}
               ${extras.map(s => {
     const detail = s.price != null && s.quantity && s.quantity > 0
@@ -710,15 +777,6 @@ function depositConfirmationHtml(data: BookingEmailData & { depositAmount: numbe
                 <td style="font-family:sans-serif;font-size:13px;color:#2a2a2a;font-weight:500;text-align:right;padding:5px 0;border-bottom:1px solid #e8d9b5;">${formatHuf(s.total)}</td>
               </tr>`;
   }).join("")}
-              ${data.touristTax && data.touristTax > 0 ? `
-              <tr>
-                <td style="font-family:sans-serif;font-size:13px;color:#525252;padding:5px 0;border-bottom:1px solid #e8d9b5;">
-                  Helyi idegenforgalmi adó (IFA: 450 Ft/felnőtt/éj) (${adults} fő/${data.nights} éj)
-                </td>
-                <td style="font-family:sans-serif;font-size:13px;color:#2a2a2a;font-weight:500;text-align:right;padding:5px 0;border-bottom:1px solid #e8d9b5;">
-                  ${formatHuf(data.touristTax)}
-                </td>
-              </tr>` : ""}
               <tr>
                 <td style="font-family:sans-serif;font-size:15px;font-weight:700;color:#1a3a2a;padding:10px 0 0;">Ár összesen (ÁFA-val)</td>
                 <td style="font-family:sans-serif;font-size:17px;font-weight:700;color:#1a3a2a;text-align:right;padding:10px 0 0;">${formatHuf(data.totalPrice)}</td>
@@ -753,22 +811,19 @@ function depositConfirmationHtml(data: BookingEmailData & { depositAmount: numbe
           <tr><td style="padding:20px 24px;">
             <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#1a3a2a;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 12px;">Az ár tartalmazza</p>
             ${[
-      "Önellátás",
-      "Szállás Gamma Apartmanok teljes ház (" + data.nights + " éj), csak Önök vannak a szálláson",
-      "Jakuzzi korlátlan használat",
-      "Klíma használat",
-      "Internethasználat",
-      "Díjmentes, zárt, kamerával megfigyelt parkoló",
-      "Ágyneműhasználat",
-      "1 db nagy- és 1 db kisméretű törölköző használat/fő",
-      "1 db fürdőköpeny használat/felnőtt",
-      "Hajszárító használat",
-      "Felszerelt konyha használat (fagyasztós hűtő, 2 zónás főzőlap, minisütő, mosogatógép, mikrohullámú sütő, vízforraló, kenyérpirító, melegszendvics sütő, Nespresso kapszulás kávéfőző és őrölt kávés kávéfőző)",
-      "Kávé és tea bekészítés",
-      "Üdvözlőital (behűtött 1 üveg bor)",
-      "Grillezési/bográcsozási/szalonnasütési lehetőség faszén és tűzifa bekészítéssel",
-      "Mosogatószer, mosogatógép tabletta, konyharuha biztosítása",
-      "Igény esetén kiságy (1 db), kiskád, etetőszék, bili, wc szűkítő, fellépő stb. biztosítása",
+      "Extra gyors ingyenes WiFi",
+      "Automata redőnyök",
+      "Központi porszívó",
+      "Padló- és mennyezeti hűtés/fűtés",
+      "Kapszulás kávéfőző + hagyományos kávéfőző (kávékapszulával)",
+      "Teafőző, kenyérpirító",
+      "Beépített hűtő + mélyhűtő",
+      "Beépített sütő + főzőlap + mikrosütő",
+      "Nagyméretű TV",
+      "Vasalószoba",
+      "Szúnyogháló",
+      "Mosókonyha (térítés ellenében)",
+      "Tetőteraszon közös jakuzzi és napozóterasz – előre egyeztetett időpontban napi 1,5 óra, privát és térítésmentes",
     ].map(item => `<p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;margin:3px 0;">&#8226; ${item}</p>`).join("")}
           </td></tr>
         </table>
@@ -797,11 +852,11 @@ function depositConfirmationHtml(data: BookingEmailData & { depositAmount: numbe
           Üdvözlettel: <strong>Beáta</strong>
         </p>
         <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 4px;">Gamma Apartmanok Vendégház</p>
-        <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 16px;">+36 30 845 4923</p>
+        <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 16px;">+36 20 359 9222</p>
 
         <p style="font-family:sans-serif;font-size:12px;color:#a8a8a8;line-height:1.6;margin:0;">
-          Kérdése esetén hívjon minket a <strong>+36 30 845 4923</strong> számon
-          vagy írjon az <strong>milan.kucko117@gmail.com</strong> címre.
+          Kérdése esetén hívjon minket a <strong>+36 20 359 9222</strong> számon
+          vagy írjon az <strong>gammaapartmanok@gmail.com</strong> címre.
         </p>
 
       </td></tr>
@@ -810,7 +865,7 @@ function depositConfirmationHtml(data: BookingEmailData & { depositAmount: numbe
       <tr>
         <td style="background:#f5f0e8;padding:20px 40px;text-align:center;border-top:1px solid #e8d9b5;">
           <p style="font-family:sans-serif;font-size:12px;color:#a8a8a8;margin:0;">
-            Gamma Apartmanok · milan.kucko117@gmail.com · +36 30 845 4923
+            Gamma Apartmanok · gammaapartmanok@gmail.com · +36 20 359 9222
           </p>
           <p style="font-family:sans-serif;font-size:11px;color:#d4d4d4;margin:4px 0 0;">
             Azonosító: ${data.bookingId}
@@ -857,6 +912,14 @@ export async function sendDepositConfirmationEmail(params: {
   discountAmount?: number;
   notes?: string | null;
   bookingId: string;
+  apartments?: Array<{
+    name: string;
+    numberOfGuests: number;
+    numberOfAdults: number;
+    breakdown: { count: number; rate: number }[];
+    aptBasePrice: number;
+    aptTouristTax: number;
+  }>;
 }): Promise<void> {
   const RESEND_API_KEY = process.env.RESEND_API_KEY;
   const FROM_EMAIL = process.env.FROM_EMAIL ?? "info@gamma-apartmanok.hu";
@@ -1042,7 +1105,7 @@ function cancellationEmailHtml(data: {
 
       <!-- Lábléc -->
       <tr><td style="background:#f0ebe3;border-radius:0 0 16px 16px;padding:20px;text-align:center;">
-        <p style="font-family:sans-serif;font-size:12px;color:#a8a8a8;margin:0;">Gamma Apartmanok · Miskolctapolca, Bencések útja 117/A</p>
+        <p style="font-family:sans-serif;font-size:12px;color:#a8a8a8;margin:0;">Gamma Apartmanok · Miskolctapolca, Beregi utca 11</p>
         <p style="font-family:sans-serif;font-size:11px;color:#c0c0c0;margin:6px 0 0;">Azonosító: ${data.bookingId}</p>
       </td></tr>
 

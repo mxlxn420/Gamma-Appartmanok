@@ -86,6 +86,7 @@ export interface PricingRule {
   isActive: boolean;
   priority: number;
   depositPercent?: number;
+  apartmentId?: string | null;
 }
 
 export interface PriceBreakdown {

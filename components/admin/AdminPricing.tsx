@@ -472,6 +472,12 @@ export default function AdminPricing({ rules: initialRules, policies, apartments
                           {(rule as any).price4 > 0 && (
                             <div><p className="text-xs text-stone-400 mb-0.5">4 fő/éj</p><p className="font-medium text-stone-700">{formatCurrency((rule as any).price4)}</p></div>
                           )}
+                          {(rule as any).price5 > 0 && (
+                            <div><p className="text-xs text-stone-400 mb-0.5">5 fő/éj</p><p className="font-medium text-stone-700">{formatCurrency((rule as any).price5)}</p></div>
+                          )}
+                          {(rule as any).price6 > 0 && (
+                            <div><p className="text-xs text-stone-400 mb-0.5">6 fő/éj</p><p className="font-medium text-stone-700">{formatCurrency((rule as any).price6)}</p></div>
+                          )}
                           {(rule as any).weekendPrice > 0 && (
                             <div><p className="text-xs text-stone-400 mb-0.5">Hétvége 1–2 fő</p><p className="font-medium text-stone-700">{formatCurrency((rule as any).weekendPrice)}</p></div>
                           )}
@@ -480,6 +486,12 @@ export default function AdminPricing({ rules: initialRules, policies, apartments
                           )}
                           {(rule as any).weekendPrice4 > 0 && (
                             <div><p className="text-xs text-stone-400 mb-0.5">Hétvége 4 fő</p><p className="font-medium text-stone-700">{formatCurrency((rule as any).weekendPrice4)}</p></div>
+                          )}
+                          {(rule as any).weekendPrice5 > 0 && (
+                            <div><p className="text-xs text-stone-400 mb-0.5">Hétvége 5 fő</p><p className="font-medium text-stone-700">{formatCurrency((rule as any).weekendPrice5)}</p></div>
+                          )}
+                          {(rule as any).weekendPrice6 > 0 && (
+                            <div><p className="text-xs text-stone-400 mb-0.5">Hétvége 6 fő</p><p className="font-medium text-stone-700">{formatCurrency((rule as any).weekendPrice6)}</p></div>
                           )}
                           {(rule as any).childPrice2to6 > 0 && (
                             <div><p className="text-xs text-stone-400 mb-0.5">Gyermek 2–6 év</p><p className="font-medium text-stone-700">{formatCurrency((rule as any).childPrice2to6)}/éj</p></div>
