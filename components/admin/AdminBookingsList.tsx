@@ -203,7 +203,8 @@ export default function AdminBookingsList({ bookings }: Props) {
       // Per-apartman számítás – minden apartman a saját vendégszáma alapján
       for (const apt of usedApts) {
         const pc = apt.numberOfAdults + apt.numberOfTeens + Math.max(0, apt.numberOfBabies - 1);
-        const bd = getAdminNightBreakdown(ci, co, rules, pc);
+        const aptRules = rules.filter(r => r.apartmentId === apt.apartmentId || !r.apartmentId);
+        const bd = getAdminNightBreakdown(ci, co, aptRules, pc);
         basePrice  += bd.reduce((s, g) => s + g.count * g.rate, 0);
         touristTax += apt.numberOfAdults * TOURIST_TAX * nights;
         totalAdults   += apt.numberOfAdults;
@@ -243,7 +244,7 @@ export default function AdminBookingsList({ bookings }: Props) {
     setEditForm((prev) => {
       if (!prev) return prev;
       const next = { ...prev, [key]: value };
-      if (["checkIn", "checkOut", "discountPercent"].includes(key)) {
+      if (["checkIn", "checkOut", "discountPercent", "numberOfAdults", "numberOfTeens", "numberOfBabies"].includes(key)) {
         return recalc(next);
       }
       return next;

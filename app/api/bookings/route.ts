@@ -227,7 +227,7 @@ export async function POST(req: NextRequest) {
     const depositAmount  = Math.round((finalTotal - Number(touristTax)) * depositPercent / 100);
 
     // Foglalás ID
-    const bookingRef = "MK-" + Math.random().toString(36).substring(2, 8).toUpperCase();
+    const bookingRef = "GA-" + Math.random().toString(36).substring(2, 8).toUpperCase();
 
     // Mentés
     const booking = await prisma.booking.create({

@@ -76,7 +76,7 @@ function apartmentDescriptionHtml(apts?: ApartmentEmailEntry[]): string {
           54 nm-es, 4 fős apartman. 1 hálószoba 180×200-as ággyal + nappali kihúzhatós kanapéval (140×200), teljesen felszerelt konyha étkező résszel, fürdőszoba, gardrób és kertkapcsolatos 20 nm-es terasszal.
         </p>
         <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;line-height:1.8;margin:0 0 8px;">
-          Közös tetőteraszon egy 5 férőhelyes jakuzzi, amit a megjelölt 1,5 órában 11–23 óra között privát tudnak használni.
+          Közös tetőteraszon napozóterasz és 5 férőhelyes jakuzzi található, amit a megjelölt 1,5 órában 11–23 óra között privát tudnak használni.
         </p>
         <p style="font-family:sans-serif;font-size:13px;font-weight:600;color:#1a3a2a;margin:0;">Parkolás ingyenes!</p>
       </td></tr>
@@ -93,7 +93,7 @@ function apartmentDescriptionHtml(apts?: ApartmentEmailEntry[]): string {
           64 nm-es, 6 fős apartman. 2 hálószoba (160 és 180 cm-es ágyak) + nappali kihúzható kanapéval (200×200), fürdőszoba, teljesen felszerelt konyha étkező résszel és erkély.
         </p>
         <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;line-height:1.8;margin:0 0 8px;">
-          Közös tetőteraszon napozóterasz és 5 férőhelyes jakuzzi található, amit a megjelölt 1,5 órában 11–22 óra között privát tudnak használni.
+          Közös tetőteraszon napozóterasz és 5 férőhelyes jakuzzi található, amit a megjelölt 1,5 órában 11–23 óra között privát tudnak használni.
         </p>
         <p style="font-family:sans-serif;font-size:13px;font-weight:600;color:#1a3a2a;margin:0;">Parkoló ingyenes!</p>
       </td></tr>
@@ -267,7 +267,7 @@ function guestEmailHtml(data: BookingEmailData): string {
               ${data.basePrice ? `
               <tr>
                 <td style="font-family:sans-serif;font-size:13px;color:#525252;padding:5px 0;border-bottom:1px solid #e8d9b5;">
-                  Ár: ${adults} felnőtt${(data.numberOfTeens ?? 0) > 0 ? ` + ${data.numberOfTeens} tinédzser` : ""} részére
+                  Ár: ${adults} felnőtt${(data.numberOfTeens ?? 0) > 0 ? ` + ${data.numberOfTeens} gyerek (2–17 év)` : ""} részére
                 </td>
                 <td style="font-family:sans-serif;font-size:13px;color:#2a2a2a;font-weight:500;text-align:right;padding:5px 0;border-bottom:1px solid #e8d9b5;">
                   ${formatHuf(data.basePrice)} / ${data.nights} éj
@@ -409,7 +409,7 @@ function guestEmailHtml(data: BookingEmailData): string {
         </p>
 
         <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;line-height:1.8;margin:0 0 4px;">
-          Üdvözlettel: <strong>Beáta</strong>
+          Üdvözlettel: <strong>Gabriella</strong>
         </p>
         <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 4px;">Gamma Apartmanok Vendégház</p>
         <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 16px;">+36 20 359 9222</p>
@@ -521,7 +521,7 @@ function adminEmailHtml(data: BookingEmailData): string {
           <tr>
             <td style="color:#737373;padding:5px 0;vertical-align:top;">Vendégek</td>
             <td style="color:#2a2a2a;padding:5px 0;text-align:right;">
-              ${adminAdults} felnőtt${(data.numberOfTeens ?? 0) > 0 ? `, ${data.numberOfTeens} tinédzser` : ""}${(data.numberOfBabies ?? 0) > 0 ? `, ${data.numberOfBabies} baba` : ""}${(data.numberOfChildren6to12 ?? 0) > 0 ? `, ${data.numberOfChildren6to12} gyerek (6–12 év)` : ""}${(data.numberOfChildren2to6 ?? 0) > 0 ? `, ${data.numberOfChildren2to6} kisgyerek (2–6 év)` : ""}
+              ${adminAdults} felnőtt${(data.numberOfTeens ?? 0) > 0 ? `, ${data.numberOfTeens} gyerek (2–17 év)` : ""}${(data.numberOfBabies ?? 0) > 0 ? `, ${data.numberOfBabies} baba` : ""}${(data.numberOfChildren6to12 ?? 0) > 0 ? `, ${data.numberOfChildren6to12} gyerek (6–12 év)` : ""}${(data.numberOfChildren2to6 ?? 0) > 0 ? `, ${data.numberOfChildren2to6} kisgyerek (2–6 év)` : ""}
             </td>
           </tr>
           ${data.apartments && data.apartments.length > 0 ? `
@@ -538,7 +538,7 @@ function adminEmailHtml(data: BookingEmailData): string {
         <table width="100%" cellpadding="0" cellspacing="0" style="font-size:13px;margin-bottom:24px;">
           ${data.basePrice ? `
           <tr>
-            <td style="color:#737373;padding:5px 0;border-bottom:1px solid #f0f0f0;">Szállás – ${adminAdults} felnőtt${(data.numberOfTeens ?? 0) > 0 ? ` + ${data.numberOfTeens} tinédzser` : ""} (${data.nights} éj)</td>
+            <td style="color:#737373;padding:5px 0;border-bottom:1px solid #f0f0f0;">Szállás – ${adminAdults} felnőtt${(data.numberOfTeens ?? 0) > 0 ? ` + ${data.numberOfTeens} gyerek (2–17 év)` : ""} (${data.nights} éj)</td>
             <td style="color:#2a2a2a;font-weight:500;padding:5px 0;border-bottom:1px solid #f0f0f0;text-align:right;">${formatHuf(data.basePrice)}</td>
           </tr>` : ""}
           ${(data.numberOfBabies ?? 0) > 0 ? `
@@ -849,7 +849,7 @@ function depositConfirmationHtml(data: BookingEmailData & { depositAmount: numbe
           <span style="font-weight:700;font-size:13px;color:#525252;text-decoration:underline;">Az érkezésük körülbelüli időpontját, kérjük legyenek szívesek előre jelezni.</span>
         </p>
         <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;line-height:1.8;margin:0 0 4px;">
-          Üdvözlettel: <strong>Beáta</strong>
+          Üdvözlettel: <strong>Gabriella</strong>
         </p>
         <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 4px;">Gamma Apartmanok Vendégház</p>
         <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 16px;">+36 20 359 9222</p>
