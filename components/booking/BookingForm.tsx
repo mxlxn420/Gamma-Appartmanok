@@ -242,15 +242,13 @@ export default function BookingForm({ bookingData, onBack, onSuccess }: Props) {
                 </button>
               ))}
             </div>
-            <p className="text-xs text-stone-400 mt-2">Ez az előleg fizetési módjára vonatkozik. A maradék összeg fizetése a helyszínen készpénzzel/átutalással/OTP Szép kártyával/KH Szép kártyával/MBH Szép kártyával lehetséges.</p>
+            <p className="text-xs text-stone-400 mt-2">Ez az előleg fizetési módjára vonatkozik. A maradék összeg fizetése a helyszínen készpénzzel/átutalással/OTP Szép kártyával lehetséges.</p>
 
             {/* SZÉP kártya bank választó */}
             {form.paymentMethod === "szep" && (
-              <div className="mt-3 grid grid-cols-3 gap-2">
+              <div className="mt-3 grid grid-cols-1 gap-2">
                 {[
                   { value: "otp", label: "OTP" },
-                  { value: "mbh", label: "MBH" },
-                  { value: "kh", label: "K&H" },
                 ].map(({ value, label }) => (
                   <button
                     key={value}

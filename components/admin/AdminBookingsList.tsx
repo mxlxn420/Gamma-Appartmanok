@@ -1322,10 +1322,10 @@ export default function AdminBookingsList({ bookings }: Props) {
                           card:                  "Bankkártya",
                           cash:                  "Készpénz",
                           transfer:              "Banki átutalás",
-                          szep:                  "SZÉP kártya",
+                          szep:                  "OTP SZÉP kártya",
                           "szep-otp":            "OTP SZÉP kártya",
-                          "szep-mbh":            "MBH SZÉP kártya",
-                          "szep-kh":             "K&H SZÉP kártya",
+                          "szep-mbh":            "OTP SZÉP kártya",
+                          "szep-kh":             "OTP SZÉP kártya",
                         }[(selected as any).paymentMethod] ?? (selected as any).paymentMethod}
                       </p>
                     </section>
@@ -1427,7 +1427,7 @@ export default function AdminBookingsList({ bookings }: Props) {
               <div className="grid grid-cols-2 gap-2">
                 {[
                   { value: "transfer", label: "Átutalás" },
-                  { value: "szep",     label: "SZÉP kártya" },
+                  { value: "szep",     label: "OTP SZÉP kártya" },
                 ].map(({ value, label }) => (
                   <button
                     key={value}

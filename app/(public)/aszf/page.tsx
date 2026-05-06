@@ -65,7 +65,7 @@ export default function AszfPage() {
               <li>Készpénz</li>
               <li>Bankkártya</li>
               <li>Banki átutalás</li>
-              <li>SZÉP kártya (OTP, MBH, K&amp;H)</li>
+              <li>OTP SZÉP kártya</li>
             </ul>
             <p className="mt-3">
               Előleg fizetése esetén annak összege és határideje a visszaigazoló e-mailben kerül közlésre.

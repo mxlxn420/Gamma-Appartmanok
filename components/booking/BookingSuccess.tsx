@@ -72,7 +72,7 @@ export default function BookingSuccess({ bookingData, bookingId }: Props) {
         <ul className="space-y-1 text-terra-600">
           <li>✓ E-mail visszaigazolás 24 órán belül</li>
           <li>✓ Előleg fizetése 48 órán belül</li>
-          <li>✓ A fennmaradó összeg fizetése a helyszínen (készpénz/átutalás/SZÉP Kártya) történik.</li>
+          <li>✓ A fennmaradó összeg fizetése a helyszínen (készpénz/átutalás/OTP Szép Kártya) történik.</li>
           <li>✓ Bejelentkezési információk e-mailben érkezés előtt</li>
         </ul>
       </div>
