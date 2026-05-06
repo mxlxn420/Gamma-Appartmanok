@@ -651,9 +651,9 @@ function depositConfirmationHtml(data: BookingEmailData & { depositAmount: numbe
     const m = data.depositMethod ?? "";
     if (m === "transfer") return "átutalással";
     if (m === "szep-otp") return "OTP Szép kártyával";
-    if (m === "szep-mbh") return "MBH Szép kártyával";
-    if (m === "szep-kh") return "K&H Szép kártyával";
-    if (m === "szep") return "SZÉP kártyával";
+    if (m === "szep-mbh") return "OTP Szép kártyával";
+    if (m === "szep-kh") return "OTP Szép kártyával";
+    if (m === "szep") return "OTP Szép kártyával";
     return "átutalással";
   })();
 
