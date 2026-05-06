@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireAuth } from "@/lib/auth";
 
 export async function GET() {
+  const unauth = await requireAuth();
+  if (unauth) return unauth;
   const blocked = await prisma.blockedPeriod.findMany({ orderBy: { dateFrom: "asc" } });
   return NextResponse.json({
     success: true,
@@ -15,6 +18,8 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  const unauth = await requireAuth();
+  if (unauth) return unauth;
   try {
     const body = await req.json();
     const { dateFrom, dateTo } = body;

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireAuth } from "@/lib/auth";
 
 const DEFAULTS = {
   id:          "singleton",
@@ -32,6 +33,8 @@ export async function GET() {
 }
 
 export async function PATCH(req: NextRequest) {
+  const unauth = await requireAuth();
+  if (unauth) return unauth;
   try {
     const body = await req.json();
     const { subtitle, heading, description, items } = body;

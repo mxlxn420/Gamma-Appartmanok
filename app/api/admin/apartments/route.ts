@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma }                    from "@/lib/prisma";
+import { requireAuth }               from "@/lib/auth";
 
 export async function GET() {
   const apartments = await prisma.apartment.findMany({
@@ -9,6 +10,8 @@ export async function GET() {
 }
 
 export async function PATCH(req: NextRequest) {
+  const unauth = await requireAuth();
+  if (unauth) return unauth;
   const { id, name, description, maxGuests, coverImage, isActive } = await req.json();
   if (!id) return NextResponse.json({ success: false, error: "Hiányzó id" }, { status: 400 });
 
