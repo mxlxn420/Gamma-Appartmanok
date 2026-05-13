@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { format, differenceInCalendarDays, getDay } from "date-fns";
 import { formatDateHu, formatCurrency, getApplicablePricingRule, getAdminNightBreakdown, getRuleForNight, getNightRateFromRule, CLEANING_FEE, TOURIST_TAX } from "@/lib/utils";
-import { Check, X, CreditCard, ChevronRight, Pencil, Trash2, RefreshCw, Plus, Minus, Moon, CalendarCheck } from "lucide-react";
+import { Check, X, CreditCard, ChevronRight, Pencil, Trash2, RefreshCw, Plus, Minus, Moon, CalendarCheck, Mail } from "lucide-react";
 import type { Booking, BookingStatus, PricingRule } from "@/types";
 
 const STATUS_CONFIG: Record<BookingStatus, { label: string; color: string }> = {
@@ -469,15 +469,40 @@ export default function AdminBookingsList({ bookings }: Props) {
                     <td className="px-5 py-4" onClick={(e) => e.stopPropagation()}>
                       <div className="flex items-center gap-2">
                         {booking.depositAmount > 0 && !booking.depositPaidAt && booking.status !== "CANCELLED" && (
-                          <button
-                            onClick={() => { setDepositForm({ paidAt: new Date().toISOString().slice(0, 10), paidAmount: String(booking.depositAmount), paidMethod: "transfer" }); setDepositModal(booking.id); }}
-                            disabled={loading === booking.id}
-                            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold transition-colors shadow-sm disabled:opacity-60"
-                            title="Előleg befizetve – visszaigazoló küldése"
-                          >
-                            <CreditCard size={12} />
-                            Előleg
-                          </button>
+                          <>
+                            <button
+                              onClick={() => { setDepositForm({ paidAt: new Date().toISOString().slice(0, 10), paidAmount: String(booking.totalPrice), paidMethod: "transfer" }); setDepositModal(booking.id); }}
+                              disabled={loading === booking.id}
+                              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold transition-colors shadow-sm disabled:opacity-60"
+                              title="Előleg befizetve – visszaigazoló küldése"
+                            >
+                              <CreditCard size={12} />
+                              Előleg
+                            </button>
+                            <button
+                              onClick={async (e) => {
+                                e.stopPropagation();
+                                if (loading === booking.id) return;
+                                setLoading(booking.id);
+                                try {
+                                  const res = await fetch(`/api/admin/bookings/${booking.id}/remind`, { method: "POST" });
+                                  const data = await res.json();
+                                  if (!data.success) throw new Error(data.error);
+                                  alert("Fizetési emlékeztető elküldve!");
+                                } catch (e: any) {
+                                  alert("Hiba: " + (e?.message ?? "Ismeretlen hiba"));
+                                } finally {
+                                  setLoading(null);
+                                }
+                              }}
+                              disabled={loading === booking.id}
+                              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-600 text-xs font-semibold transition-colors disabled:opacity-60"
+                              title="Fizetési emlékeztető küldése"
+                            >
+                              <Mail size={12} />
+                              Emlékeztető
+                            </button>
+                          </>
                         )}
                         {booking.depositPaidAt && (
                           <span className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-green-100 text-green-700 text-xs font-medium">
@@ -1316,11 +1341,12 @@ export default function AdminBookingsList({ bookings }: Props) {
                   {/* Fizetési mód */}
                   {(selected as any).paymentMethod && (
                     <section>
-                      <h3 className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-2">Előleg fizetési módja</h3>
+                      <h3 className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-2">Fizetési mód</h3>
                       <p className="text-sm text-stone-700 bg-stone-50 rounded-xl px-3 py-2">
                         {{
                           card:                  "Bankkártya",
                           cash:                  "Készpénz",
+                          revolut:               "Revolut",
                           transfer:              "Banki átutalás",
                           szep:                  "OTP SZÉP kártya",
                           "szep-otp":            "OTP SZÉP kártya",
@@ -1341,7 +1367,7 @@ export default function AdminBookingsList({ bookings }: Props) {
 
                   {/* Előleg befizetve */}
                   {selected.depositAmount > 0 && selected.status !== "CANCELLED" && (
-                    <section>
+                    <section className="space-y-2">
                       {selected.depositPaidAt ? (
                         <div className="flex items-center gap-3 bg-green-50 border border-green-200 rounded-xl px-4 py-3">
                           <Check className="w-5 h-5 text-green-600 shrink-0" />
@@ -1353,14 +1379,37 @@ export default function AdminBookingsList({ bookings }: Props) {
                           </div>
                         </div>
                       ) : (
-                        <button
-                          onClick={() => { setDepositForm({ paidAt: new Date().toISOString().slice(0, 10), paidAmount: String(selected.depositAmount), paidMethod: "transfer" }); setDepositModal(selected.id); }}
-                          disabled={loading === selected.id}
-                          className="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold transition-colors flex items-center justify-center gap-2 shadow-sm"
-                        >
-                          <CreditCard className="w-4 h-4" />
-                          Előleg befizetve – visszaigazoló küldése
-                        </button>
+                        <>
+                          <button
+                            onClick={() => { setDepositForm({ paidAt: new Date().toISOString().slice(0, 10), paidAmount: String(selected.totalPrice), paidMethod: "transfer" }); setDepositModal(selected.id); }}
+                            disabled={loading === selected.id}
+                            className="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold transition-colors flex items-center justify-center gap-2 shadow-sm"
+                          >
+                            <CreditCard className="w-4 h-4" />
+                            Előleg befizetve – visszaigazoló küldése
+                          </button>
+                          <button
+                            onClick={async () => {
+                              if (loading === selected.id) return;
+                              setLoading(selected.id);
+                              try {
+                                const res = await fetch(`/api/admin/bookings/${selected.id}/remind`, { method: "POST" });
+                                const data = await res.json();
+                                if (!data.success) throw new Error(data.error);
+                                alert("Fizetési emlékeztető elküldve!");
+                              } catch (e: any) {
+                                alert("Hiba: " + (e?.message ?? "Ismeretlen hiba"));
+                              } finally {
+                                setLoading(null);
+                              }
+                            }}
+                            disabled={loading === selected.id}
+                            className="w-full py-3 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-700 text-sm font-semibold transition-colors flex items-center justify-center gap-2"
+                          >
+                            <Mail className="w-4 h-4" />
+                            Fizetési emlékeztető küldése
+                          </button>
+                        </>
                       )}
                     </section>
                   )}
@@ -1423,10 +1472,12 @@ export default function AdminBookingsList({ bookings }: Props) {
             </div>
 
             <div>
-              <label className="text-xs font-medium text-stone-500 uppercase tracking-wider block mb-1.5">Előleg fizetési módja</label>
+              <label className="text-xs font-medium text-stone-500 uppercase tracking-wider block mb-1.5">Fizetési mód</label>
               <div className="grid grid-cols-2 gap-2">
                 {[
                   { value: "transfer", label: "Átutalás" },
+                  { value: "revolut",  label: "Revolut" },
+                  { value: "cash",     label: "Készpénz" },
                   { value: "szep",     label: "OTP SZÉP kártya" },
                 ].map(({ value, label }) => (
                   <button

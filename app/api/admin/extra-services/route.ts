@@ -1,21 +1,16 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
 import { prisma } from "@/lib/prisma";
-
-async function isAuthed() {
-  const store = await cookies();
-  return !!store.get("admin_token")?.value;
-}
+import { requireAuth } from "@/lib/auth";
 
 export async function GET() {
-  if (!(await isAuthed())) return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+  const authErr = await requireAuth(); if (authErr) return authErr;
 
   const services = await prisma.extraService.findMany({ orderBy: { createdAt: "asc" } });
   return NextResponse.json({ success: true, data: services });
 }
 
 export async function POST(req: Request) {
-  if (!(await isAuthed())) return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+  const authErr = await requireAuth(); if (authErr) return authErr;
 
   const { name, description, pricingType, price, imageUrl } = await req.json();
   if (!name?.trim()) return NextResponse.json({ success: false, error: "A név kötelező!" }, { status: 400 });

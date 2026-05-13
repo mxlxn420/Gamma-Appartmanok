@@ -124,7 +124,7 @@ export async function POST(
                 const breakdown = getAdminNightBreakdown(ci, co, aptRules as any, pc);
                 const aptBasePrice = breakdown.reduce((s, g) => s + g.count * g.rate, 0);
                 const aptTouristTax = adultCount * booking.nights * TOURIST_TAX;
-                return { name: a.apartment.name, numberOfGuests, numberOfAdults: adultCount, breakdown, aptBasePrice, aptTouristTax };
+                return { name: a.apartment.name, numberOfGuests, numberOfAdults: adultCount, numberOfBabies: babyCount, breakdown, aptBasePrice, aptTouristTax };
               });
             })()
           : undefined,

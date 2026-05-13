@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import {
   ArrowLeft, ArrowRight, User, Mail, Phone, MessageSquare, MapPin,
-  Moon, CalendarCheck, Check, ImageOff, Plus, Minus, CreditCard, Banknote, Building2,
+  Moon, CalendarCheck, Check, ImageOff, Plus, Minus, CreditCard, Banknote, Building2, Smartphone, Wallet,
 } from "lucide-react";
 import { formatDateHu, formatCurrency } from "@/lib/utils";
 import type { BookingData, SelectedService } from "./BookingPage";
@@ -116,11 +116,11 @@ export default function BookingForm({ bookingData, onBack, onSuccess }: Props) {
           extraServices: selected,
           extraServicesTotal: extrasTotal,
           apartmentGuests: bookingData.apartmentGuests.map(a => ({
-            id:       a.id,
-            adults:   a.adults,
-            teens:    a.children,
-            babies:   a.babies,
-            children2to6:  0,
+            id: a.id,
+            adults: a.adults,
+            teens: a.children,
+            babies: a.babies,
+            children2to6: 0,
             children6to12: 0,
           })),
         }),
@@ -223,26 +223,48 @@ export default function BookingForm({ bookingData, onBack, onSuccess }: Props) {
             <label className="text-xs font-medium text-stone-500 uppercase tracking-wider block mb-3">
               <CreditCard size={12} className="inline mr-1" />Fizetési mód *
             </label>
-            <div className="grid grid-cols-2 gap-3">
-              {[
-                { value: "transfer", label: "Átutalás", Icon: Building2 },
-                { value: "szep", label: "SZÉP kártya", Icon: CreditCard },
-              ].map(({ value, label, Icon }) => (
-                <button
-                  key={value}
-                  type="button"
-                  onClick={() => setForm({ ...form, paymentMethod: value, szepType: value === "szep" ? (form.szepType || "otp") : "" })}
-                  className={`flex flex-col items-center gap-2 py-4 px-2 rounded-2xl border-2 transition-all text-sm font-medium ${form.paymentMethod === value
-                    ? "border-forest-600 bg-forest-50 text-forest-800"
-                    : "border-stone-200 text-stone-500 hover:border-stone-300"
-                    }`}
-                >
-                  <Icon size={20} className={form.paymentMethod === value ? "text-forest-600" : "text-stone-400"} />
-                  {label}
-                </button>
-              ))}
+            <div className="space-y-3">
+              <div className="grid grid-cols-3 gap-3">
+                {[
+                  { value: "transfer", label: "Átutalás", Icon: Building2 },
+                  { value: "revolut", label: "Revolut", Icon: Smartphone },
+                  { value: "cash", label: "Készpénz", Icon: Banknote },
+                ].map(({ value, label, Icon }) => (
+                  <button
+                    key={value}
+                    type="button"
+                    onClick={() => setForm({ ...form, paymentMethod: value, szepType: "" })}
+                    className={`flex flex-col items-center gap-2 py-4 px-2 rounded-2xl border-2 transition-all text-sm font-medium ${form.paymentMethod === value
+                      ? "border-forest-600 bg-forest-50 text-forest-800"
+                      : "border-stone-200 text-stone-500 hover:border-stone-300"
+                      }`}
+                  >
+                    <Icon size={20} className={form.paymentMethod === value ? "text-forest-600" : "text-stone-400"} />
+                    {label}
+                  </button>
+                ))}
+              </div>
+              <div className="grid grid-cols-2 gap-3 w-2/3 mx-auto">
+                {[
+                  { value: "card", label: "Bankkártya", Icon: CreditCard },
+                  { value: "szep", label: "SZÉP kártya", Icon: Wallet },
+                ].map(({ value, label, Icon }) => (
+                  <button
+                    key={value}
+                    type="button"
+                    onClick={() => setForm({ ...form, paymentMethod: value, szepType: value === "szep" ? (form.szepType || "otp") : "" })}
+                    className={`flex flex-col items-center gap-2 py-4 px-2 rounded-2xl border-2 transition-all text-sm font-medium ${form.paymentMethod === value
+                      ? "border-forest-600 bg-forest-50 text-forest-800"
+                      : "border-stone-200 text-stone-500 hover:border-stone-300"
+                      }`}
+                  >
+                    <Icon size={20} className={form.paymentMethod === value ? "text-forest-600" : "text-stone-400"} />
+                    {label}
+                  </button>
+                ))}
+              </div>
             </div>
-            <p className="text-xs text-stone-400 mt-2">Ez az előleg fizetési módjára vonatkozik. A maradék összeg fizetése a helyszínen készpénzzel/átutalással/OTP Szép kártyával lehetséges.</p>
+            <p className="text-xs text-stone-400 mt-2">Ez a teljes összeg fizetési módjára vonatkozik.</p>
 
             {/* SZÉP kártya bank választó */}
             {form.paymentMethod === "szep" && (
@@ -262,6 +284,9 @@ export default function BookingForm({ bookingData, onBack, onSuccess }: Props) {
                     {label}
                   </button>
                 ))}
+                <p className="text-xs text-stone-400 mt-1 leading-relaxed">
+                  A SZÉP kártyás fizetés előreutalással történik: lépj be az <span className="font-medium text-stone-500">OTP SZÉP kártya portálra</span> (szepkartya.otpportalok.hu), válaszd az <span className="font-medium text-stone-500">„Előlegfizetés"</span> menüpontot, keresd meg szálláshelyünket az elfogadóhelyek között, add meg a teljes összeget és erősítsd meg, illetve a bizonylatot küldd el nekünk. Az összeg 5 munkanapon belül érkezik meg hozzánk.
+                </p>
               </div>
             )}
           </div>

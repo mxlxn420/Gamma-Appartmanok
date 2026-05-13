@@ -1,12 +1,7 @@
 import { NextResponse } from "next/server";
-import { cookies }      from "next/headers";
 import { randomBytes }  from "crypto";
 import { getR2Client, getBucketName, getPublicUrl, PutObjectCommand } from "@/lib/r2";
-
-async function isAuthed() {
-  const store = await cookies();
-  return !!store.get("admin_token")?.value;
-}
+import { requireAuth }  from "@/lib/auth";
 
 function detectImageType(buf: Buffer): string | null {
   if (buf[0] === 0xFF && buf[1] === 0xD8 && buf[2] === 0xFF) return "image/jpeg";
@@ -23,7 +18,7 @@ const MAX_SIZE_MB     = 20;
 const ALLOWED_BUCKETS = ["extra-services", "hero", "about", "gallery", "apartments"];
 
 export async function POST(req: Request) {
-  if (!(await isAuthed())) return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+  const authErr = await requireAuth(); if (authErr) return authErr;
 
   const { searchParams } = new URL(req.url);
   const bucket = searchParams.get("bucket") ?? "extra-services";

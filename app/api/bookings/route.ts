@@ -300,7 +300,7 @@ export async function POST(req: NextRequest) {
         const breakdown = getAdminNightBreakdown(checkInDate, checkOutDate, aptRules as any, pc);
         const aptBasePrice = breakdown.reduce((s, g) => s + g.count * g.rate, 0);
         const aptTouristTax = adultCount * nights * TOURIST_TAX;
-        return { name: apt?.name ?? a.id, numberOfGuests, numberOfAdults: adultCount, breakdown, aptBasePrice, aptTouristTax };
+        return { name: apt?.name ?? a.id, numberOfGuests, numberOfAdults: adultCount, numberOfBabies: babyCount, breakdown, aptBasePrice, aptTouristTax };
       });
     }
 

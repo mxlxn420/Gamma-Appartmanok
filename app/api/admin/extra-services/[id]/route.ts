@@ -1,17 +1,12 @@
 import { NextResponse }  from "next/server";
-import { cookies }       from "next/headers";
 import { prisma }        from "@/lib/prisma";
 import { deleteFromR2 }  from "@/lib/r2";
-
-async function isAuthed() {
-  const store = await cookies();
-  return !!store.get("admin_token")?.value;
-}
+import { requireAuth }   from "@/lib/auth";
 
 const BUCKET = "extra-services";
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  if (!(await isAuthed())) return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+  const authErr = await requireAuth(); if (authErr) return authErr;
 
   const { id } = await params;
   const { name, description, pricingType, price, imageUrl, isActive } = await req.json();
@@ -34,7 +29,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
 }
 
 export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
-  if (!(await isAuthed())) return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+  const authErr = await requireAuth(); if (authErr) return authErr;
 
   const { id } = await params;
 
