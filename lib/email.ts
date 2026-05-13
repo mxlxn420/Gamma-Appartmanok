@@ -477,9 +477,10 @@ function adminEmailHtml(data: BookingEmailData): string {
   const paymentLabel = (() => {
     const m = data.paymentMethod ?? "";
     if (m === "transfer") return "Átutalás";
-    if (m === "szep-otp") return "OTP Szép kártya";
-    if (m === "szep-mbh") return "OTP Szép kártya";
-    if (m === "szep-kh") return "OTP Szép kártya";
+    if (m === "revolut")  return "Revolut";
+    if (m === "cash")     return "Készpénz";
+    if (m === "card")     return "Bankkártya";
+    if (m.startsWith("szep")) return "OTP Szép kártya";
     return m || "—";
   })();
 
@@ -680,10 +681,9 @@ function depositConfirmationHtml(data: BookingEmailData & { depositAmount: numbe
   const depositMethodText = (() => {
     const m = data.depositMethod ?? "";
     if (m === "transfer") return "átutalással";
-    if (m === "szep-otp") return "OTP Szép kártyával";
-    if (m === "szep-mbh") return "OTP Szép kártyával";
-    if (m === "szep-kh") return "OTP Szép kártyával";
-    if (m === "szep") return "OTP Szép kártyával";
+    if (m === "revolut")  return "Revoluttal";
+    if (m === "cash")     return "készpénzzel";
+    if (m.startsWith("szep")) return "OTP Szép kártyával";
     return "átutalással";
   })();
 
