@@ -157,7 +157,18 @@ export async function POST(req: NextRequest) {
     }
 
     // Ütközés ellenőrzés — csak a kiválasztott apartmanokra
+    // Kizárjuk a 2 óránál régebbi kártyás PENDING foglalásokat (Stripe session lejárt)
     const selectedApartmentIds = apartmentGuests.map(a => a.id);
+    const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000);
+    const staleCardPendingFilter = {
+      NOT: {
+        AND: [
+          { status: "PENDING" as const },
+          { paymentIntentId: { not: null } },
+          { createdAt: { lt: twoHoursAgo } },
+        ],
+      },
+    };
     const conflict = selectedApartmentIds.length > 0
       ? await prisma.booking.findFirst({
           where: {
@@ -166,6 +177,7 @@ export async function POST(req: NextRequest) {
             AND: [
               { checkIn:  { lt: checkOutDate } },
               { checkOut: { gt: checkInDate  } },
+              staleCardPendingFilter,
             ],
           },
         })
@@ -175,6 +187,7 @@ export async function POST(req: NextRequest) {
             AND: [
               { checkIn:  { lt: checkOutDate } },
               { checkOut: { gt: checkInDate  } },
+              staleCardPendingFilter,
             ],
           },
         });
@@ -232,58 +245,62 @@ export async function POST(req: NextRequest) {
 
     const isCardPayment = body.paymentMethod === "card";
 
-    // Mentés
-    const booking = await prisma.booking.create({
-      data: {
-        id: bookingRef,
-        guestName,
-        guestEmail,
-        guestPhone,
-        guestAddress: guestAddress || null,
-        numberOfGuests:        Number(numberOfGuests)              || 2,
-        numberOfAdults:        Number(body.numberOfAdults)        || 2,
-        numberOfTeens:         Number(body.numberOfTeens)         || 0,
-        numberOfBabies:        Number(body.numberOfBabies)        || 0,
-        numberOfChildren2to6:  Number(body.numberOfChildren2to6)  || 0,
-        numberOfChildren6to12: Number(body.numberOfChildren6to12) || 0,
-        notes: notes || null,
-        checkIn: checkInDate,
-        checkOut: checkOutDate,
-        nights,
-        basePrice: Number(basePrice),
-        childPrice2to6: Number(body.childPrice2to6) || 0,
-        childPrice6to12: Number(body.childPrice6to12) || 0,
-        guestSurcharge: Number(guestSurcharge) || 0,
-        cleaningFee:    Number(cleaningFee)    || 0,
-        touristTax:     Number(touristTax)     || 0,
-        totalPrice: finalTotal,
-        discountPercent,
-        discountAmount,
-        depositAmount,
-        extraServices:     extraServices     ?? null,
-        extraServicesTotal: Number(extraServicesTotal) || 0,
-        paymentMethod:     body.paymentMethod ?? null,
-        // kártyás fizetés: PENDING marad, webhook PAID-re állítja
-        status: body.paymentMethod === "cash" ? "CONFIRMED" : "PENDING",
-      },
-    });
-
-    // BookingApartment rekordok mentése
-    let emailApartments: { name: string; numberOfGuests: number; numberOfAdults: number; breakdown: { count: number; rate: number }[]; aptBasePrice: number; aptTouristTax: number }[] = [];
-    if (apartmentGuests.length > 0) {
-      await prisma.bookingApartment.createMany({
-        data: apartmentGuests.map(a => ({
-          bookingId:             bookingRef,
-          apartmentId:           a.id,
-          numberOfAdults:        Number(a.adults)        || 0,
-          numberOfTeens:         Number(a.teens)         || 0,
-          numberOfBabies:        Number(a.babies)        || 0,
-          numberOfChildren2to6:  Number(a.children2to6)  || 0,
-          numberOfChildren6to12: Number(a.children6to12) || 0,
-        })),
+    // Mentés — transaction: booking + apartman linkek atomikusan
+    const booking = await prisma.$transaction(async (tx) => {
+      const b = await tx.booking.create({
+        data: {
+          id: bookingRef,
+          guestName,
+          guestEmail,
+          guestPhone,
+          guestAddress: guestAddress || null,
+          numberOfGuests:        Number(numberOfGuests)              || 2,
+          numberOfAdults:        Number(body.numberOfAdults)        || 2,
+          numberOfTeens:         Number(body.numberOfTeens)         || 0,
+          numberOfBabies:        Number(body.numberOfBabies)        || 0,
+          numberOfChildren2to6:  Number(body.numberOfChildren2to6)  || 0,
+          numberOfChildren6to12: Number(body.numberOfChildren6to12) || 0,
+          notes: notes || null,
+          checkIn: checkInDate,
+          checkOut: checkOutDate,
+          nights,
+          basePrice: Number(basePrice),
+          childPrice2to6: Number(body.childPrice2to6) || 0,
+          childPrice6to12: Number(body.childPrice6to12) || 0,
+          guestSurcharge: Number(guestSurcharge) || 0,
+          cleaningFee:    Number(cleaningFee)    || 0,
+          touristTax:     Number(touristTax)     || 0,
+          totalPrice: finalTotal,
+          discountPercent,
+          discountAmount,
+          depositAmount,
+          extraServices:     extraServices     ?? null,
+          extraServicesTotal: Number(extraServicesTotal) || 0,
+          paymentMethod:     body.paymentMethod ?? null,
+          status: body.paymentMethod === "cash" ? "CONFIRMED" : "PENDING",
+        },
       });
 
-      // Apartman nevek + árlebontás lekérése az emailhez
+      if (apartmentGuests.length > 0) {
+        await tx.bookingApartment.createMany({
+          data: apartmentGuests.map(a => ({
+            bookingId:             bookingRef,
+            apartmentId:           a.id,
+            numberOfAdults:        Number(a.adults)        || 0,
+            numberOfTeens:         Number(a.teens)         || 0,
+            numberOfBabies:        Number(a.babies)        || 0,
+            numberOfChildren2to6:  Number(a.children2to6)  || 0,
+            numberOfChildren6to12: Number(a.children6to12) || 0,
+          })),
+        });
+      }
+
+      return b;
+    });
+
+    // Apartman nevek + árlebontás lekérése az emailhez (transaction után)
+    let emailApartments: { name: string; numberOfGuests: number; numberOfAdults: number; breakdown: { count: number; rate: number }[]; aptBasePrice: number; aptTouristTax: number }[] = [];
+    if (apartmentGuests.length > 0) {
       const aptRecords = await prisma.apartment.findMany({
         where: { id: { in: apartmentGuests.map(a => a.id) } },
         select: { id: true, name: true },

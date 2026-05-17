@@ -36,10 +36,18 @@ export async function POST(req: NextRequest) {
     try {
       const prisma = await getPrisma();
 
-      const booking = await prisma.booking.update({
-        where: { id: bookingId },
+      // Idempotency: csak egyszer dolgozzuk fel
+      const updated = await prisma.booking.updateMany({
+        where: { id: bookingId, status: { not: "PAID" } },
         data:  { status: "PAID", paidAt: new Date() },
       });
+
+      if (updated.count === 0) {
+        // Már feldolgozva (dupla webhook)
+        return NextResponse.json({ received: true });
+      }
+
+      const booking = await prisma.booking.findUniqueOrThrow({ where: { id: bookingId } });
 
       // Email küldés fizetés után
       try {
