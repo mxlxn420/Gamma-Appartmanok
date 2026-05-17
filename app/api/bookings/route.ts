@@ -3,6 +3,7 @@ import { differenceInCalendarDays } from "date-fns";
 import { cookies } from "next/headers";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
+import { stripe } from "@/lib/stripe";
 
 const ratelimit = new Ratelimit({
   redis: Redis.fromEnv(),
@@ -229,6 +230,8 @@ export async function POST(req: NextRequest) {
     // Foglalás ID
     const bookingRef = "GA-" + Math.random().toString(36).substring(2, 8).toUpperCase();
 
+    const isCardPayment = body.paymentMethod === "card";
+
     // Mentés
     const booking = await prisma.booking.create({
       data: {
@@ -260,7 +263,8 @@ export async function POST(req: NextRequest) {
         extraServices:     extraServices     ?? null,
         extraServicesTotal: Number(extraServicesTotal) || 0,
         paymentMethod:     body.paymentMethod ?? null,
-        status: "PENDING",
+        // kártyás fizetés: PENDING marad, webhook PAID-re állítja
+        status: body.paymentMethod === "cash" ? "CONFIRMED" : "PENDING",
       },
     });
 
@@ -302,6 +306,42 @@ export async function POST(req: NextRequest) {
         const aptTouristTax = adultCount * nights * TOURIST_TAX;
         return { name: apt?.name ?? a.id, numberOfGuests, numberOfAdults: adultCount, numberOfBabies: babyCount, breakdown, aptBasePrice, aptTouristTax };
       });
+    }
+
+    // Kártyás fizetés: Stripe Checkout session létrehozás
+    if (isCardPayment) {
+      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+      const session = await stripe.checkout.sessions.create({
+        mode: "payment",
+        payment_method_types: ["card"],
+        line_items: [
+          {
+            price_data: {
+              currency: "huf",
+              unit_amount: Math.round(finalTotal * 100), // HUF: fillérben kell megadni
+              product_data: {
+                name: `Gamma Apartman foglalás – ${bookingRef}`,
+                description: `${nights} éj, ${guestName}, ${checkIn} – ${checkOut}`,
+              },
+            },
+            quantity: 1,
+          },
+        ],
+        metadata: { bookingId: bookingRef },
+        customer_email: guestEmail,
+        success_url: `${siteUrl}/foglalas/sikeres?bookingId=${bookingRef}&session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url:  `${siteUrl}/foglalas?cancelled=1`,
+      });
+
+      await prisma.booking.update({
+        where: { id: bookingRef },
+        data:  { paymentIntentId: session.id },
+      });
+
+      return NextResponse.json(
+        { success: true, data: { id: bookingRef, stripeUrl: session.url } },
+        { status: 201 }
+      );
     }
 
     // Email (opcionális, nem töri el a foglalást)

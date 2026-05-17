@@ -128,6 +128,12 @@ export default function BookingForm({ bookingData, onBack, onSuccess }: Props) {
 
       const data = await res.json();
       if (!res.ok || !data.success) throw new Error(data.error || "Ismeretlen hiba");
+
+      if (data.data.stripeUrl) {
+        window.location.href = data.data.stripeUrl;
+        return;
+      }
+
       onSuccess(data.data.id, grandTotal);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Hiba történt. Kérjük próbálja újra!");
@@ -266,6 +272,13 @@ export default function BookingForm({ bookingData, onBack, onSuccess }: Props) {
             </div>
             <p className="text-xs text-stone-400 mt-2">Ez a teljes összeg fizetési módjára vonatkozik.</p>
 
+            {/* Készpénz megjegyzés */}
+            {form.paymentMethod === "cash" && (
+              <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2.5 mt-3 leading-relaxed">
+                Készpénzes fizetéshez előzetes egyeztetés szükséges telefonon a tulajdonossal. Kérjük, hívj minket ezen a számon: <span className="font-semibold">+36 20 359 9222</span> – ellenkező esetben a foglalás törlésre kerül.
+              </p>
+            )}
+
             {/* SZÉP kártya bank választó */}
             {form.paymentMethod === "szep" && (
               <div className="mt-3 grid grid-cols-1 gap-2">
@@ -284,8 +297,8 @@ export default function BookingForm({ bookingData, onBack, onSuccess }: Props) {
                     {label}
                   </button>
                 ))}
-                <p className="text-xs text-stone-400 mt-1 leading-relaxed">
-                  A SZÉP kártyás fizetés előreutalással történik: lépj be az <span className="font-medium text-stone-500">OTP SZÉP kártya portálra</span> (szepkartya.otpportalok.hu), válaszd az <span className="font-medium text-stone-500">„Előlegfizetés"</span> menüpontot, keresd meg szálláshelyünket az elfogadóhelyek között, add meg a teljes összeget és erősítsd meg, illetve a bizonylatot küldd el nekünk. Az összeg 5 munkanapon belül érkezik meg hozzánk.
+                <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2.5 mt-1 leading-relaxed">
+                  A SZÉP kártyás fizetés előreutalással történik: lépj be az <span className="font-semibold">OTP SZÉP kártya portálra</span> (szepkartya.otpportalok.hu), válaszd az <span className="font-semibold">„Előlegfizetés"</span> menüpontot, keresd meg szálláshelyünket az elfogadóhelyek között, add meg a teljes összeget és erősítsd meg, illetve a bizonylatot küldd el nekünk. Az összeg 5 munkanapon belül érkezik meg hozzánk.
                 </p>
               </div>
             )}

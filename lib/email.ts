@@ -185,7 +185,10 @@ function guestEmailHtml(data: BookingEmailData): string {
   const deadline = depositDeadlineDate(data.checkIn, freeCancelDays);
   const extras = data.extraServices?.filter(s => s.total > 0) ?? [];
   const penaltyFromDay = freeCancelDays - 1;
-  const isCardPayment = data.paymentMethod === "card";
+  const isCardPayment    = data.paymentMethod === "card";
+  const isCashPayment    = data.paymentMethod === "cash";
+  const isRevolutPayment = data.paymentMethod === "revolut";
+  const isSzepPayment    = (data.paymentMethod ?? "").startsWith("szep");
 
   return `
 <!DOCTYPE html>
@@ -215,8 +218,8 @@ function guestEmailHtml(data: BookingEmailData): string {
         <p style="font-size:20px;color:#1a3a2a;margin:0 0 10px;">Kedves ${escapeHtml(data.guestName)}!</p>
         <p style="font-family:sans-serif;font-size:14px;color:#525252;line-height:1.7;margin:0 0 28px;">
           ${isCardPayment
-            ? "Köszönjük hogy minket választott! A teljes összeg bankkártyás fizetése megtörtént, <strong>foglalása végleges</strong>."
-            : "Köszönjük hogy minket választott, foglalását megkaptuk."}
+      ? "Köszönjük hogy minket választott! A teljes összeg bankkártyás fizetése megtörtént, <strong>foglalása végleges</strong>."
+      : "Köszönjük hogy minket választott, foglalását megkaptuk."}
         </p>
 
         <!-- Ingatlan leírás -->
@@ -257,7 +260,18 @@ function guestEmailHtml(data: BookingEmailData): string {
               &nbsp;<span style="font-size:18px;font-weight:700;color:#d4a878;">${formatHuf(depositAmt)}</span>
             </p>
             <p style="font-family:sans-serif;font-size:12px;color:rgba(245,240,232,0.65);margin:0;">
-              bankkártyával fizetve
+              Bankkártyával fizetve
+            </p>
+            ` : isCashPayment ? `
+            <p style="font-family:sans-serif;font-size:14px;color:#f5f0e8;margin:0 0 6px;">
+              <strong>Fizetendő összeg:</strong>
+              &nbsp;<span style="font-size:18px;font-weight:700;color:#d4a878;">${formatHuf(depositAmt)}</span>
+            </p>
+            <p style="font-family:sans-serif;font-size:13px;color:rgba(245,240,232,0.8);margin:0 0 10px;">
+              A szállás átvétele előtt a teljes összeget kérjük készpénzben befizetni.
+            </p>
+            <p style="font-family:sans-serif;font-size:13px;color:rgba(245,240,232,0.8);margin:0;">
+              Amennyiben nem történt előzetes telefonos egyeztetés a tulajdonossal, a foglalást töröljük.
             </p>
             ` : `
             <p style="font-family:sans-serif;font-size:14px;color:#f5f0e8;margin:0 0 6px;">
@@ -280,8 +294,8 @@ function guestEmailHtml(data: BookingEmailData): string {
             <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#1a3a2a;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 14px;">Ár összesítő</p>
             <table width="100%" cellpadding="0" cellspacing="0">
               ${data.apartments && data.apartments.length > 0
-                ? apartmentPriceRowsHtml(data.apartments)
-                : `
+      ? apartmentPriceRowsHtml(data.apartments)
+      : `
               ${data.basePrice ? `
               <tr>
                 <td style="font-family:sans-serif;font-size:13px;color:#525252;padding:5px 0;border-bottom:1px solid #e8d9b5;">
@@ -317,17 +331,17 @@ function guestEmailHtml(data: BookingEmailData): string {
                 <td style="font-family:sans-serif;font-size:13px;color:#1a5c2a;font-weight:500;text-align:right;padding:5px 0;border-bottom:1px solid #e8d9b5;">&minus;${formatHuf(data.discountAmount)}</td>
               </tr>` : ""}
               ${extras.map(s => {
-    const detail = s.price != null && s.quantity && s.quantity > 0
-      ? s.pricingType === "PER_NIGHT" && s.nights && s.nights > 0
-        ? ` (${s.quantity} db × ${s.nights} éj × ${formatHuf(s.price)})`
-        : ` (${s.quantity} db × ${formatHuf(s.price)})`
-      : "";
-    return `
+        const detail = s.price != null && s.quantity && s.quantity > 0
+          ? s.pricingType === "PER_NIGHT" && s.nights && s.nights > 0
+            ? ` (${s.quantity} db × ${s.nights} éj × ${formatHuf(s.price)})`
+            : ` (${s.quantity} db × ${formatHuf(s.price)})`
+          : "";
+        return `
               <tr>
                 <td style="font-family:sans-serif;font-size:13px;color:#525252;padding:5px 0;border-bottom:1px solid #e8d9b5;">${escapeHtml(s.name)}${detail}</td>
                 <td style="font-family:sans-serif;font-size:13px;color:#2a2a2a;font-weight:500;text-align:right;padding:5px 0;border-bottom:1px solid #e8d9b5;">${formatHuf(s.total)}</td>
               </tr>`;
-  }).join("")}
+      }).join("")}
               <tr>
                 <td style="font-family:sans-serif;font-size:15px;font-weight:700;color:#1a3a2a;padding:10px 0 0;">Ár összesen (ÁFA-val)</td>
                 <td style="font-family:sans-serif;font-size:17px;font-weight:700;color:#1a3a2a;text-align:right;padding:10px 0 0;">${formatHuf(data.totalPrice)}</td>
@@ -344,7 +358,7 @@ function guestEmailHtml(data: BookingEmailData): string {
             <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;line-height:1.7;margin:0 0 14px;">
               Foglalása végleges, további teendője nincs. Ha bármilyen kérdése van, keressen minket e-mailben vagy telefonon.
             </p>
-            ` : `
+            ` : isCashPayment ? `` : `
             <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;line-height:1.7;margin:0 0 14px;">
               A foglalást az előleg beérkezésével tudjuk véglegesíteni. Ha a járványügyi helyzet úgy alakul, akkor természetesen a foglaló összegét visszatérítjük, vagy módosíthatják a foglalás dátumát.
             </p>
@@ -356,15 +370,15 @@ function guestEmailHtml(data: BookingEmailData): string {
           </td></tr>
         </table>
 
-        <!-- Átutalás adatai (csak nem kártyás fizetésnél) -->
-        ${!isCardPayment ? `
+        <!-- Átutalás adatai (csak banki átutalásnál) -->
+        ${!isCardPayment && !isCashPayment && !isRevolutPayment && !isSzepPayment ? `
         <table width="100%" cellpadding="0" cellspacing="0" style="background:#1a3a2a;border-radius:12px;margin-bottom:24px;">
           <tr><td style="padding:20px 24px;">
             <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:rgba(245,240,232,0.6);text-transform:uppercase;letter-spacing:0.15em;margin:0 0 14px;">Átutaláshoz az adatok</p>
             <table width="100%" cellpadding="0" cellspacing="0">
               <tr>
                 <td style="font-family:sans-serif;font-size:13px;color:rgba(245,240,232,0.65);padding:4px 0;width:50%;">Számlatulajdonos</td>
-                <td style="font-family:sans-serif;font-size:13px;color:#f5f0e8;font-weight:600;padding:4px 0;text-align:right;">Siposné Kiss Gabriella</td>
+                <td style="font-family:sans-serif;font-size:13px;color:#f5f0e8;font-weight:600;padding:4px 0;text-align:right;">Siposé Kiss Gabriella</td>
               </tr>
               <tr>
                 <td style="font-family:sans-serif;font-size:13px;color:rgba(245,240,232,0.65);padding:4px 0;">Számlaszám</td>
@@ -375,6 +389,34 @@ function guestEmailHtml(data: BookingEmailData): string {
                 <td style="font-family:sans-serif;font-size:13px;color:#d4a878;font-weight:600;padding:4px 0;text-align:right;">${escapeHtml(data.guestName)}</td>
               </tr>
             </table>
+          </td></tr>
+        </table>
+        ` : ""}
+
+        <!-- SZÉP kártya adatok -->
+        ${isSzepPayment ? `
+        <table width="100%" cellpadding="0" cellspacing="0" style="background:#1a3a2a;border-radius:12px;margin-bottom:24px;">
+          <tr><td style="padding:20px 24px;">
+            <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:rgba(245,240,232,0.6);text-transform:uppercase;letter-spacing:0.15em;margin:0 0 14px;">OTP SZÉP kártya fizetés</p>
+            <p style="font-family:sans-serif;font-size:13px;color:#f5f0e8;line-height:1.8;margin:0;">
+              A SZÉP kártyás fizetés előreutalással történik:<br>
+              Lépjen be az <span style="color:#d4a878;font-weight:600;">OTP SZÉP kártya portálra</span> (szepkartya.otpportalok.hu), válassza az <span style="color:#d4a878;font-weight:600;">„Előlegfizetés"</span> menüpontot, keresse meg szálláshelyünket az elfogadóhelyek között (<span style="color:#d4a878;font-weight:600;">Gamma Apartmanok, 3519 Miskolctapolca, Beregi utca 11.</span>), adja meg a teljes összeget és erősítse meg, majd a bizonylatot küldje el nekünk.<br><br>
+              <span style="color:rgba(245,240,232,0.6);font-size:12px;">Az összeg 5 munkanapon belül érkezik meg hozzánk, ezt követően véglegesítjük a foglalást.</span>
+            </p>
+          </td></tr>
+        </table>
+        ` : ""}
+
+        <!-- Revolut adatok -->
+        ${isRevolutPayment ? `
+        <table width="100%" cellpadding="0" cellspacing="0" style="background:#1a3a2a;border-radius:12px;margin-bottom:24px;">
+          <tr><td style="padding:20px 24px;">
+            <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:rgba(245,240,232,0.6);text-transform:uppercase;letter-spacing:0.15em;margin:0 0 14px;">Revolut fizetés</p>
+            <p style="font-family:sans-serif;font-size:13px;color:#f5f0e8;line-height:1.7;margin:0;">
+              Kérjük utald át az előleg összegét Revoluton az alábbi telefonszámra:<br>
+              <span style="color:#f5f0e8;font-weight:600;font-size:15px;">+36 20 359 9222</span><br><br>
+              <span style="color:#d4a878;font-weight:600;">Közlemény: ${escapeHtml(data.guestName)}</span>
+            </p>
           </td></tr>
         </table>
         ` : ""}
@@ -477,9 +519,9 @@ function adminEmailHtml(data: BookingEmailData): string {
   const paymentLabel = (() => {
     const m = data.paymentMethod ?? "";
     if (m === "transfer") return "Átutalás";
-    if (m === "revolut")  return "Revolut";
-    if (m === "cash")     return "Készpénz";
-    if (m === "card")     return "Bankkártya";
+    if (m === "revolut") return "Revolut";
+    if (m === "cash") return "Készpénz";
+    if (m === "card") return "Bankkártya";
     if (m.startsWith("szep")) return "OTP Szép kártya";
     return m || "—";
   })();
@@ -569,17 +611,17 @@ function adminEmailHtml(data: BookingEmailData): string {
             <td style="color:#2a2a2a;font-weight:500;padding:5px 0;border-bottom:1px solid #f0f0f0;text-align:right;">${formatHuf(data.basePrice)}</td>
           </tr>` : ""}
           ${(data.numberOfBabies ?? 0) > 0 ? (() => {
-    const totalBabies = data.numberOfBabies ?? 0;
-    const freeBabies = data.apartments && data.apartments.length > 0
-      ? data.apartments.reduce((sum, a) => sum + ((a.numberOfBabies ?? 0) > 0 ? 1 : 0), 0)
-      : Math.min(totalBabies, 1);
-    const paidBabies = totalBabies - freeBabies;
-    return `
+      const totalBabies = data.numberOfBabies ?? 0;
+      const freeBabies = data.apartments && data.apartments.length > 0
+        ? data.apartments.reduce((sum, a) => sum + ((a.numberOfBabies ?? 0) > 0 ? 1 : 0), 0)
+        : Math.min(totalBabies, 1);
+      const paidBabies = totalBabies - freeBabies;
+      return `
           <tr>
             <td style="color:#737373;padding:5px 0;border-bottom:1px solid #f0f0f0;">Baba (0–2 év): ${totalBabies} fő</td>
             <td style="color:#2a2a2a;font-weight:500;padding:5px 0;border-bottom:1px solid #f0f0f0;text-align:right;">${freeBabies} ingyenes${paidBabies > 0 ? `, ${paidBabies} felnőtt árú` : ""}</td>
           </tr>`;
-  })() : ""}
+    })() : ""}
           ${(data.numberOfChildren6to12 ?? 0) > 0 && (data.childPrice6to12 ?? 0) > 0 ? `
           <tr>
             <td style="color:#737373;padding:5px 0;border-bottom:1px solid #f0f0f0;">Gyerek (6–12 év): ${data.numberOfChildren6to12} fő × ${data.nights} éj × ${formatHuf(data.childPrice6to12!)}</td>
@@ -596,17 +638,17 @@ function adminEmailHtml(data: BookingEmailData): string {
             <td style="color:#1a5c2a;font-weight:500;padding:5px 0;border-bottom:1px solid #f0f0f0;text-align:right;">&minus;${formatHuf(data.discountAmount)}</td>
           </tr>` : ""}
           ${extras.map(s => {
-    const detail = s.price != null && s.quantity && s.quantity > 0
-      ? s.pricingType === "PER_NIGHT" && s.nights && s.nights > 0
-        ? ` (${s.quantity} db × ${s.nights} éj × ${formatHuf(s.price)})`
-        : ` (${s.quantity} db × ${formatHuf(s.price)})`
-      : "";
-    return `
+      const detail = s.price != null && s.quantity && s.quantity > 0
+        ? s.pricingType === "PER_NIGHT" && s.nights && s.nights > 0
+          ? ` (${s.quantity} db × ${s.nights} éj × ${formatHuf(s.price)})`
+          : ` (${s.quantity} db × ${formatHuf(s.price)})`
+        : "";
+      return `
           <tr>
             <td style="color:#737373;padding:5px 0;border-bottom:1px solid #f0f0f0;">${escapeHtml(s.name)}${detail}</td>
             <td style="color:#2a2a2a;font-weight:500;padding:5px 0;border-bottom:1px solid #f0f0f0;text-align:right;">${formatHuf(s.total)}</td>
           </tr>`;
-  }).join("")}
+    }).join("")}
           ${data.touristTax && data.touristTax > 0 ? `
           <tr>
             <td style="color:#737373;padding:5px 0;border-bottom:1px solid #f0f0f0;">IFA (${adminAdults} fő × ${data.nights} éj × 450 Ft)</td>
@@ -681,8 +723,8 @@ function depositConfirmationHtml(data: BookingEmailData & { depositAmount: numbe
   const depositMethodText = (() => {
     const m = data.depositMethod ?? "";
     if (m === "transfer") return "átutalással";
-    if (m === "revolut")  return "Revoluttal";
-    if (m === "cash")     return "készpénzzel";
+    if (m === "revolut") return "Revoluttal";
+    if (m === "cash") return "készpénzzel";
     if (m.startsWith("szep")) return "OTP Szép kártyával";
     return "átutalással";
   })();
@@ -772,8 +814,8 @@ function depositConfirmationHtml(data: BookingEmailData & { depositAmount: numbe
             <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#1a3a2a;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 14px;">Ár összesítő</p>
             <table width="100%" cellpadding="0" cellspacing="0">
               ${data.apartments && data.apartments.length > 0
-                ? apartmentPriceRowsHtml(data.apartments)
-                : `
+      ? apartmentPriceRowsHtml(data.apartments)
+      : `
               ${data.basePrice ? `
               <tr>
                 <td style="font-family:sans-serif;font-size:13px;color:#525252;padding:5px 0;border-bottom:1px solid #e8d9b5;">Ár: ${adults} felnőtt${(data.numberOfTeens ?? 0) > 0 ? ` + ${data.numberOfTeens} fiatal` : ""} részére</td>
@@ -805,17 +847,17 @@ function depositConfirmationHtml(data: BookingEmailData & { depositAmount: numbe
                 <td style="font-family:sans-serif;font-size:13px;color:#1a5c2a;font-weight:500;text-align:right;padding:5px 0;border-bottom:1px solid #e8d9b5;">&minus;${formatHuf(data.discountAmount)}</td>
               </tr>` : ""}
               ${extras.map(s => {
-    const detail = s.price != null && s.quantity && s.quantity > 0
-      ? s.pricingType === "PER_NIGHT" && s.nights && s.nights > 0
-        ? ` (${s.quantity} db × ${s.nights} éj × ${formatHuf(s.price)})`
-        : ` (${s.quantity} db × ${formatHuf(s.price)})`
-      : "";
-    return `
+        const detail = s.price != null && s.quantity && s.quantity > 0
+          ? s.pricingType === "PER_NIGHT" && s.nights && s.nights > 0
+            ? ` (${s.quantity} db × ${s.nights} éj × ${formatHuf(s.price)})`
+            : ` (${s.quantity} db × ${formatHuf(s.price)})`
+          : "";
+        return `
               <tr>
                 <td style="font-family:sans-serif;font-size:13px;color:#525252;padding:5px 0;border-bottom:1px solid #e8d9b5;">${escapeHtml(s.name)}${detail}</td>
                 <td style="font-family:sans-serif;font-size:13px;color:#2a2a2a;font-weight:500;text-align:right;padding:5px 0;border-bottom:1px solid #e8d9b5;">${formatHuf(s.total)}</td>
               </tr>`;
-  }).join("")}
+      }).join("")}
               <tr>
                 <td style="font-family:sans-serif;font-size:15px;font-weight:700;color:#1a3a2a;padding:10px 0 0;">Ár összesen (ÁFA-val)</td>
                 <td style="font-family:sans-serif;font-size:17px;font-weight:700;color:#1a3a2a;text-align:right;padding:10px 0 0;">${formatHuf(data.totalPrice)}</td>
@@ -1330,8 +1372,8 @@ export async function sendPaymentReminderEmail(params: {
   apartments: string[];
 }): Promise<void> {
   const RESEND_API_KEY = process.env.RESEND_API_KEY;
-  const FROM_EMAIL     = process.env.FROM_EMAIL  ?? "info@gamma-apartmanok.hu";
-  const ADMIN_EMAIL    = process.env.ADMIN_EMAIL ?? FROM_EMAIL;
+  const FROM_EMAIL = process.env.FROM_EMAIL ?? "info@gamma-apartmanok.hu";
+  const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? FROM_EMAIL;
 
   const deadline = depositDeadlineDate(params.checkIn, params.freeCancelDays);
   const html = paymentReminderHtml({ ...params, deadline });
@@ -1345,10 +1387,10 @@ export async function sendPaymentReminderEmail(params: {
     method: "POST",
     headers: { "Content-Type": "application/json", "Authorization": `Bearer ${RESEND_API_KEY}` },
     body: JSON.stringify({
-      from:     `Gamma Apartmanok <${FROM_EMAIL}>`,
-      to:       [params.guestEmail],
+      from: `Gamma Apartmanok <${FROM_EMAIL}>`,
+      to: [params.guestEmail],
       reply_to: [ADMIN_EMAIL],
-      subject:  `⏰ Fizetési emlékeztető – ${params.bookingId}`,
+      subject: `⏰ Fizetési emlékeztető – ${params.bookingId}`,
       html,
     }),
   });
