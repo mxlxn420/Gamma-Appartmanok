@@ -468,7 +468,7 @@ export default function AdminBookingsList({ bookings }: Props) {
                     </td>
                     <td className="px-5 py-4" onClick={(e) => e.stopPropagation()}>
                       <div className="flex items-center gap-2">
-                        {booking.depositAmount > 0 && !booking.depositPaidAt && booking.status !== "CANCELLED" && (
+                        {booking.depositAmount > 0 && !booking.depositPaidAt && booking.status !== "CANCELLED" && booking.paymentMethod !== "cash" && booking.paymentMethod !== "card" && (
                           <>
                             <button
                               onClick={() => { setDepositForm({ paidAt: new Date().toISOString().slice(0, 10), paidAmount: String(booking.totalPrice), paidMethod: "transfer" }); setDepositModal(booking.id); }}
@@ -1366,7 +1366,7 @@ export default function AdminBookingsList({ bookings }: Props) {
                   )}
 
                   {/* Előleg befizetve */}
-                  {selected.depositAmount > 0 && selected.status !== "CANCELLED" && (
+                  {selected.depositAmount > 0 && selected.status !== "CANCELLED" && selected.paymentMethod !== "cash" && selected.paymentMethod !== "card" && (
                     <section className="space-y-2">
                       {selected.depositPaidAt ? (
                         <div className="flex items-center gap-3 bg-green-50 border border-green-200 rounded-xl px-4 py-3">
