@@ -1059,6 +1059,28 @@ export async function sendDepositConfirmationEmail(params: {
 }
 
 // ─── FŐ EMAIL KÜLDŐ FÜGGVÉNY ─────────────────────────────────
+async function sendWithRetry(payload: object, apiKey: string, label: string): Promise<void> {
+  const send = () => fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${apiKey}` },
+    body: JSON.stringify(payload),
+  });
+
+  const res = await send();
+  if (res.ok) return;
+
+  const err1 = await res.text();
+  console.warn(`${label} email hiba (1. próba):`, err1, "– újrapróbálkozás 2mp múlva...");
+
+  await new Promise((r) => setTimeout(r, 2000));
+
+  const res2 = await send();
+  if (res2.ok) return;
+
+  const err2 = await res2.text();
+  console.error(`${label} email hiba (2. próba, feladva):`, err2);
+}
+
 export async function sendBookingEmails(data: BookingEmailData): Promise<void> {
   const RESEND_API_KEY = process.env.RESEND_API_KEY;
   const FROM_EMAIL = process.env.FROM_EMAIL ?? "info@gamma-apartmanok.hu";
@@ -1072,47 +1094,21 @@ export async function sendBookingEmails(data: BookingEmailData): Promise<void> {
     return;
   }
 
-  // Vendég emailje
-  const guestRes = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${RESEND_API_KEY}`,
-    },
-    body: JSON.stringify({
-      from: `Gamma Apartmanok <${FROM_EMAIL}>`,
-      to: [data.guestEmail],
-      bcc: [ADMIN_EMAIL],
-      reply_to: [ADMIN_EMAIL],
-      subject: `✓ Foglalás visszaigazolása – ${data.bookingId}`,
-      html: guestEmailHtml(data),
-    }),
-  });
+  await sendWithRetry({
+    from: `Gamma Apartmanok <${FROM_EMAIL}>`,
+    to: [data.guestEmail],
+    bcc: [ADMIN_EMAIL],
+    reply_to: [ADMIN_EMAIL],
+    subject: `✓ Foglalás visszaigazolása – ${data.bookingId}`,
+    html: guestEmailHtml(data),
+  }, RESEND_API_KEY, "Vendég");
 
-  if (!guestRes.ok) {
-    const err = await guestRes.text();
-    console.error("Vendég email hiba:", err);
-  }
-
-  // Admin értesítő
-  const adminRes = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${RESEND_API_KEY}`,
-    },
-    body: JSON.stringify({
-      from: `Gamma Apartmanok Foglalások <${FROM_EMAIL}>`,
-      to: [ADMIN_EMAIL],
-      subject: `🏡 Új foglalás: ${data.guestName} – ${formatDate(data.checkIn)}`,
-      html: adminEmailHtml(data),
-    }),
-  });
-
-  if (!adminRes.ok) {
-    const err = await adminRes.text();
-    console.error("Admin email hiba:", err);
-  }
+  await sendWithRetry({
+    from: `Gamma Apartmanok Foglalások <${FROM_EMAIL}>`,
+    to: [ADMIN_EMAIL],
+    subject: `🏡 Új foglalás: ${data.guestName} – ${formatDate(data.checkIn)}`,
+    html: adminEmailHtml(data),
+  }, RESEND_API_KEY, "Admin");
 }
 
 // ─── TÖRLÉSI / ELUTASÍTÁSI EMAIL ─────────────────────────────
