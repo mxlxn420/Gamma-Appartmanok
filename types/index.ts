@@ -43,6 +43,7 @@ export interface Booking {
   discountPercent?: number;
   discountAmount?: number;
   status: BookingStatus;
+  paymentMethod?: string | null;
   paymentIntentId?: string | null;
   paidAt?: Date | string | null;
   createdAt: Date | string;
