@@ -120,7 +120,7 @@ function calcApartmentPrice(
 }
 
 function getEffectiveMinNights(checkIn: Date, checkOut: Date, rules: PricingRule[]): number {
-  let max = 1;
+  let max = 2;
   const cur = new Date(checkIn);
   while (cur < checkOut) {
     const rule = getGlobalApplicableRule(cur, rules);
