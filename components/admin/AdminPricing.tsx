@@ -210,27 +210,7 @@ export default function AdminPricing({ rules: initialRules, policies, apartments
       const data = await res.json();
       if (data.success) {
         setRules((prev) =>
-          prev.map((r) => r.id === editRule.id ? {
-            ...r,
-            name:            editRule.name,
-            pricePerNight:   editRule.pricePerNight,
-            price3:          editRule.price3,
-            price4:          editRule.price4,
-            price5:          editRule.price5,
-            price6:          editRule.price6,
-            weekendPrice:    editRule.weekendPrice,
-            weekendPrice3:   editRule.weekendPrice3,
-            weekendPrice4:   editRule.weekendPrice4,
-            weekendPrice5:   editRule.weekendPrice5,
-            weekendPrice6:   editRule.weekendPrice6,
-            childPrice2to6:  editRule.childPrice2to6,
-            childPrice6to12: editRule.childPrice6to12,
-            dateFrom:        editRule.dateFrom ? format(editRule.dateFrom, "yyyy-MM-dd") : null,
-            dateTo:          editRule.dateTo   ? format(editRule.dateTo,   "yyyy-MM-dd") : null,
-            minNights:       editRule.minNights,
-            isActive:        editRule.isActive,
-            priority:        editRule.featured ? 10 : 5,
-          } : r)
+          prev.map((r) => r.id === editRule.id ? { ...r, ...data.data } : r)
         );
         closeEdit();
       } else {
