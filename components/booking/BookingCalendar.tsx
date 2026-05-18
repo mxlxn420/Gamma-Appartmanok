@@ -119,12 +119,14 @@ function calcApartmentPrice(
   return { baseTotal, touristTax, nightBreakdown: groups };
 }
 
-function getEffectiveMinNights(checkIn: Date, checkOut: Date, rules: PricingRule[]): number {
+function getEffectiveMinNights(checkIn: Date, checkOut: Date, rules: PricingRule[], apartmentIds: string[]): number {
   let max = 0;
   const cur = new Date(checkIn);
   while (cur < checkOut) {
-    const rule = getGlobalApplicableRule(cur, rules);
-    if (rule && rule.minNights > max) max = rule.minNights;
+    for (const aptId of apartmentIds) {
+      const rule = getApplicableRuleForApartment(cur, rules, aptId);
+      if (rule && rule.minNights > max) max = rule.minNights;
+    }
     cur.setDate(cur.getDate() + 1);
   }
   return max || 2;
@@ -195,7 +197,7 @@ export default function BookingCalendar({ apartmentGuests, onBack, onNext }: Pro
   const checkIn  = range?.from ?? null;
   const checkOut = range?.to   ?? null;
   const nights   = checkIn && checkOut ? differenceInCalendarDays(checkOut, checkIn) : 0;
-  const minNights = checkIn && checkOut ? getEffectiveMinNights(checkIn, checkOut, rules) : 2;
+  const minNights = checkIn && checkOut ? getEffectiveMinNights(checkIn, checkOut, rules, apartmentGuests.map(a => a.id)) : 2;
 
   const weekendNights = checkIn && checkOut ? (() => {
     let count = 0;
