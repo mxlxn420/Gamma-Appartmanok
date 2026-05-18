@@ -120,14 +120,14 @@ function calcApartmentPrice(
 }
 
 function getEffectiveMinNights(checkIn: Date, checkOut: Date, rules: PricingRule[]): number {
-  let max = 2;
+  let max = 0;
   const cur = new Date(checkIn);
   while (cur < checkOut) {
     const rule = getGlobalApplicableRule(cur, rules);
     if (rule && rule.minNights > max) max = rule.minNights;
     cur.setDate(cur.getDate() + 1);
   }
-  return max;
+  return max || 2;
 }
 
 function isRangeOverlapping(from: Date, to: Date, bookedRanges: BookedRange[]): boolean {
