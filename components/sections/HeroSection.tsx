@@ -107,7 +107,7 @@ export default function HeroSection({ data }: Props) {
             <motion.h1
               initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, delay: 0.2 }}
-              className="font-serif text-display-2xl font-light text-white mb-6"
+              className="font-serif text-display-xl font-light text-white mb-6"
             >
               {data.titleBefore}
               <em className="italic text-white">{data.titleEmphasis}</em>
@@ -117,7 +117,7 @@ export default function HeroSection({ data }: Props) {
             <motion.p
               initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.35 }}
-              className="text-white/90 text-lg font-light leading-relaxed mb-8 max-w-xl"
+              className="text-white/90 text-base font-light leading-relaxed mb-8 max-w-xl"
             >
               {data.description}
             </motion.p>
