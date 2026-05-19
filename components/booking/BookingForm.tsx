@@ -646,7 +646,7 @@ export default function BookingForm({ bookingData, onBack, onSuccess }: Props) {
 
         <p className="text-xs text-cream/40 mt-4 leading-relaxed">
           A foglalás elküldése után e-mailben visszaigazolást küldünk.
-          Fizetés helyszínen vagy előre utalással.
+          A fizetéssel kapcsolatos tudnivalókat a visszaigazoló e-mailben megtalálja.
         </p>
       </div>
 
