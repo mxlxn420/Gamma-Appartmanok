@@ -39,9 +39,10 @@ function ImageSlot({
       const form = new FormData();
       form.append("file", file);
       const res  = await fetch(`/api/admin/upload?bucket=${bucket}`, { method: "POST", body: form });
-      const json = await res.json();
+      let json: { success: boolean; url?: string; error?: string };
+      try { json = await res.json(); } catch { throw new Error(`Szerver hiba (${res.status}): a fájl túl nagy, vagy hiányzó konfig.`); }
       if (!json.success) throw new Error(json.error);
-      onChangeSrc(json.url);
+      onChangeSrc(json.url!);
     } catch (err: unknown) {
       setUploadError(err instanceof Error ? err.message : "Felt\u00F6lt\u00E9si hiba");
     } finally {
@@ -107,9 +108,10 @@ function AddImageButton({ bucket, onAdd }: { bucket: string; onAdd: (img: Galler
         const fd = new FormData();
         fd.append('file', files[i]);
         const res  = await fetch(`/api/admin/upload?bucket=${bucket}`, { method: 'POST', body: fd });
-        const json = await res.json();
+        let json: { success: boolean; url?: string; error?: string };
+        try { json = await res.json(); } catch { throw new Error(`Szerver hiba (${res.status}): a fájl túl nagy, vagy hiányzó konfig.`); }
         if (!json.success) throw new Error(json.error);
-        onAdd({ src: json.url, alt: '' });
+        onAdd({ src: json.url!, alt: '' });
       } catch (err: unknown) {
         errs.push(`${files[i].name}: ${err instanceof Error ? err.message : 'Feltöltési hiba'}`);
       }

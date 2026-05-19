@@ -76,9 +76,10 @@ function ImageUploader({
       const form = new FormData();
       form.append("file", file);
       const res  = await fetch(`/api/admin/upload?bucket=${bucket}`, { method: "POST", body: form });
-      const json = await res.json();
+      let json: { success: boolean; url?: string; error?: string };
+      try { json = await res.json(); } catch { throw new Error(`Szerver hiba (${res.status}): a fájl túl nagy, vagy hiányzó konfig.`); }
       if (!json.success) throw new Error(json.error);
-      onChange({ ...image, src: json.url });
+      onChange({ ...image, src: json.url! });
     } catch (err: unknown) {
       setUploadError(err instanceof Error ? err.message : "Feltöltési hiba");
     } finally {
