@@ -1,17 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image                   from "next/image";
-import { motion }              from "framer-motion";
-import { Check, Home }         from "lucide-react";
+import Image from "next/image";
+import { motion } from "framer-motion";
+import { Check, Home } from "lucide-react";
 
 interface Apartment {
-  id:          string;
-  name:        string;
-  slug:        string;
-  maxGuests:   number;
+  id: string;
+  name: string;
+  slug: string;
+  maxGuests: number;
   description: string | null;
-  coverImage:  string | null;
+  coverImage: string | null;
 }
 
 interface Props {
@@ -19,9 +19,9 @@ interface Props {
 }
 
 export default function ApartmentSelector({ onNext }: Props) {
-  const [apartments, setApartments]   = useState<Apartment[]>([]);
-  const [selected, setSelected]       = useState<string[]>([]);
-  const [loading, setLoading]         = useState(true);
+  const [apartments, setApartments] = useState<Apartment[]>([]);
+  const [selected, setSelected] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch("/api/apartments")
@@ -51,7 +51,7 @@ export default function ApartmentSelector({ onNext }: Props) {
   return (
     <div className="space-y-6">
       <div className="text-center mb-8">
-        <p className="text-stone-500 text-sm">Válassza ki melyik apartmant szeretné foglalni</p>
+        <p className="text-stone-500 text-sm">Válassza ki melyik apartmant szeretné foglalni, akár többet is!</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -65,16 +65,14 @@ export default function ApartmentSelector({ onNext }: Props) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: i * 0.07 }}
-              className={`relative text-left p-6 rounded-2xl border-2 transition-all duration-200 ${
-                isSelected
+              className={`relative text-left p-6 rounded-2xl border-2 transition-all duration-200 ${isSelected
                   ? "border-forest-700 bg-forest-50 shadow-card"
                   : "border-stone-200 bg-white hover:border-forest-300 hover:shadow-card"
-              }`}
+                }`}
             >
               {/* Pipa */}
-              <div className={`absolute top-4 right-4 w-6 h-6 rounded-full flex items-center justify-center transition-all duration-200 ${
-                isSelected ? "bg-forest-900" : "bg-stone-100"
-              }`}>
+              <div className={`absolute top-4 right-4 w-6 h-6 rounded-full flex items-center justify-center transition-all duration-200 ${isSelected ? "bg-forest-900" : "bg-stone-100"
+                }`}>
                 {isSelected && <Check size={13} className="text-white" strokeWidth={3} />}
               </div>
 

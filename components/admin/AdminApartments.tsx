@@ -21,6 +21,31 @@ interface ApartmentFormState {
   coverImage:  string;
 }
 
+async function compressImage(file: File): Promise<File> {
+  const MAX_BYTES = 3.5 * 1024 * 1024;
+  if (file.size <= MAX_BYTES) return file;
+  return new Promise((resolve) => {
+    const img = document.createElement("img");
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      const maxDim = 1920;
+      let { width, height } = img;
+      if (width > maxDim || height > maxDim) {
+        if (width > height) { height = Math.round(height * maxDim / width); width = maxDim; }
+        else { width = Math.round(width * maxDim / height); height = maxDim; }
+      }
+      const canvas = document.createElement("canvas");
+      canvas.width = width; canvas.height = height;
+      canvas.getContext("2d")!.drawImage(img, 0, 0, width, height);
+      URL.revokeObjectURL(url);
+      canvas.toBlob((blob) => {
+        resolve(new File([blob!], file.name, { type: "image/jpeg" }));
+      }, "image/jpeg", 0.85);
+    };
+    img.src = url;
+  });
+}
+
 function ApartmentCard({ apt }: { apt: Apartment }) {
   const [form, setForm]         = useState<ApartmentFormState>({
     name:        apt.name,
@@ -40,12 +65,15 @@ function ApartmentCard({ apt }: { apt: Apartment }) {
     setUploading(true);
     setUploadError(null);
     try {
+      const compressed = await compressImage(file);
       const fd = new FormData();
-      fd.append("file", file);
+      fd.append("file", compressed);
       const res  = await fetch("/api/admin/upload?bucket=apartments", { method: "POST", body: fd });
-      const json = await res.json();
+      let json: { success: boolean; url?: string; error?: string };
+      try { json = await res.json(); }
+      catch { throw new Error(`Szerver hiba (${res.status}): a fájl túl nagy, vagy hiányzó konfig.`); }
       if (!json.success) throw new Error(json.error);
-      setForm((f) => ({ ...f, coverImage: json.url }));
+      setForm((f) => ({ ...f, coverImage: json.url! }));
     } catch (err) {
       setUploadError(err instanceof Error ? err.message : "Feltöltési hiba");
     } finally {

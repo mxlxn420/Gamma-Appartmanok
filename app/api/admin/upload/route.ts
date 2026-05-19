@@ -51,10 +51,10 @@ export async function POST(req: Request) {
       Body:        buffer,
       ContentType: actualType,
     }));
+    const url = getPublicUrl(bucket, filename);
+    return NextResponse.json({ success: true, url });
   } catch (err) {
     const msg = err instanceof Error ? err.message : "Ismeretlen hiba";
     return NextResponse.json({ success: false, error: msg }, { status: 500 });
   }
-
-  return NextResponse.json({ success: true, url: getPublicUrl(bucket, filename) });
 }
