@@ -89,14 +89,14 @@ export default function AboutSection({ data }: { data: AboutData }) {
               {data.heading1}<br />
               <em className="italic">{data.heading2}</em>
             </h2>
-            <p className="text-stone-600 leading-relaxed mb-4">{data.description1}</p>
+            <p className="text-stone-600 leading-relaxed mb-4 whitespace-pre-wrap">{data.description1}</p>
             <motion.div
               initial={false}
               animate={{ height: expanded ? "auto" : 0, opacity: expanded ? 1 : 0 }}
               transition={{ duration: 0.4, ease: "easeInOut" }}
               style={{ overflow: "hidden" }}
             >
-              <p className="text-stone-600 leading-relaxed mb-4">{data.description2}</p>
+              <p className="text-stone-600 leading-relaxed mb-4 whitespace-pre-wrap">{data.description2}</p>
             </motion.div>
             <button
               onClick={() => setExpanded(e => !e)}

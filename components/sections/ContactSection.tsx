@@ -59,7 +59,7 @@ export default function ContactSection() {
             <div className="space-y-5">
               {[
                 { icon: MapPin, label: "Cím", value: "3519 Miskolctapolca, Beregi utca 11." },
-                { icon: Phone, label: "Telefon", value: "+36 20 359 9222" },
+                { icon: Phone, label: "Telefon, WhatsApp, Viber", value: "+36 20 359 9222" },
                 { icon: Mail, label: "E-mail", value: "gammaapartmanok@gmail.com" },
               ].map(({ icon: Icon, label, value }) => (
                 <div key={label} className="flex items-center gap-4">
@@ -80,7 +80,7 @@ export default function ContactSection() {
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between"><span className="text-cream/60">Bejelentkezés</span><span>15:00 – 00:00</span></div>
                 <div className="flex justify-between"><span className="text-cream/60">Kijelentkezés</span><span>8:00 – 11:00</span></div>
-                <div className="flex justify-between"><span className="text-cream/60">Max. vendég</span><span>4 fő</span></div>
+                <div className="flex justify-between"><span className="text-cream/60">Max. vendég</span><span>20 fő</span></div>
                 <div className="flex justify-between"><span className="text-cream/60">NTAK</span><span>MA21027231</span></div>
                 <div className="flex justify-between"><span className="text-cream/60">Háziállat</span><span>Nem tudunk fogadni</span></div>
               </div>
