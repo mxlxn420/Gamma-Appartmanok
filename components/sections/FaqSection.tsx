@@ -8,7 +8,7 @@ import AnimatedSection from "@/components/ui/AnimatedSection";
 const FAQS = [
   { q: "Mikor van bejelentkezés és kijelentkezés?",          a: "Bejelentkezés: 15:00–00:00 között. Kijelentkezés: 11:00-ig. Eltérő időpont előzetesen egyeztethető." },
   { q: "Hogyan jutok be az apartmanba?",                     a: "Az apartmanba való belépés érintkezésmentesen történik, a bejárati ajtók egyedi belépőkóddal működnek. A kódot érkezés napján küldjük Önnek." },
-  { q: "Hány fő tud elszállásolni a kuckóban?",              a: "A Gamma Apartmanok maximum 20 fő részére biztosít elhelyezést." },
+  { q: "Hány főt tudnak elszállásolni az apartmanok?",              a: "A Gamma Apartmanok maximum 20 fő részére biztosít elhelyezést." },
   { q: "Szabad-e kisállatot hozni?",                         a: "Sajnos kisállatokat nem tudunk fogadni. Kérjük ennek tiszteletben tartását." },
   { q: "Hogyan működik a jakuzzi?",                          a: "Panorámás tetőteraszunkon egy közös 4-5 férőhelyes jakuzzi és napozóterasz található, melyet a helyszínen előre egyeztetett napi 1,5  órában 12-23 óra között privát használhatnak. Törölközőt biztosítunk, saját fürdőköpenyt kérjük hozzanak magukkal." },
   { q: "Van-e lehetőség korai érkezésre vagy késői távozásra?", a: "Foglaltságtól függően, előzetes egyeztetés alapján van lehetőség korai érkezésre, illetve késői távozásra, esetlegesen felár ellenében." },
