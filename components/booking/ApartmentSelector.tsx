@@ -25,8 +25,9 @@ export default function ApartmentSelector({ onNext }: Props) {
 
   useEffect(() => {
     fetch("/api/apartments")
-      .then((r) => r.json())
-      .then((data) => { setApartments(data); setLoading(false); });
+      .then((r) => { if (!r.ok) throw new Error(r.statusText); return r.json(); })
+      .then((data) => { setApartments(Array.isArray(data) ? data : []); setLoading(false); })
+      .catch(() => { setApartments([]); setLoading(false); });
   }, []);
 
   const toggle = (id: string) => {

@@ -133,6 +133,14 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const todayUTC = new Date(new Date().toISOString().split("T")[0] + "T00:00:00Z");
+    if (checkInDate < todayUTC) {
+      return NextResponse.json(
+        { success: false, error: "A bejelentkezés dátuma nem lehet múltbeli" },
+        { status: 400 }
+      );
+    }
+
     const prisma = await getPrisma();
 
     // MinNights ellenőrzés: minden éjszakára megnézzük a szezon szabályát
@@ -233,7 +241,13 @@ export async function POST(req: NextRequest) {
     });
 
     const discountPercent = applicableDiscount?.discountPercent ?? 0;
-    const finalTotal      = Number(totalPrice); // frontend már levonja a kedvezményt
+    const finalTotal      = Number(totalPrice);
+    if (!finalTotal || finalTotal <= 0) {
+      return NextResponse.json(
+        { success: false, error: "Érvénytelen ár" },
+        { status: 400 }
+      );
+    }
     const discountAmount  = Number(body.discountAmount) || 0;
 
     const depositPercent  = (applicableRule as any)?.policy?.depositPercent ?? 30;
