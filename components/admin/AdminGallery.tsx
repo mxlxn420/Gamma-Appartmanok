@@ -11,6 +11,31 @@ interface GalleryData {
   categories: GalleryCategory[];
 }
 
+async function compressImage(file: File): Promise<File> {
+  const MAX_BYTES = 3.5 * 1024 * 1024;
+  if (file.size <= MAX_BYTES) return file;
+  return new Promise((resolve) => {
+    const img = document.createElement("img");
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      const maxDim = 1920;
+      let { width, height } = img;
+      if (width > maxDim || height > maxDim) {
+        if (width > height) { height = Math.round(height * maxDim / width); width = maxDim; }
+        else { width = Math.round(width * maxDim / height); height = maxDim; }
+      }
+      const canvas = document.createElement("canvas");
+      canvas.width = width; canvas.height = height;
+      canvas.getContext("2d")!.drawImage(img, 0, 0, width, height);
+      URL.revokeObjectURL(url);
+      canvas.toBlob((blob) => {
+        resolve(new File([blob!], file.name, { type: "image/jpeg" }));
+      }, "image/jpeg", 0.85);
+    };
+    img.src = url;
+  });
+}
+
 // ─── Újrahasználható kép-feltöltő slot ───────────────────────────────────────
 
 function ImageSlot({
@@ -36,8 +61,9 @@ function ImageSlot({
     setUploading(true);
     setUploadError(null);
     try {
+      const compressed = await compressImage(file);
       const form = new FormData();
-      form.append("file", file);
+      form.append("file", compressed);
       const res  = await fetch(`/api/admin/upload?bucket=${bucket}`, { method: "POST", body: form });
       let json: { success: boolean; url?: string; error?: string };
       try { json = await res.json(); } catch { throw new Error(`Szerver hiba (${res.status}): a fájl túl nagy, vagy hiányzó konfig.`); }
@@ -105,8 +131,9 @@ function AddImageButton({ bucket, onAdd }: { bucket: string; onAdd: (img: Galler
     const errs: string[] = [];
     for (let i = 0; i < files.length; i++) {
       try {
+        const compressed = await compressImage(files[i]);
         const fd = new FormData();
-        fd.append('file', files[i]);
+        fd.append('file', compressed);
         const res  = await fetch(`/api/admin/upload?bucket=${bucket}`, { method: 'POST', body: fd });
         let json: { success: boolean; url?: string; error?: string };
         try { json = await res.json(); } catch { throw new Error(`Szerver hiba (${res.status}): a fájl túl nagy, vagy hiányzó konfig.`); }
