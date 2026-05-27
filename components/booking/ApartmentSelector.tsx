@@ -71,13 +71,12 @@ export default function ApartmentSelector({ onNext }: Props) {
                   : "border-stone-200 bg-white hover:border-forest-300 hover:shadow-card"
                 }`}
             >
+              {/* Borítókép */}
               {/* Pipa */}
-              <div className={`absolute top-4 right-4 w-6 h-6 rounded-full flex items-center justify-center transition-all duration-200 ${isSelected ? "bg-forest-900" : "bg-stone-100"
-                }`}>
+              <div className={`absolute top-4 right-4 z-10 w-6 h-6 rounded-full flex items-center justify-center transition-all duration-200 ${isSelected ? "bg-forest-900" : "bg-stone-100"}`}>
                 {isSelected && <Check size={13} className="text-white" strokeWidth={3} />}
               </div>
 
-              {/* Borítókép */}
               {apt.coverImage ? (
                 <div className="relative w-full h-36 rounded-xl overflow-hidden mb-4 -mx-0">
                   <Image src={apt.coverImage} alt={apt.name} fill sizes="(max-width:640px) 100vw, 50vw" className="object-cover" />
