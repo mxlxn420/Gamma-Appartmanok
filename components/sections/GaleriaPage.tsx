@@ -177,7 +177,7 @@ export default function GaleriaPage({ categories = DEFAULT_CATEGORIES }: { categ
                 <div className="text-center mb-12">
                     <div className="section-badge">Galéria</div>
                     <h1 className="font-serif text-display-lg font-light text-forest-900">
-                        Tekintsen be a kuckóba
+                        Tekintsen be az apartmanokba
                     </h1>
                     <p className="text-stone-500 mt-3">
                         {ALL_IMAGES.length} kép a szállásról és környékéről
