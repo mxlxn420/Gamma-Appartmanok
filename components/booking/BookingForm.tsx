@@ -187,6 +187,7 @@ export default function BookingForm({ bookingData, onBack, onSuccess }: Props) {
               </label>
               <input
                 className="input-base"
+                type="tel"
                 placeholder="+36 30 123 4567"
                 required
                 maxLength={30}
@@ -230,7 +231,7 @@ export default function BookingForm({ bookingData, onBack, onSuccess }: Props) {
               <CreditCard size={12} className="inline mr-1" />Fizetési mód *
             </label>
             <div className="space-y-3">
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {[
                   { value: "transfer", label: "Átutalás", Icon: Building2 },
                   { value: "revolut", label: "Revolut", Icon: Smartphone },
@@ -240,7 +241,7 @@ export default function BookingForm({ bookingData, onBack, onSuccess }: Props) {
                     key={value}
                     type="button"
                     onClick={() => setForm({ ...form, paymentMethod: value, szepType: "" })}
-                    className={`flex flex-col items-center gap-2 py-4 px-2 rounded-2xl border-2 transition-all text-sm font-medium ${form.paymentMethod === value
+                    className={`flex flex-col items-center gap-2 py-3 px-2 min-h-[56px] rounded-2xl border-2 transition-all text-sm font-medium ${form.paymentMethod === value
                       ? "border-forest-600 bg-forest-50 text-forest-800"
                       : "border-stone-200 text-stone-500 hover:border-stone-300"
                       }`}
@@ -250,7 +251,7 @@ export default function BookingForm({ bookingData, onBack, onSuccess }: Props) {
                   </button>
                 ))}
               </div>
-              <div className="grid grid-cols-2 gap-3 w-2/3 mx-auto">
+              <div className="grid grid-cols-2 gap-3">
                 {[
                   { value: "card", label: "Bankkártya", Icon: CreditCard },
                   { value: "szep", label: "SZÉP kártya", Icon: Wallet },
@@ -259,7 +260,7 @@ export default function BookingForm({ bookingData, onBack, onSuccess }: Props) {
                     key={value}
                     type="button"
                     onClick={() => setForm({ ...form, paymentMethod: value, szepType: value === "szep" ? (form.szepType || "otp") : "" })}
-                    className={`flex flex-col items-center gap-2 py-4 px-2 rounded-2xl border-2 transition-all text-sm font-medium ${form.paymentMethod === value
+                    className={`flex flex-col items-center gap-2 py-3 px-2 min-h-[56px] rounded-2xl border-2 transition-all text-sm font-medium ${form.paymentMethod === value
                       ? "border-forest-600 bg-forest-50 text-forest-800"
                       : "border-stone-200 text-stone-500 hover:border-stone-300"
                       }`}
