@@ -308,7 +308,7 @@ export default function BookingCalendar({ apartmentGuests, onBack, onNext }: Pro
           modifiersStyles={{
             booked:       { backgroundColor: "#f5e6d8", color: "#a86435", textDecoration: "line-through", cursor: "not-allowed", opacity: 0.7 },
             tooSoon:      { backgroundColor: "#f5e6d8", color: "#a86435", textDecoration: "line-through", cursor: "not-allowed", opacity: 0.7 },
-            checkoutOnly: { background: "linear-gradient(135deg, #fff 50%, #f5e6d8 50%)", color: "#a86435", cursor: "pointer" },
+            checkoutOnly: { backgroundImage: "linear-gradient(135deg, #fff 50%, #f5e6d8 50%)", backgroundColor: "transparent", color: "#a86435", cursor: "pointer" },
           }}
           styles={{ months: { gap: "1rem" } }}
         />
