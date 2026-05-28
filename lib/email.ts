@@ -75,7 +75,7 @@ function apartmentDescriptionHtml(apts?: ApartmentEmailEntry[]): string {
       <tr><td style="padding:20px 24px;">
         <p style="font-family:sans-serif;font-size:13px;font-weight:700;color:#1a3a2a;margin:0 0 10px;">Az Ön apartmanja a ${escapeHtml(title)}</p>
         <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;line-height:1.8;margin:0 0 8px;">
-          54 nm-es, 4 fős apartman. 1 hálószoba 180×200-as ággyal + nappali kihúzhatós kanapéval (140×200), teljesen felszerelt konyha étkező résszel, fürdőszoba, gardrób és kertkapcsolatos 20 nm-es terasszal.
+          54 nm + 20 nm kertkapcsolatos terasszal – max. 4 fő befogadására alkalmas. 1 hálószoba – 180 cm-es ággyal, 1 nappali – kihúzható 2 személyes kanapéval, teljesen felszerelt amerikai konyha étkező résszel, fürdőszoba, gardrób.
         </p>
         <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;line-height:1.8;margin:0 0 8px;">
           Közös tetőteraszon napozóterasz és 5 férőhelyes jakuzzi található, amit a megjelölt 1,5 órában 11–23 óra között privát tudnak használni.
@@ -92,7 +92,7 @@ function apartmentDescriptionHtml(apts?: ApartmentEmailEntry[]): string {
       <tr><td style="padding:20px 24px;">
         <p style="font-family:sans-serif;font-size:13px;font-weight:700;color:#1a3a2a;margin:0 0 10px;">Az Ön apartmanja a ${escapeHtml(title)}</p>
         <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;line-height:1.8;margin:0 0 8px;">
-          64 nm-es, 6 fős apartman. 2 hálószoba (160 és 180 cm-es ágyak) + nappali kanapé (380×200), fürdőszoba, teljesen felszerelt konyha étkező résszel és erkély.
+          64 nm + 4 nm terasszal – max. 6 fő befogadására alkalmas. 2 hálószoba – 180 cm-es boxspring és 160 cm-es franciaággyal, nappali óriási kihúzható kanapéval, teljesen felszerelt amerikai konyha étkező résszel, fürdőszoba.
         </p>
         <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;line-height:1.8;margin:0 0 8px;">
           Közös tetőteraszon napozóterasz és 5 férőhelyes jakuzzi található, amit a megjelölt 1,5 órában 11–23 óra között privát tudnak használni.
@@ -378,7 +378,7 @@ function guestEmailHtml(data: BookingEmailData): string {
             <table width="100%" cellpadding="0" cellspacing="0">
               <tr>
                 <td style="font-family:sans-serif;font-size:13px;color:rgba(245,240,232,0.65);padding:4px 0;width:50%;">Számlatulajdonos</td>
-                <td style="font-family:sans-serif;font-size:13px;color:#f5f0e8;font-weight:600;padding:4px 0;text-align:right;">Siposé Kiss Gabriella</td>
+                <td style="font-family:sans-serif;font-size:13px;color:#f5f0e8;font-weight:600;padding:4px 0;text-align:right;">Siposné Kiss Gabriella</td>
               </tr>
               <tr>
                 <td style="font-family:sans-serif;font-size:13px;color:rgba(245,240,232,0.65);padding:4px 0;">Számlaszám</td>
