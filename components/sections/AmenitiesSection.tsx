@@ -26,14 +26,14 @@ interface AmenitiesData {
 
 export default function AmenitiesSection({ data }: { data: AmenitiesData }) {
   return (
-    <section id="felszereltseg" className="section-py overflow-hidden" style={{ backgroundColor: "#2347a8" }}>
+    <section id="felszereltseg" className="section-py bg-forest-900 overflow-hidden">
       <div className="container-custom">
 
         <AnimatedSection className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 text-terra-300 text-xs font-medium tracking-[0.2em] uppercase mb-4">
-            <span className="h-px w-8 bg-terra-400/60" />
+          <div className="inline-flex items-center gap-2 text-blue-300 text-xs font-medium tracking-[0.2em] uppercase mb-4">
+            <span className="h-px w-8 bg-blue-400/60" />
             {data.subtitle}
-            <span className="h-px w-8 bg-terra-400/60" />
+            <span className="h-px w-8 bg-blue-400/60" />
           </div>
           <h2 className="font-serif text-display-lg font-light text-cream mb-4">
             {data.heading}
@@ -56,8 +56,8 @@ export default function AmenitiesSection({ data }: { data: AmenitiesData }) {
                 whileHover={{ y: -4, transition: { duration: 0.2 } }}
                 className="w-[calc(50%-8px)] md:w-[calc(33.333%-11px)] lg:w-[calc(25%-12px)] bg-white/5 border border-white/10 rounded-2xl p-5 hover:bg-white/10 hover:border-white/20 transition-colors cursor-default"
               >
-                <div className="w-10 h-10 rounded-xl bg-terra-400/20 flex items-center justify-center mb-4">
-                  <Icon size={18} className="text-terra-300" />
+                <div className="w-10 h-10 rounded-xl bg-blue-400/20 flex items-center justify-center mb-4">
+                  <Icon size={18} className="text-blue-300" />
                 </div>
                 <p className="text-cream font-medium text-sm mb-1">{label}</p>
                 <p className="text-cream/50 text-xs">{desc}</p>

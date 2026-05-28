@@ -4,6 +4,77 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─── Forest szín → kék felülírás ────────────────────────────── */
+.bg-forest-50  { background-color: #eef3fd !important; }
+.bg-forest-100 { background-color: #dde8fb !important; }
+.bg-forest-200 { background-color: #bbd1f7 !important; }
+.bg-forest-300 { background-color: #8db4f1 !important; }
+.bg-forest-400 { background-color: #5a8ee8 !important; }
+.bg-forest-500 { background-color: #3469d6 !important; }
+.bg-forest-600 { background-color: #2a57c5 !important; }
+.bg-forest-700 { background-color: #2850b5 !important; }
+.bg-forest-800 { background-color: #2449ab !important; }
+.bg-forest-900 { background-color: #2347a8 !important; }
+
+.text-forest-50  { color: #eef3fd !important; }
+.text-forest-100 { color: #dde8fb !important; }
+.text-forest-200 { color: #bbd1f7 !important; }
+.text-forest-300 { color: #8db4f1 !important; }
+.text-forest-400 { color: #5a8ee8 !important; }
+.text-forest-500 { color: #3469d6 !important; }
+.text-forest-600 { color: #2a57c5 !important; }
+.text-forest-700 { color: #2850b5 !important; }
+.text-forest-800 { color: #2449ab !important; }
+.text-forest-900 { color: #2347a8 !important; }
+
+.border-forest-50  { border-color: #eef3fd !important; }
+.border-forest-100 { border-color: #dde8fb !important; }
+.border-forest-200 { border-color: #bbd1f7 !important; }
+.border-forest-300 { border-color: #8db4f1 !important; }
+.border-forest-400 { border-color: #5a8ee8 !important; }
+.border-forest-500 { border-color: #3469d6 !important; }
+.border-forest-600 { border-color: #2a57c5 !important; }
+.border-forest-700 { border-color: #2850b5 !important; }
+.border-forest-800 { border-color: #2449ab !important; }
+.border-forest-900 { border-color: #2347a8 !important; }
+
+.hover\:bg-forest-700:hover { background-color: #2850b5 !important; }
+.hover\:bg-forest-800:hover { background-color: #2449ab !important; }
+.hover\:bg-forest-900:hover { background-color: #2347a8 !important; }
+.hover\:text-forest-900:hover { color: #2347a8 !important; }
+.focus\:border-forest-500:focus { border-color: #3469d6 !important; }
+.focus\:ring-forest-500\/10 { --tw-ring-color: rgba(52,105,214,0.1) !important; }
+.ring-forest-500 { --tw-ring-color: #3469d6 !important; }
+.group:hover .group-hover\:opacity-100 { opacity: 1; }
+.bg-forest-900\/8 { background-color: rgba(35,71,168,0.08) !important; }
+.bg-forest-900\/30 { background-color: rgba(35,71,168,0.3) !important; }
+.border-forest-900\/30 { border-color: rgba(35,71,168,0.3) !important; }
+
+/* ─── Terra szín → arany felülírás ───────────────────────────── */
+.bg-terra-100 { background-color: #dbeafe !important; }
+.bg-terra-200 { background-color: #bfdbfe !important; }
+.bg-terra-300 { background-color: #93c5fd !important; }
+.bg-terra-400 { background-color: #60a5fa !important; }
+.bg-terra-500 { background-color: #3b82f6 !important; }
+.bg-terra-600 { background-color: #2563eb !important; }
+.bg-terra-700 { background-color: #1d4ed8 !important; }
+
+.text-terra-100 { color: #dbeafe !important; }
+.text-terra-200 { color: #bfdbfe !important; }
+.text-terra-300 { color: #93c5fd !important; }
+.text-terra-400 { color: #60a5fa !important; }
+.text-terra-500 { color: #3b82f6 !important; }
+.text-terra-600 { color: #2563eb !important; }
+.text-terra-700 { color: #1d4ed8 !important; }
+
+.border-terra-400 { border-color: #60a5fa !important; }
+.hover\:bg-terra-500:hover { background-color: #3b82f6 !important; }
+.bg-terra-400\/20 { background-color: rgba(96,165,250,0.2) !important; }
+.bg-terra-400\/60 { background-color: rgba(96,165,250,0.6) !important; }
+
+/* Scrollbar */
+::-webkit-scrollbar-thumb { background: #2347a8 !important; }
+
 :root {
   --navbar-h: 80px;
 }
@@ -21,8 +92,8 @@
   }
   ::-webkit-scrollbar { width: 5px; }
   ::-webkit-scrollbar-track { background: #f5f0e8; }
-  ::-webkit-scrollbar-thumb { background: #264f2d; border-radius: 3px; }
-  ::selection { background: #1a3a2a; color: #f5f0e8; }
+  ::-webkit-scrollbar-thumb { background: #2347a8; border-radius: 3px; }
+  ::selection { background: #2347a8; color: #f5f0e8; }
   :target { scroll-margin-top: calc(var(--navbar-h) + 1.5rem); }
   /* iOS Safari auto-zoom megelőzése: input fókuszkor nem nagyít ha font >= 16px */
   @media (max-width: 768px) {
@@ -103,14 +174,14 @@
 /* ─── React Day Picker v9 ───────────────────────────────────── */
 /* html .rdp-root > magasabb specificitás mint a csomag .rdp-root szabályai */
 html .rdp-root {
-  --rdp-accent-color:                      #1a3a2a;
-  --rdp-accent-background-color:           #f0f5f1;
-  --rdp-range_middle-background-color:     #dceade;
-  --rdp-range_middle-color:                #1a3a2a;
+  --rdp-accent-color:                      #2347a8;
+  --rdp-accent-background-color:           #eef3fd;
+  --rdp-range_middle-background-color:     #dde8fb;
+  --rdp-range_middle-color:                #2347a8;
   --rdp-range_start-color:                 #f5f0e8;
   --rdp-range_end-color:                   #f5f0e8;
-  --rdp-range_start-date-background-color: #1a3a2a;
-  --rdp-range_end-date-background-color:   #1a3a2a;
+  --rdp-range_start-date-background-color: #2347a8;
+  --rdp-range_end-date-background-color:   #2347a8;
   --rdp-today-color:                       #c17f4e;
   --rdp-day_button-border-radius:          8px;
   --rdp-selected-border:                   2px solid transparent;
@@ -131,20 +202,20 @@ html .rdp-root .rdp-day {
 
 /* Hover */
 html .rdp-root .rdp-day_button:hover:not(:disabled) {
-  background-color: #dceade !important;
-  color: #1a3a2a !important;
+  background-color: #dde8fb !important;
+  color: #2347a8 !important;
 }
 
 /* Kiválasztott nap */
 html .rdp-root .rdp-selected .rdp-day_button {
-  background-color: #1a3a2a !important;
+  background-color: #2347a8 !important;
   color: #f5f0e8 !important;
   font-weight: 600 !important;
 }
 
 /* iOS sticky hover fix – kiválasztott nap hover-on is sötétzöld marad */
 html .rdp-root .rdp-selected .rdp-day_button:hover {
-  background-color: #1a3a2a !important;
+  background-color: #2347a8 !important;
   color: #f5f0e8 !important;
 }
 
@@ -160,7 +231,7 @@ html .rdp-root .rdp-disabled:not(.rdp-selected) {
 
 /* Fejléc (hónapnév, évszám) */
 html .rdp-root .rdp-caption_label {
-  color: #1a3a2a !important;
+  color: #2347a8 !important;
   font-weight: 600 !important;
   font-size: 15px !important;
 }
@@ -175,12 +246,12 @@ html .rdp-root .rdp-weekday {
 /* Navigációs gombok */
 html .rdp-root .rdp-button_previous,
 html .rdp-root .rdp-button_next {
-  color: #1a3a2a !important;
+  color: #2347a8 !important;
   border-radius: 8px !important;
 }
 html .rdp-root .rdp-button_previous:hover,
 html .rdp-root .rdp-button_next:hover {
-  background-color: #dceade !important;
+  background-color: #dde8fb !important;
 }
 
 /* Külső hónap napjai */

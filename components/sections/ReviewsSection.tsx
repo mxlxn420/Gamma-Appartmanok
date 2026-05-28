@@ -57,10 +57,10 @@ export default function ReviewsSection() {
 
         {/* Fejléc */}
         <AnimatedSection className="text-center mb-14">
-          <div className="inline-flex items-center gap-2 text-terra-300 text-xs font-medium tracking-[0.2em] uppercase mb-4">
-            <span className="h-px w-8 bg-terra-400/60" />
+          <div className="inline-flex items-center gap-2 text-blue-300 text-xs font-medium tracking-[0.2em] uppercase mb-4">
+            <span className="h-px w-8 bg-blue-400/60" />
             Értékelések
-            <span className="h-px w-8 bg-terra-400/60" />
+            <span className="h-px w-8 bg-blue-400/60" />
           </div>
           <h2 className="font-serif text-display-lg font-light text-cream mb-6">
             Vendégeink mondták
@@ -73,7 +73,7 @@ export default function ReviewsSection() {
                 {OVERALL_RATING.toFixed(1)}
               </span>
               <div className="flex flex-col items-start gap-1.5">
-                <span className="text-sm font-semibold text-terra-300">/ 10</span>
+                <span className="text-sm font-semibold text-blue-300">/ 10</span>
                 <p className="text-cream/60 text-xs">
                   Booking.com értékelések alapján
                 </p>
@@ -83,7 +83,7 @@ export default function ReviewsSection() {
             <a href={BOOKING_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs text-terra-300 hover:text-terra-200 transition-colors"
+              className="text-xs text-blue-300 hover:text-blue-200 transition-colors"
             >
               Összes értékelés megtekintése →
             </a>
@@ -99,7 +99,7 @@ export default function ReviewsSection() {
               className="w-full md:w-[calc(50%-10px)] lg:w-[calc(25%-15px)] bg-white/8 border border-white/10 rounded-2xl p-6 flex flex-col hover:bg-white/12 transition-colors duration-300"
             >
               {/* Idézőjel */}
-              <Quote size={22} className="text-terra-400/40 mb-4 shrink-0" />
+              <Quote size={22} className="text-blue-400/40 mb-4 shrink-0" />
 
               {/* Szöveg */}
               <p className="text-cream/75 text-sm leading-relaxed flex-1 mb-5">
@@ -121,11 +121,11 @@ export default function ReviewsSection() {
                     </div>
                   </div>
                   <div className="flex items-baseline gap-0.5">
-                    <span className="font-serif text-xl font-light text-terra-300">{review.score}</span>
+                    <span className="font-serif text-xl font-light text-blue-300">{review.score}</span>
                     <span className="text-xs text-cream/30">/10</span>
                   </div>
                 </div>
-                <span className="text-xs text-terra-400/70 bg-terra-400/10 px-2 py-0.5 rounded-full">
+                <span className="text-xs text-blue-300 bg-blue-400/10 px-2 py-0.5 rounded-full">
                   {review.type}
                 </span>
               </div>
