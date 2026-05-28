@@ -75,6 +75,21 @@
 /* Scrollbar */
 ::-webkit-scrollbar-thumb { background: #2347a8 !important; }
 
+/* ─── Hover állapot overrides ─────────────────────────────────── */
+.btn-primary:hover  { background-color: #2850b5 !important; }
+.btn-secondary:hover { background-color: #2347a8 !important; color: #f5f0e8 !important; }
+.btn-accent:hover   { background-color: #3b82f6 !important; }
+.hover\:bg-forest-700:hover { background-color: #2850b5 !important; }
+.hover\:bg-forest-800:hover { background-color: #2449ab !important; }
+.hover\:bg-forest-900:hover { background-color: #2347a8 !important; }
+.hover\:text-forest-900:hover { color: #2347a8 !important; }
+.hover\:bg-terra-400:hover  { background-color: #60a5fa !important; }
+.hover\:bg-terra-500:hover  { background-color: #3b82f6 !important; }
+.hover\:text-terra-200:hover { color: #bfdbfe !important; }
+.hover\:text-terra-300:hover { color: #93c5fd !important; }
+/* Navbar link aláhúzás */
+.bg-terra-400 { background-color: #60a5fa !important; }
+
 :root {
   --navbar-h: 80px;
 }
