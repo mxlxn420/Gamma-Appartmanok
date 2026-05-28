@@ -254,7 +254,7 @@ export default function AdminCalendar({ bookings, blocked: initialBlocked, apart
             blocked: blockedDays,
           }}
           modifiersStyles={{
-            booked:  { backgroundColor: "#dceade", color: "#1a3a2a" },
+            booked:  { backgroundColor: "#dde8fb", color: "#2347a8" },
             blocked: { backgroundColor: "#f5e6d8", color: "#a86435", textDecoration: "line-through" },
           }}
           {...(activeTab === null ? { components: { DayButton: CustomDayButton } } : {})}

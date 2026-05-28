@@ -90,6 +90,23 @@
 /* Navbar link aláhúzás */
 .bg-terra-400 { background-color: #60a5fa !important; }
 
+/* ─── Admin hover/focus/border overrides ─────────────────────── */
+.hover\:bg-forest-600:hover { background-color: #2a57c5 !important; }
+.hover\:border-forest-300:hover { border-color: #8db4f1 !important; }
+.hover\:border-forest-400:hover { border-color: #5a8ee8 !important; }
+.hover\:text-forest-700:hover { color: #2850b5 !important; }
+.hover\:text-forest-800:hover { color: #2449ab !important; }
+.focus\:ring-forest-400 { --tw-ring-color: #5a8ee8 !important; }
+.bg-terra-50 { background-color: #eff6ff !important; }
+.border-forest-100 { border-color: #dde8fb !important; }
+.border-forest-200 { border-color: #bbd1f7 !important; }
+.border-forest-300 { border-color: #8db4f1 !important; }
+.border-forest-400 { border-color: #5a8ee8 !important; }
+.text-forest-600 { color: #2a57c5 !important; }
+.bg-forest-600 { background-color: #2a57c5 !important; }
+.ring-forest-400 { --tw-ring-color: #5a8ee8 !important; }
+.ring-offset-forest-400 { --tw-ring-offset-color: #5a8ee8 !important; }
+
 :root {
   --navbar-h: 80px;
 }
