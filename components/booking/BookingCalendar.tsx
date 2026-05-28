@@ -157,7 +157,7 @@ export default function BookingCalendar({ apartmentGuests, onBack, onNext }: Pro
   const [rules, setRules]               = useState<PricingRule[]>([]);
   const [loadingRules, setLoadingRules] = useState(true);
   const [bookedRanges, setBookedRanges] = useState<BookedRange[]>([]);
-  const [discount, setDiscount]         = useState<{ name: string; discountPercent: number } | null>(null);
+  const [discount, setDiscount]         = useState<{ name: string; discountPercent: number; isLastMinute: boolean; lastMinuteDays: number } | null>(null);
   const [openApt, setOpenApt]           = useState<string | null>(null);
 
   const apartmentIds = apartmentGuests.map(a => a.id).join(",");
@@ -214,7 +214,36 @@ export default function BookingCalendar({ apartmentGuests, onBack, onNext }: Pro
 
   const totalBase       = aptPrices.reduce((s, a) => s + a.baseTotal, 0);
   const totalTouristTax = aptPrices.reduce((s, a) => s + a.touristTax, 0);
-  const discountAmount  = discount ? Math.round(totalBase * discount.discountPercent / 100) : 0;
+
+  const { discountAmount, discountedNights } = (() => {
+    if (!discount || !checkIn || !checkOut) return { discountAmount: 0, discountedNights: 0 };
+    if (discount.isLastMinute) {
+      const todayUTC = new Date(new Date().toISOString().split("T")[0] + "T00:00:00Z");
+      const deadline = new Date(todayUTC);
+      deadline.setDate(deadline.getDate() + discount.lastMinuteDays);
+      let discountedBase = 0;
+      let nightCount = 0;
+      const cur0 = new Date(checkIn);
+      while (cur0 < checkOut) {
+        if (cur0 <= deadline) nightCount++;
+        cur0.setDate(cur0.getDate() + 1);
+      }
+      for (const apt of apartmentGuests) {
+        const personCount = apt.adults + apt.children + Math.max(0, apt.babies - 1);
+        const cur = new Date(checkIn);
+        while (cur < checkOut) {
+          if (cur <= deadline) {
+            const rule = getApplicableRuleForApartment(cur, rules, apt.id);
+            discountedBase += rule ? getPriceForNight(cur, rule, personCount) : 0;
+          }
+          cur.setDate(cur.getDate() + 1);
+        }
+      }
+      return { discountAmount: Math.round(discountedBase * discount.discountPercent / 100), discountedNights: nightCount };
+    }
+    return { discountAmount: Math.round(totalBase * discount.discountPercent / 100), discountedNights: 0 };
+  })();
+
   const grandTotal      = totalBase + totalTouristTax - discountAmount;
 
   // Összesített vendégszámok
@@ -387,7 +416,12 @@ export default function BookingCalendar({ apartmentGuests, onBack, onNext }: Pro
 
               {discountAmount > 0 && discount && (
                 <div className="flex justify-between items-center bg-green-50 px-3 py-2 rounded-lg mb-3 text-sm">
-                  <span className="text-green-700 font-medium">Kedvezmény – {discount.name}</span>
+                  <span className="text-green-700 font-medium">
+                    Kedvezmény – {discount.name}
+                    {discount.isLastMinute && discountedNights > 0 && (
+                      <span> ({discountedNights} éj)</span>
+                    )}
+                  </span>
                   <span className="text-green-700 font-medium">−{formatCurrency(discountAmount)}</span>
                 </div>
               )}

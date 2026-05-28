@@ -3,8 +3,6 @@ import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
-// GET /api/discounts?checkIn=yyyy-MM-dd&checkOut=yyyy-MM-dd
-// Returns the best applicable discount for the given stay period, checked at booking time (now)
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
@@ -20,30 +18,32 @@ export async function GET(req: NextRequest) {
 
     const checkInDate = new Date(checkIn + "T00:00:00Z");
     const now         = new Date();
+    const todayUTC    = new Date(now.toISOString().split("T")[0] + "T00:00:00Z");
 
-    // Discount is valid when:
-    // 1. The stay (checkIn) falls within stayFrom–stayTo
-    // 2. If bookingFrom/bookingTo are set, today must be within that window
-    const discounts = await prisma.discount.findMany({
-      where: {
-        isActive: true,
-        stayFrom: { lte: checkInDate },
-        stayTo:   { gte: checkInDate },
-        OR: [
-          // No booking window restriction
-          { bookingFrom: null, bookingTo: null },
-          // Only bookingFrom set — "from this date onwards"
-          { bookingFrom: { lte: now }, bookingTo: null },
-          // Only bookingTo set — "until this date"
-          { bookingFrom: null, bookingTo: { gte: now } },
-          // Both set — must be within window
-          { bookingFrom: { lte: now }, bookingTo: { gte: now } },
-        ],
-      },
+    const allDiscounts = await prisma.discount.findMany({
+      where: { isActive: true },
       orderBy: { discountPercent: "desc" },
     });
 
-    const best = discounts[0] ?? null;
+    const applicable = allDiscounts.filter((d) => {
+      const inBookingWindow =
+        (!d.bookingFrom && !d.bookingTo) ||
+        (d.bookingFrom && !d.bookingTo && d.bookingFrom <= now) ||
+        (!d.bookingFrom && d.bookingTo && d.bookingTo >= now) ||
+        (d.bookingFrom && d.bookingTo && d.bookingFrom <= now && d.bookingTo >= now);
+
+      if (!inBookingWindow) return false;
+
+      if (d.isLastMinute) {
+        const deadline = new Date(todayUTC);
+        deadline.setDate(deadline.getDate() + d.lastMinuteDays);
+        return checkInDate >= todayUTC && checkInDate <= deadline;
+      }
+
+      return d.stayFrom <= checkInDate && d.stayTo >= checkInDate;
+    });
+
+    const best = applicable[0] ?? null;
 
     return NextResponse.json({
       success: true,
@@ -51,6 +51,8 @@ export async function GET(req: NextRequest) {
         id:              best.id,
         name:            best.name,
         discountPercent: best.discountPercent,
+        isLastMinute:    best.isLastMinute,
+        lastMinuteDays:  best.lastMinuteDays,
       } : null,
     });
   } catch (error: any) {

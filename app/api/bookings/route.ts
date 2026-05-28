@@ -223,22 +223,26 @@ export async function POST(req: NextRequest) {
       orderBy: { priority: "desc" },
       include: { policy: true },
     });
-    // Kedvezmény keresés — szállás időszak + opcionális foglalási ablak
+    // Kedvezmény keresés — sima + last minute
     const now = new Date();
-    const applicableDiscount = await prisma.discount.findFirst({
-      where: {
-        isActive: true,
-        stayFrom: { lte: checkInDate },
-        stayTo:   { gte: checkInDate },
-        OR: [
-          { bookingFrom: null, bookingTo: null },
-          { bookingFrom: { lte: now }, bookingTo: null },
-          { bookingFrom: null, bookingTo: { gte: now } },
-          { bookingFrom: { lte: now }, bookingTo: { gte: now } },
-        ],
-      },
+    const allDiscounts = await prisma.discount.findMany({
+      where: { isActive: true },
       orderBy: { discountPercent: "desc" },
     });
+    const applicableDiscount = allDiscounts.find((d) => {
+      const inBookingWindow =
+        (!d.bookingFrom && !d.bookingTo) ||
+        (d.bookingFrom && !d.bookingTo && d.bookingFrom <= now) ||
+        (!d.bookingFrom && d.bookingTo && d.bookingTo >= now) ||
+        (d.bookingFrom && d.bookingTo && d.bookingFrom <= now && d.bookingTo >= now);
+      if (!inBookingWindow) return false;
+      if (d.isLastMinute) {
+        const deadline = new Date(todayUTC);
+        deadline.setDate(deadline.getDate() + d.lastMinuteDays);
+        return checkInDate >= todayUTC && checkInDate <= deadline;
+      }
+      return d.stayFrom <= checkInDate && d.stayTo >= checkInDate;
+    }) ?? null;
 
     const discountPercent = applicableDiscount?.discountPercent ?? 0;
     const finalTotal      = Number(totalPrice);

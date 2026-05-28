@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Trash2, Pencil, Save, X, Tag, CalendarDays, Calendar } from "lucide-react";
+import { Plus, Trash2, Pencil, Save, X, Tag, CalendarDays, Calendar, Zap } from "lucide-react";
 import { DayPicker } from "react-day-picker";
 import { format, parseISO } from "date-fns";
 import { hu } from "date-fns/locale";
@@ -17,6 +17,8 @@ interface Discount {
   bookingFrom:     string | null;
   bookingTo:       string | null;
   isActive:        boolean;
+  isLastMinute:    boolean;
+  lastMinuteDays:  number;
 }
 
 interface Props {
@@ -31,6 +33,8 @@ const EMPTY = {
   bookingFrom:     "",
   bookingTo:       "",
   isActive:        true,
+  isLastMinute:    false,
+  lastMinuteDays:  7,
 };
 
 type FormState = typeof EMPTY;
@@ -52,10 +56,12 @@ export default function AdminDiscounts({ discounts: initial }: Props) {
     setEditingId(d.id);
     setEditForm({
       ...d,
-      stayFrom:    d.stayFrom.slice(0, 10),
-      stayTo:      d.stayTo.slice(0, 10),
-      bookingFrom: d.bookingFrom ? d.bookingFrom.slice(0, 10) : "",
-      bookingTo:   d.bookingTo   ? d.bookingTo.slice(0, 10)   : "",
+      stayFrom:      d.stayFrom.slice(0, 10),
+      stayTo:        d.stayTo.slice(0, 10),
+      bookingFrom:   d.bookingFrom ? d.bookingFrom.slice(0, 10) : "",
+      bookingTo:     d.bookingTo   ? d.bookingTo.slice(0, 10)   : "",
+      isLastMinute:  d.isLastMinute  ?? false,
+      lastMinuteDays: d.lastMinuteDays ?? 7,
     });
     setShowNew(false);
   };
@@ -63,7 +69,7 @@ export default function AdminDiscounts({ discounts: initial }: Props) {
   const closeEdit = () => { setEditingId(null); setEditForm(null); };
 
   const createDiscount = async () => {
-    if (!newForm.name || !newForm.stayFrom || !newForm.stayTo || !newForm.discountPercent) {
+    if (!newForm.name || !newForm.discountPercent || (!newForm.isLastMinute && (!newForm.stayFrom || !newForm.stayTo))) {
       alert("A név, a kedvezmény mértéke és a szállás időszaka kötelező!");
       return;
     }
@@ -207,6 +213,11 @@ export default function AdminDiscounts({ discounts: initial }: Props) {
                       <div className="min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
                           <h3 className="font-medium text-stone-800 truncate">{d.name}</h3>
+                          {d.isLastMinute && (
+                            <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full shrink-0 flex items-center gap-1">
+                              <Zap size={10} /> Last minute
+                            </span>
+                          )}
                           {!d.isActive && (
                             <span className="text-xs bg-stone-100 text-stone-500 px-2 py-0.5 rounded-full shrink-0">Inaktív</span>
                           )}
@@ -232,12 +243,19 @@ export default function AdminDiscounts({ discounts: initial }: Props) {
                   </div>
                   {/* Dátumok */}
                   <div className="space-y-0.5 pl-12">
-                    <p className="text-xs text-stone-500 flex items-center gap-1.5 flex-wrap">
-                      <CalendarDays size={11} className="text-forest-500 shrink-0" />
-                      <span className="text-stone-400 shrink-0">Szállás:</span>
-                      <span className="whitespace-nowrap">{formatDate(d.stayFrom)} – {formatDate(d.stayTo)}</span>
-                    </p>
-                    {(d.bookingFrom || d.bookingTo) && (
+                    {d.isLastMinute ? (
+                      <p className="text-xs text-amber-700 flex items-center gap-1.5">
+                        <Zap size={11} className="shrink-0" />
+                        Bejelentkezés az elkövetkező <strong>{d.lastMinuteDays} napon</strong> belül
+                      </p>
+                    ) : (
+                      <p className="text-xs text-stone-500 flex items-center gap-1.5 flex-wrap">
+                        <CalendarDays size={11} className="text-forest-500 shrink-0" />
+                        <span className="text-stone-400 shrink-0">Szállás:</span>
+                        <span className="whitespace-nowrap">{formatDate(d.stayFrom)} – {formatDate(d.stayTo)}</span>
+                      </p>
+                    )}
+                    {!d.isLastMinute && (d.bookingFrom || d.bookingTo) && (
                       <p className="text-xs text-stone-500 flex items-center gap-1.5 flex-wrap">
                         <Calendar size={11} className="text-terra-400 shrink-0" />
                         <span className="text-stone-400 shrink-0">Foglalási ablak:</span>
@@ -351,7 +369,7 @@ function DiscountFormFields({ form, setForm }: { form: any; setForm: (f: any) =>
           <input
             type="text"
             className="input-base"
-            placeholder="pl. Júliusi early bird"
+            placeholder="pl. Last minute akció"
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
           />
@@ -367,7 +385,7 @@ function DiscountFormFields({ form, setForm }: { form: any; setForm: (f: any) =>
             onChange={(e) => setForm({ ...form, discountPercent: Number(e.target.value) })}
           />
         </div>
-        <div className="flex items-end pb-1">
+        <div className="flex items-end pb-1 gap-4">
           <label className="flex items-center gap-2 cursor-pointer">
             <input
               type="checkbox"
@@ -380,51 +398,87 @@ function DiscountFormFields({ form, setForm }: { form: any; setForm: (f: any) =>
         </div>
       </div>
 
-      {/* Szállás időszak */}
-      <div>
-        <p className="text-xs font-medium text-stone-500 uppercase tracking-wider mb-1 flex items-center gap-1.5">
-          <CalendarDays size={12} className="text-forest-500" />
-          Szállás időszaka <span className="text-red-400">*</span>
-        </p>
-        <p className="text-xs text-stone-400 mb-3">Milyen dátumra szóló foglalásokra érvényes a kedvezmény?</p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <DatePickerField
-            label="Ettől"
-            value={form.stayFrom}
-            onChange={(v) => setForm({ ...form, stayFrom: v, stayTo: "" })}
+      {/* Last minute toggle */}
+      <div className={`rounded-xl border-2 p-4 transition-colors ${form.isLastMinute ? "border-amber-200 bg-amber-50" : "border-stone-100 bg-stone-50"}`}>
+        <label className="flex items-center gap-3 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={form.isLastMinute ?? false}
+            onChange={(e) => setForm({ ...form, isLastMinute: e.target.checked })}
+            className="w-4 h-4 accent-amber-600"
           />
-          <DatePickerField
-            label="Eddig"
-            value={form.stayTo}
-            onChange={(v) => setForm({ ...form, stayTo: v })}
-            fromDate={stayFromDate}
-          />
-        </div>
+          <div>
+            <span className="text-sm font-medium text-stone-700 flex items-center gap-1.5">
+              <Zap size={13} className="text-amber-500" /> Last minute kedvezmény
+            </span>
+            <p className="text-xs text-stone-400 mt-0.5">Automatikusan érvényes ha a bejelentkezés az elkövetkező N napon belül van</p>
+          </div>
+        </label>
+        {form.isLastMinute && (
+          <div className="mt-3 flex items-center gap-2">
+            <label className="text-xs text-stone-500 whitespace-nowrap">Napok száma:</label>
+            <input
+              type="number"
+              className="input-base w-24"
+              min={1}
+              max={90}
+              value={form.lastMinuteDays ?? 7}
+              onChange={(e) => setForm({ ...form, lastMinuteDays: Number(e.target.value) })}
+            />
+            <span className="text-xs text-stone-400">nap</span>
+          </div>
+        )}
       </div>
 
-      {/* Foglalási ablak */}
-      <div>
-        <p className="text-xs font-medium text-stone-500 uppercase tracking-wider mb-1 flex items-center gap-1.5">
-          <Calendar size={12} className="text-terra-400" />
-          Foglalási ablak <span className="text-stone-300">(opcionális)</span>
-        </p>
-        <p className="text-xs text-stone-400 mb-3">
-          Ha meg van adva, csak ebben az időszakban foglalva érvényes a kedvezmény.
-        </p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <DatePickerField
-            label="Foglalás ettől"
-            value={form.bookingFrom ?? ""}
-            onChange={(v) => setForm({ ...form, bookingFrom: v })}
-          />
-          <DatePickerField
-            label="Foglalás eddig"
-            value={form.bookingTo ?? ""}
-            onChange={(v) => setForm({ ...form, bookingTo: v })}
-            fromDate={form.bookingFrom ? parseISO(form.bookingFrom) : undefined}
-          />
+      {/* Szállás időszak — csak ha nem last minute */}
+      {!form.isLastMinute && (
+        <div>
+          <p className="text-xs font-medium text-stone-500 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+            <CalendarDays size={12} className="text-forest-500" />
+            Szállás időszaka <span className="text-red-400">*</span>
+          </p>
+          <p className="text-xs text-stone-400 mb-3">Milyen dátumra szóló foglalásokra érvényes a kedvezmény?</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <DatePickerField
+              label="Ettől"
+              value={form.stayFrom}
+              onChange={(v) => setForm({ ...form, stayFrom: v, stayTo: "" })}
+            />
+            <DatePickerField
+              label="Eddig"
+              value={form.stayTo}
+              onChange={(v) => setForm({ ...form, stayTo: v })}
+              fromDate={stayFromDate}
+            />
+          </div>
         </div>
-      </div>
+      )}
+
+      {/* Foglalási ablak — csak ha nem last minute */}
+      {!form.isLastMinute && (
+        <div>
+          <p className="text-xs font-medium text-stone-500 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+            <Calendar size={12} className="text-terra-400" />
+            Foglalási ablak <span className="text-stone-300">(opcionális)</span>
+          </p>
+          <p className="text-xs text-stone-400 mb-3">
+            Ha meg van adva, csak ebben az időszakban foglalva érvényes a kedvezmény.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <DatePickerField
+              label="Foglalás ettől"
+              value={form.bookingFrom ?? ""}
+              onChange={(v) => setForm({ ...form, bookingFrom: v })}
+            />
+            <DatePickerField
+              label="Foglalás eddig"
+              value={form.bookingTo ?? ""}
+              onChange={(v) => setForm({ ...form, bookingTo: v })}
+              fromDate={form.bookingFrom ? parseISO(form.bookingFrom) : undefined}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

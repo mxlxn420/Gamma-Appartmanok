@@ -19,7 +19,8 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    if (!body.name || !body.discountPercent || !body.stayFrom || !body.stayTo) {
+    const isLastMinute = Boolean(body.isLastMinute);
+    if (!body.name || !body.discountPercent || (!isLastMinute && (!body.stayFrom || !body.stayTo))) {
       return NextResponse.json(
         { success: false, error: "Hiányzó kötelező mezők" },
         { status: 400 }
@@ -39,11 +40,13 @@ export async function POST(req: NextRequest) {
       data: {
         name:            body.name,
         discountPercent: Number(body.discountPercent),
-        stayFrom:        new Date(body.stayFrom),
-        stayTo:          new Date(body.stayTo),
+        stayFrom:        isLastMinute ? new Date("2000-01-01") : new Date(body.stayFrom),
+        stayTo:          isLastMinute ? new Date("2100-12-31") : new Date(body.stayTo),
         bookingFrom:     body.bookingFrom ? new Date(body.bookingFrom) : null,
         bookingTo:       body.bookingTo   ? new Date(body.bookingTo)   : null,
         isActive:        body.isActive ?? true,
+        isLastMinute,
+        lastMinuteDays:  isLastMinute ? (Number(body.lastMinuteDays) || 7) : 7,
       },
     });
 
