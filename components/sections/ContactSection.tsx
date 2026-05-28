@@ -5,6 +5,40 @@ import { motion } from "framer-motion";
 import { MapPin, Phone, Mail, Send } from "lucide-react";
 import AnimatedSection from "@/components/ui/AnimatedSection";
 
+function GoogleMap() {
+  const [accepted, setAccepted] = useState(false);
+
+  if (!accepted) {
+    return (
+      <div className="rounded-2xl overflow-hidden shadow-card h-56 bg-stone-100 flex flex-col items-center justify-center gap-3 text-center px-6">
+        <MapPin size={24} className="text-stone-400" />
+        <p className="text-sm text-stone-600 leading-relaxed">
+          A térkép betöltéséhez a Google adatait használja.{" "}
+          <a href="/adatvedelem" target="_blank" className="underline text-forest-700 hover:text-forest-900">Adatvédelmi tájékoztató</a>
+        </p>
+        <button
+          onClick={() => setAccepted(true)}
+          className="px-4 py-2 bg-forest-900 text-cream text-xs font-medium rounded-full hover:bg-forest-800 transition-colors"
+        >
+          Térkép megjelenítése
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="rounded-2xl overflow-hidden shadow-card h-56">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2666.1200384756376!2d20.7463474767372!3d48.0693258559098!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47409f721c28f079%3A0xce829f7d15e260b5!2sGamma%20Apartmanok!5e0!3m2!1shu!2shu!4v1777851018328!5m2!1shu!2shu"
+        width="100%" height="100%" style={{ border: 0 }}
+        allowFullScreen loading="lazy"
+        referrerPolicy="no-referrer-when-downgrade"
+        title="Gamma Apartmanok – Beregi utca 11"
+      />
+    </div>
+  );
+}
+
 export default function ContactSection() {
   const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
   const [sent, setSent] = useState(false);
@@ -86,16 +120,8 @@ export default function ContactSection() {
               </div>
             </div>
 
-            {/* Google Maps */}
-            <div className="rounded-2xl overflow-hidden shadow-card h-56">
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2666.1200384756376!2d20.7463474767372!3d48.0693258559098!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47409f721c28f079%3A0xce829f7d15e260b5!2sGamma%20Apartmanok!5e0!3m2!1shu!2shu!4v1777851018328!5m2!1shu!2shu"
-                width="100%" height="100%" style={{ border: 0 }}
-                allowFullScreen loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Gamma Apartmanok – Beregi utca 11"
-              />
-            </div>
+            {/* Google Maps – kattintásra betöltés (GDPR) */}
+            <GoogleMap />
           </AnimatedSection>
 
           <AnimatedSection direction="right" delay={0.1}>

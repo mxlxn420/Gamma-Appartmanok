@@ -109,7 +109,7 @@ export default function AdatvedelemPage() {
               </div>
               <div className="border border-stone-200 rounded-xl p-4">
                 <p className="font-semibold text-stone-800">Google Maps (térképszolgáltatás)</p>
-                <p className="text-stone-600 mt-1">Weboldalunk kapcsolati oldalán beágyazott Google Maps térképet jelenítünk meg a helyszín megtalálásának megkönnyítése érdekében. Az iframe betöltésekor a Google LLC (USA) adatokat gyűjthet (pl. IP-cím, böngésző adatok). Jogalap: GDPR 6. cikk (1) f) – jogos érdek (navigációs segítség). Google adatvédelmi tájékoztató: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-forest-700 underline">policies.google.com/privacy</a>. GDPR megfelelőség: SCC alapján.</p>
+                <p className="text-stone-600 mt-1">Weboldalunk kapcsolati oldalán beágyazott Google Maps térképet jelenítünk meg a helyszín megtalálásának megkönnyítése érdekében. A térkép csak az Ön explicit jóváhagyása után töltődik be – addig egyetlen Google-kiszolgálóval sem lép kapcsolatba a böngészője. Jóváhagyás esetén a Google LLC (USA) adatokat gyűjthet (pl. IP-cím, böngésző adatok). Jogalap: GDPR 6. cikk (1) a) – hozzájárulás. Google adatvédelmi tájékoztató: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-forest-700 underline">policies.google.com/privacy</a>. GDPR megfelelőség: SCC alapján.</p>
               </div>
             </div>
             <p className="mt-4 text-sm text-stone-500">
