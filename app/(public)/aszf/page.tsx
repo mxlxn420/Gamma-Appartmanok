@@ -88,8 +88,8 @@ export default function AszfPage() {
           <section>
             <h2 className="font-serif text-xl text-forest-900 mb-3">6. Bejelentkezés és kijelentkezés</h2>
             <ul className="list-disc pl-5 space-y-1">
-              <li>Bejelentkezés: 14:00–20:00 között</li>
-              <li>Kijelentkezés: 10:00-ig</li>
+              <li>Bejelentkezés: 15:00–00:00 között</li>
+              <li>Kijelentkezés: 11:00-ig</li>
             </ul>
             <p className="mt-3">
               Ettől eltérő időpontban való érkezés esetén kérjük, előzetesen egyeztessen velünk.
