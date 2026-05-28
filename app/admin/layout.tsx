@@ -16,10 +16,10 @@ export default async function AdminLayout({
   // de a /admin/login-t ki kell venni
   
   return (
-    <div className="min-h-screen bg-stone-100 flex flex-col md:flex-row">
+    <div className={`min-h-screen flex flex-col md:flex-row ${token ? "bg-stone-100" : "bg-forest-900"}`}>
       <ScrollToTop />
       {token && <AdminSidebar />}
-      <main className={token ? "flex-1 md:ml-64 p-4 md:p-8 min-w-0" : "flex-1 p-4 md:p-8"}>
+      <main className={token ? "flex-1 md:ml-64 p-4 md:p-8 min-w-0" : "flex-1"}>
         {children}
       </main>
     </div>
