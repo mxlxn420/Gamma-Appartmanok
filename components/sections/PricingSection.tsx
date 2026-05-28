@@ -57,7 +57,7 @@ export default async function PricingSection() {
               <p className="text-cream/60 text-sm mb-6">Hamarosan</p>
             )}
             <ul className="space-y-2 mb-6 text-left">
-              {["Privát jacuzzi", "Ingyenes WiFi", "Ingyenes parkoló"].map((f) => (
+              {["Jakuzzi a tetőteraszon", "Ingyenes WiFi", "Ingyenes parkoló"].map((f) => (
                 <li key={f} className="flex items-center gap-2 text-sm">
                   <Check size={14} className="text-terra-400 shrink-0" />
                   <span className="text-cream/80">{f}</span>

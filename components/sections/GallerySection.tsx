@@ -31,7 +31,7 @@ export default function GallerySection({ featured = DEFAULT_FEATURED }: { featur
         <AnimatedSection className="text-center mb-14">
           <div className="section-badge">{"Gal\u00E9ria"}</div>
           <h2 className="font-serif text-display-lg font-light text-forest-900">
-            {"Tekintsen be a kuck\u00F3ba"}
+            {"Tekintsen be az apartmanokba"}
           </h2>
         </AnimatedSection>
 

@@ -26,7 +26,7 @@ interface AmenitiesData {
 
 export default function AmenitiesSection({ data }: { data: AmenitiesData }) {
   return (
-    <section id="felszereltseg" className="section-py bg-forest-900 overflow-hidden">
+    <section id="felszereltseg" className="section-py overflow-hidden" style={{ backgroundColor: "#2347a8" }}>
       <div className="container-custom">
 
         <AnimatedSection className="text-center mb-16">

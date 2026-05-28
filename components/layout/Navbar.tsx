@@ -13,6 +13,7 @@ const NAV_LINKS = [
   { label: "Galéria", href: "/galeria" },
   { label: "Árak", href: "/#arak" },
   { label: "Értékelések", href: "/#ertekelesek" },
+  { label: "GYIK", href: "/#gyik" },
   { label: "Kapcsolat", href: "/#kapcsolat" },
 ];
 
