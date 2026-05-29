@@ -7,8 +7,9 @@ import AmenitiesSection from "@/components/sections/AmenitiesSection";
 import GallerySection   from "@/components/sections/GallerySection";
 import PricingSection   from "@/components/sections/PricingSection";
 import ReviewsSection   from "@/components/sections/ReviewsSection";
-import FaqSection       from "@/components/sections/FaqSection";
-import ContactSection   from "@/components/sections/ContactSection";
+import FaqSection            from "@/components/sections/FaqSection";
+import NeighborhoodSection   from "@/components/sections/NeighborhoodSection";
+import ContactSection        from "@/components/sections/ContactSection";
 
 const DEFAULT_SLIDES = [
   { src: "/images/haz/IMG_8519 kicsi.jpg",    alt: "Milán Kuckó – vendégház kívülről" },
@@ -114,6 +115,7 @@ export default async function HomePage() {
       <PricingSection />
       <ReviewsSection />
       <FaqSection />
+      <NeighborhoodSection />
       <ContactSection />
     </>
   );
