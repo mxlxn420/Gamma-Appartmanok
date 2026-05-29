@@ -14,6 +14,7 @@ const NAV_LINKS = [
   { label: "Árak", href: "/#arak" },
   { label: "Értékelések", href: "/#ertekelesek" },
   { label: "GYIK", href: "/#gyik" },
+  { label: "Környék", href: "/#kornyek" },
   { label: "Kapcsolat", href: "/#kapcsolat" },
 ];
 
