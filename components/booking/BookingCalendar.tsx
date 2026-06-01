@@ -129,7 +129,7 @@ function getEffectiveMinNights(checkIn: Date, checkOut: Date, rules: PricingRule
     }
     cur.setDate(cur.getDate() + 1);
   }
-  return max || 2;
+  return max > 0 ? max : 1;
 }
 
 function isRangeOverlapping(from: Date, to: Date, bookedRanges: BookedRange[]): boolean {

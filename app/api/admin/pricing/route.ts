@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
         childPrice6to12: Number(body.childPrice6to12) || 0,
         dateFrom:        body.dateFrom ? new Date(body.dateFrom) : null,
         dateTo:          body.dateTo   ? new Date(body.dateTo)   : null,
-        minNights:       Number(body.minNights)       || 2,
+        minNights:       Number(body.minNights) > 0 ? Number(body.minNights) : 1,
         minAdvanceDays:  Number(body.minAdvanceDays) ?? 2,
         extraGuestFee:   0,
         extraGuestFrom:  3,
