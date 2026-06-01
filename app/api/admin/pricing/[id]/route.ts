@@ -12,7 +12,6 @@ export async function PATCH(
   try {
     const body = await req.json();
 
-    console.log("PATCH pricing body:", body); // DEBUG
 
     // Átfedés-ellenőrzés: csak kiemelt időszakok (priority >= 10) ne fedhessék egymást
     if (body.dateFrom && body.dateTo && Number(body.priority) >= 10) {
@@ -70,7 +69,6 @@ export async function PATCH(
       },
     });
 
-    console.log("PATCH pricing result:", updated); // DEBUG
 
     return NextResponse.json({
       success: true,

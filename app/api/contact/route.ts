@@ -120,7 +120,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: true });
   } catch (error: any) {
     return NextResponse.json(
-      { success: false, error: error?.message },
+      { success: false, error: "Szerver hiba, kérjük próbáld újra." },
       { status: 500 }
     );
   }

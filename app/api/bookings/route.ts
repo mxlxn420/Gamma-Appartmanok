@@ -43,7 +43,7 @@ export async function GET() {
   } catch (error: any) {
     console.error("GET /api/bookings hiba:", error);
     return NextResponse.json(
-      { success: false, error: error?.message ?? "Szerver hiba" },
+      { success: false, error: "Szerver hiba, kérjük próbáld újra." },
       { status: 500 }
     );
   }
@@ -434,7 +434,7 @@ export async function POST(req: NextRequest) {
   } catch (error: any) {
     console.error("POST /api/bookings hiba:", error);
     return NextResponse.json(
-      { success: false, error: error?.message ?? "Szerver hiba" },
+      { success: false, error: "Szerver hiba, kérjük próbáld újra." },
       { status: 500 }
     );
   }
