@@ -271,8 +271,8 @@ export default function AdminCalendar({ bookings, blocked: initialBlocked, apart
             blockedSingle:   blockedSingleDays,
           }}
           modifiersStyles={{
-            booked:           { backgroundColor: "#dde8fb", color: "#2347a8" },
-            blocked:          { backgroundColor: "#f5e6d8", color: "#a86435" },
+            booked:           { background: "#dde8fb", color: "#2347a8" },
+            blocked:          { background: "#f5e6d8", color: "#a86435" },
             blockedArrival:   { background: "linear-gradient(to bottom right, transparent 50%, #f5e6d8 50%)", color: "#a86435" },
             blockedDeparture: { background: "linear-gradient(to bottom right, #f5e6d8 50%, transparent 50%)", color: "#a86435" },
             blockedSingle:    { background: "linear-gradient(to bottom right, #f5e6d8 50%, transparent 50%)", color: "#a86435" },
