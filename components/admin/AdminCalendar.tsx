@@ -131,17 +131,31 @@ export default function AdminCalendar({ bookings, blocked: initialBlocked, apart
     return days;
   });
 
-  // Blokkolt napok
+  // Blokkolt napok (középső napok – érkezés/távozás nélkül)
   const blockedDays = filteredBlocked.flatMap(({ dateFrom, dateTo }) => {
     const days = [];
     const cur  = new Date(dateFrom);
+    cur.setDate(cur.getDate() + 1); // első nap kihagyva
     const end  = new Date(dateTo);
-    while (cur <= end) {
+    while (cur < end) {              // utolsó nap kihagyva
       days.push(new Date(cur));
       cur.setDate(cur.getDate() + 1);
     }
     return days;
   });
+
+  // Érkezési napok (dateFrom) – átlós jobb-alul
+  const blockedArrivalDays = filteredBlocked.map(({ dateFrom }) => new Date(dateFrom));
+
+  // Távozási napok (dateTo) – csak ha nem azonos a dateFrom-mal
+  const blockedDepartureDays = filteredBlocked
+    .filter(({ dateFrom, dateTo }) => dateFrom !== dateTo)
+    .map(({ dateTo }) => new Date(dateTo));
+
+  // Egész napos blokk (dateFrom === dateTo)
+  const blockedSingleDays = filteredBlocked
+    .filter(({ dateFrom, dateTo }) => dateFrom === dateTo)
+    .map(({ dateFrom }) => new Date(dateFrom));
 
   const handleBlock = async () => {
     if (!range.from || !range.to) return;
@@ -250,12 +264,18 @@ export default function AdminCalendar({ bookings, blocked: initialBlocked, apart
           numberOfMonths={isMobile ? 1 : 2}
           locale={hu}
           modifiers={{
-            booked:  bookedDays,
-            blocked: blockedDays,
+            booked:          bookedDays,
+            blocked:         blockedDays,
+            blockedArrival:  blockedArrivalDays,
+            blockedDeparture: blockedDepartureDays,
+            blockedSingle:   blockedSingleDays,
           }}
           modifiersStyles={{
-            booked:  { backgroundColor: "#dde8fb", color: "#2347a8" },
-            blocked: { backgroundColor: "#f5e6d8", color: "#a86435", textDecoration: "line-through" },
+            booked:           { backgroundColor: "#dde8fb", color: "#2347a8" },
+            blocked:          { backgroundColor: "#f5e6d8", color: "#a86435" },
+            blockedArrival:   { background: "linear-gradient(to bottom right, transparent 50%, #f5e6d8 50%)", color: "#a86435" },
+            blockedDeparture: { background: "linear-gradient(to bottom right, #f5e6d8 50%, transparent 50%)", color: "#a86435" },
+            blockedSingle:    { background: "linear-gradient(to bottom right, #f5e6d8 50%, transparent 50%)", color: "#a86435" },
           }}
           {...(activeTab === null ? { components: { DayButton: CustomDayButton } } : {})}
         />
@@ -272,6 +292,14 @@ export default function AdminCalendar({ bookings, blocked: initialBlocked, apart
               {label}
             </div>
           ))}
+          <div className="flex items-center gap-2 text-xs text-stone-500">
+            <span className="w-4 h-4 rounded-full inline-block" style={{ background: "linear-gradient(to bottom right, transparent 50%, #f5e6d8 50%)", border: "1px solid #e7c9aa" }} />
+            Érkezés
+          </div>
+          <div className="flex items-center gap-2 text-xs text-stone-500">
+            <span className="w-4 h-4 rounded-full inline-block" style={{ background: "linear-gradient(to bottom right, #f5e6d8 50%, transparent 50%)", border: "1px solid #e7c9aa" }} />
+            Távozás
+          </div>
           {activeTab === null && apartments.length > 0 && (
             <div className="flex items-center gap-2 flex-wrap">
               {apartments.map((apt, i) => (
