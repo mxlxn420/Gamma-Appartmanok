@@ -37,8 +37,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, error: "Érvénytelen dátum" }, { status: 400 });
     }
 
-    if (to <= from) {
-      return NextResponse.json({ success: false, error: "A záró dátumnak a kezdő dátum után kell lennie" }, { status: 400 });
+    if (to < from) {
+      return NextResponse.json({ success: false, error: "A záró dátumnak a kezdő dátummal egyenlőnek vagy utána kell lennie" }, { status: 400 });
     }
 
     const blocked = await prisma.blockedPeriod.create({
