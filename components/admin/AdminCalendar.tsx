@@ -388,6 +388,11 @@ export default function AdminCalendar({ bookings, blocked: initialBlocked, apart
                     <p className="text-sm font-medium text-stone-700">
                       {formatDateHu(b.dateFrom)} – {formatDateHu(b.dateTo)}
                     </p>
+                    <p className="text-xs text-stone-400 mt-0.5">
+                      {b.apartmentId
+                        ? apartments.find(a => a.id === b.apartmentId)?.name ?? "Ismeretlen apartman"
+                        : "Minden apartman"}
+                    </p>
                     {b.reason && (
                       <p className="text-xs text-stone-400 mt-0.5">{b.reason}</p>
                     )}
