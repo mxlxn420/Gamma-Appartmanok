@@ -73,14 +73,14 @@ function apartmentDescriptionHtml(apts?: ApartmentEmailEntry[]): string {
     blocks.push(`
     <table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f0e8;border-radius:12px;margin-bottom:16px;">
       <tr><td style="padding:20px 24px;">
-        <p style="font-family:sans-serif;font-size:13px;font-weight:700;color:#1a3a2a;margin:0 0 10px;">Az Ön apartmanja a ${escapeHtml(title)}</p>
+        <p style="font-family:sans-serif;font-size:13px;font-weight:700;color:#2347a8;margin:0 0 10px;">Az Ön apartmanja a ${escapeHtml(title)}</p>
         <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;line-height:1.8;margin:0 0 8px;">
           54 nm + 20 nm kertkapcsolatos terasszal – max. 4 fő befogadására alkalmas. 1 hálószoba – 180 cm-es ággyal, 1 nappali – kihúzható 2 személyes kanapéval, teljesen felszerelt amerikai konyha étkező résszel, fürdőszoba, gardrób.
         </p>
         <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;line-height:1.8;margin:0 0 8px;">
           Közös tetőteraszon napozóterasz és 5 férőhelyes jakuzzi található, amit a megjelölt 1,5 órában 11–23 óra között privát tudnak használni.
         </p>
-        <p style="font-family:sans-serif;font-size:13px;font-weight:600;color:#1a3a2a;margin:0;">Parkolás ingyenes!</p>
+        <p style="font-family:sans-serif;font-size:13px;font-weight:600;color:#2347a8;margin:0;">Parkolás ingyenes!</p>
       </td></tr>
     </table>`);
   }
@@ -90,14 +90,14 @@ function apartmentDescriptionHtml(apts?: ApartmentEmailEntry[]): string {
     blocks.push(`
     <table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f0e8;border-radius:12px;margin-bottom:16px;">
       <tr><td style="padding:20px 24px;">
-        <p style="font-family:sans-serif;font-size:13px;font-weight:700;color:#1a3a2a;margin:0 0 10px;">Az Ön apartmanja a ${escapeHtml(title)}</p>
+        <p style="font-family:sans-serif;font-size:13px;font-weight:700;color:#2347a8;margin:0 0 10px;">Az Ön apartmanja a ${escapeHtml(title)}</p>
         <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;line-height:1.8;margin:0 0 8px;">
           64 nm + 4 nm terasszal – max. 6 fő befogadására alkalmas. 2 hálószoba – 180 cm-es boxspring és 160 cm-es franciaággyal, nappali óriási kihúzható kanapéval, teljesen felszerelt amerikai konyha étkező résszel, fürdőszoba.
         </p>
         <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;line-height:1.8;margin:0 0 8px;">
           Közös tetőteraszon napozóterasz és 5 férőhelyes jakuzzi található, amit a megjelölt 1,5 órában 11–23 óra között privát tudnak használni.
         </p>
-        <p style="font-family:sans-serif;font-size:13px;font-weight:600;color:#1a3a2a;margin:0;">Parkoló ingyenes!</p>
+        <p style="font-family:sans-serif;font-size:13px;font-weight:600;color:#2347a8;margin:0;">Parkoló ingyenes!</p>
       </td></tr>
     </table>`);
   }
@@ -108,7 +108,7 @@ function apartmentDescriptionHtml(apts?: ApartmentEmailEntry[]): string {
 function apartmentPriceRowsHtml(apts: ApartmentEmailEntry[]): string {
   return apts.map(a => `
     <tr>
-      <td colspan="2" style="font-family:sans-serif;font-size:12px;font-weight:700;color:#1a3a2a;padding:8px 0 2px;border-bottom:1px solid #e8d9b5;">
+      <td colspan="2" style="font-family:sans-serif;font-size:12px;font-weight:700;color:#2347a8;padding:8px 0 2px;border-bottom:1px solid #e8d9b5;">
         ${escapeHtml(a.name)} – ${a.numberOfGuests} fő
       </td>
     </tr>
@@ -205,7 +205,7 @@ function guestEmailHtml(data: BookingEmailData): string {
 
       <!-- Fejléc -->
       <tr>
-        <td style="background:#1a3a2a;padding:36px 40px;text-align:center;">
+        <td style="background:#2347a8;padding:36px 40px;text-align:center;">
           <p style="color:#f5f0e8;font-size:28px;font-weight:300;margin:0;letter-spacing:-0.02em;">Gamma Apartmanok</p>
           <p style="color:rgba(245,240,232,0.6);font-size:11px;margin:8px 0 0;font-family:sans-serif;letter-spacing:0.2em;text-transform:uppercase;">Miskolctapolca · Beregi utca 11</p>
         </td>
@@ -215,7 +215,7 @@ function guestEmailHtml(data: BookingEmailData): string {
       <tr><td style="padding:36px 40px;">
 
         <!-- Üdvözlés -->
-        <p style="font-size:20px;color:#1a3a2a;margin:0 0 10px;">Kedves ${escapeHtml(data.guestName)}!</p>
+        <p style="font-size:20px;color:#2347a8;margin:0 0 10px;">Kedves ${escapeHtml(data.guestName)}!</p>
         <p style="font-family:sans-serif;font-size:14px;color:#525252;line-height:1.7;margin:0 0 28px;">
           ${isCardPayment
       ? "Köszönjük hogy minket választott! A teljes összeg bankkártyás fizetése megtörtént, <strong>foglalása végleges</strong>."
@@ -228,7 +228,7 @@ function guestEmailHtml(data: BookingEmailData): string {
         <!-- Foglalás részletei -->
         <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e8d9b5;border-radius:12px;margin-bottom:24px;">
           <tr><td style="padding:20px 24px;">
-            <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#1a3a2a;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 14px;">Foglalás részletei</p>
+            <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#2347a8;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 14px;">Foglalás részletei</p>
             <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;margin:0 0 4px;"><strong>Gamma Apartmanok Miskolctapolca</strong></p>
             <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 4px;">Cím: 3519 Miskolctapolca, Beregi utca 11</p>
             <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 4px;">Telefonszám: +36 20 359 9222</p>
@@ -244,14 +244,14 @@ function guestEmailHtml(data: BookingEmailData): string {
             <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 6px;">
               Érkezés napján <strong>15 órától</strong> lehet elfoglalni a szállást és elutazás napján <strong>11 óráig</strong> kérjük elhagyni.
             </p>
-            <p style="font-family:sans-serif;font-size:13px;color:#1a3a2a;font-weight:600;margin:0;">
+            <p style="font-family:sans-serif;font-size:13px;color:#2347a8;font-weight:600;margin:0;">
               Érkezésük napján mobilos vagy email-es tájékoztatást küldünk a bejutás részleteiről!
             </p>
           </td></tr>
         </table>
 
         <!-- Fizetési mód -->
-        <table width="100%" cellpadding="0" cellspacing="0" style="background:#1a3a2a;border-radius:12px;margin-bottom:24px;">
+        <table width="100%" cellpadding="0" cellspacing="0" style="background:#2347a8;border-radius:12px;margin-bottom:24px;">
           <tr><td style="padding:22px 24px;">
             <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:rgba(245,240,232,0.6);text-transform:uppercase;letter-spacing:0.15em;margin:0 0 14px;">Fizetési mód</p>
             ${isCardPayment ? `
@@ -291,7 +291,7 @@ function guestEmailHtml(data: BookingEmailData): string {
         <!-- Ár összesítő -->
         <table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f0e8;border-radius:12px;margin-bottom:24px;">
           <tr><td style="padding:20px 24px;">
-            <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#1a3a2a;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 14px;">Ár összesítő</p>
+            <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#2347a8;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 14px;">Ár összesítő</p>
             <table width="100%" cellpadding="0" cellspacing="0">
               ${data.apartments && data.apartments.length > 0
       ? apartmentPriceRowsHtml(data.apartments)
@@ -343,8 +343,8 @@ function guestEmailHtml(data: BookingEmailData): string {
               </tr>`;
       }).join("")}
               <tr>
-                <td style="font-family:sans-serif;font-size:15px;font-weight:700;color:#1a3a2a;padding:10px 0 0;">Ár összesen (ÁFA-val)</td>
-                <td style="font-family:sans-serif;font-size:17px;font-weight:700;color:#1a3a2a;text-align:right;padding:10px 0 0;">${formatHuf(data.totalPrice)}</td>
+                <td style="font-family:sans-serif;font-size:15px;font-weight:700;color:#2347a8;padding:10px 0 0;">Ár összesen (ÁFA-val)</td>
+                <td style="font-family:sans-serif;font-size:17px;font-weight:700;color:#2347a8;text-align:right;padding:10px 0 0;">${formatHuf(data.totalPrice)}</td>
               </tr>
             </table>
             ${data.notes ? `<p style="font-family:sans-serif;font-size:13px;color:#525252;margin:12px 0 0;padding-top:12px;border-top:1px solid #e8d9b5;">Megjegyzés: ${escapeHtml(data.notes)}</p>` : ""}
@@ -363,7 +363,7 @@ function guestEmailHtml(data: BookingEmailData): string {
               A foglalást az előleg beérkezésével tudjuk véglegesíteni. Ha a járványügyi helyzet úgy alakul, akkor természetesen a foglaló összegét visszatérítjük, vagy módosíthatják a foglalás dátumát.
             </p>
             `}
-            <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#1a3a2a;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 10px;">Lemondási feltételek</p>
+            <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#2347a8;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 10px;">Lemondási feltételek</p>
             <p style="font-family:sans-serif;font-size:13px;color:#525252;line-height:1.7;margin:0;">
               Érkezés előtti ${freeCancelDays + 1}. napig kötbérmentesen lemondható a foglalás. Az érkezési nap előtti ${penaltyFromDay + 1}. nap és az érkezési nap között a foglalás értékének ${depositPct}%-a a kötbér.
             </p>
@@ -372,7 +372,7 @@ function guestEmailHtml(data: BookingEmailData): string {
 
         <!-- Átutalás adatai (csak banki átutalásnál) -->
         ${!isCardPayment && !isCashPayment && !isRevolutPayment && !isSzepPayment ? `
-        <table width="100%" cellpadding="0" cellspacing="0" style="background:#1a3a2a;border-radius:12px;margin-bottom:24px;">
+        <table width="100%" cellpadding="0" cellspacing="0" style="background:#2347a8;border-radius:12px;margin-bottom:24px;">
           <tr><td style="padding:20px 24px;">
             <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:rgba(245,240,232,0.6);text-transform:uppercase;letter-spacing:0.15em;margin:0 0 14px;">Átutaláshoz az adatok</p>
             <table width="100%" cellpadding="0" cellspacing="0">
@@ -395,7 +395,7 @@ function guestEmailHtml(data: BookingEmailData): string {
 
         <!-- SZÉP kártya adatok -->
         ${isSzepPayment ? `
-        <table width="100%" cellpadding="0" cellspacing="0" style="background:#1a3a2a;border-radius:12px;margin-bottom:24px;">
+        <table width="100%" cellpadding="0" cellspacing="0" style="background:#2347a8;border-radius:12px;margin-bottom:24px;">
           <tr><td style="padding:20px 24px;">
             <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:rgba(245,240,232,0.6);text-transform:uppercase;letter-spacing:0.15em;margin:0 0 14px;">OTP SZÉP kártya fizetés</p>
             <p style="font-family:sans-serif;font-size:13px;color:#f5f0e8;line-height:1.8;margin:0;">
@@ -409,7 +409,7 @@ function guestEmailHtml(data: BookingEmailData): string {
 
         <!-- Revolut adatok -->
         ${isRevolutPayment ? `
-        <table width="100%" cellpadding="0" cellspacing="0" style="background:#1a3a2a;border-radius:12px;margin-bottom:24px;">
+        <table width="100%" cellpadding="0" cellspacing="0" style="background:#2347a8;border-radius:12px;margin-bottom:24px;">
           <tr><td style="padding:20px 24px;">
             <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:rgba(245,240,232,0.6);text-transform:uppercase;letter-spacing:0.15em;margin:0 0 14px;">Revolut fizetés</p>
             <p style="font-family:sans-serif;font-size:13px;color:#f5f0e8;line-height:1.7;margin:0;">
@@ -425,7 +425,7 @@ function guestEmailHtml(data: BookingEmailData): string {
         ${data.guestAddress ? `
         <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e8d9b5;border-radius:12px;margin-bottom:24px;">
           <tr><td style="padding:20px 24px;">
-            <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#1a3a2a;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 10px;">Számlázási cím</p>
+            <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#2347a8;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 10px;">Számlázási cím</p>
             <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;margin:0 0 3px;">Név: ${escapeHtml(data.guestName)}</p>
             <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 6px;">Cím: ${escapeHtml(data.guestAddress)}</p>
             <p style="font-family:sans-serif;font-size:12px;color:#a8a8a8;margin:0;">(Ha Szép Kártyával szeretne fizetni, akkor a Gamma Apartmanok Miskolctapolca, 3519 Miskolctapolca, Beregi utca 11. elfogadóhelyet kell megkeresnie az előleg utalásnál.)</p>
@@ -436,7 +436,7 @@ function guestEmailHtml(data: BookingEmailData): string {
         <!-- Az ár tartalmazza -->
         <table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f0e8;border-radius:12px;margin-bottom:24px;">
           <tr><td style="padding:20px 24px;">
-            <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#1a3a2a;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 12px;">Az ár tartalmazza</p>
+            <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#2347a8;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 12px;">Az ár tartalmazza</p>
             ${[
       "Extra gyors ingyenes WiFi",
       "Automata redőnyök",
@@ -458,7 +458,7 @@ function guestEmailHtml(data: BookingEmailData): string {
         <!-- Vendég elérhetősége -->
         <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e8d9b5;border-radius:12px;margin-bottom:24px;">
           <tr><td style="padding:20px 24px;">
-            <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#1a3a2a;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 10px;">Vendég elérhetősége</p>
+            <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#2347a8;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 10px;">Vendég elérhetősége</p>
             <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;font-weight:600;margin:0 0 3px;">${escapeHtml(data.guestName)}</p>
             ${data.guestPhone ? `<p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 3px;">Telefon: ${escapeHtml(data.guestPhone)}</p>` : ""}
             ${data.guestAddress ? `<p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 3px;">Cím: ${escapeHtml(data.guestAddress)}</p>` : ""}
@@ -471,7 +471,7 @@ function guestEmailHtml(data: BookingEmailData): string {
           Köszönjük, hogy minket választottak!<br>
           Bármilyen kérésük/kérdésük merülne föl, forduljanak hozzánk bizalommal!
         </p>
-        <p style="font-family:sans-serif;font-size:14px;color:#1a3a2a;font-weight:600;margin:0 0 20px;">
+        <p style="font-family:sans-serif;font-size:14px;color:#2347a8;font-weight:600;margin:0 0 20px;">
           Szeretettel várjuk Önöket ${formatDateWithDay(data.checkIn)} napján 15 óra után!<br>
           <span style="font-weight:700;font-size:13px;color:#525252;text-decoration:underline;">Az érkezésük körülbelüli időpontját, kérjük legyenek szívesek előre jelezni.</span>
         </p>
@@ -540,7 +540,7 @@ function adminEmailHtml(data: BookingEmailData): string {
 
       <!-- Fejléc -->
       <tr>
-        <td style="background:#1a3a2a;padding:28px 32px;">
+        <td style="background:#2347a8;padding:28px 32px;">
           <p style="color:rgba(245,240,232,0.6);font-size:11px;margin:0 0 6px;letter-spacing:0.2em;text-transform:uppercase;">Gamma Apartmanok</p>
           <p style="color:#f5f0e8;font-size:22px;font-weight:600;margin:0 0 4px;">Új foglalás érkezett!</p>
           <p style="color:rgba(245,240,232,0.5);font-size:12px;margin:0;font-family:monospace;letter-spacing:0.1em;">${data.bookingId}</p>
@@ -550,11 +550,11 @@ function adminEmailHtml(data: BookingEmailData): string {
       <tr><td style="padding:28px 32px;">
 
         <!-- Vendég adatai -->
-        <p style="font-size:11px;font-weight:600;color:#1a3a2a;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 12px;">Vendég adatai</p>
+        <p style="font-size:11px;font-weight:600;color:#2347a8;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 12px;">Vendég adatai</p>
         <table width="100%" cellpadding="0" cellspacing="0" style="font-size:13px;margin-bottom:24px;">
           <tr>
             <td style="color:#737373;padding:5px 0;border-bottom:1px solid #f0f0f0;width:40%;">Név</td>
-            <td style="font-weight:600;color:#1a3a2a;padding:5px 0;border-bottom:1px solid #f0f0f0;text-align:right;">${escapeHtml(data.guestName)}</td>
+            <td style="font-weight:600;color:#2347a8;padding:5px 0;border-bottom:1px solid #f0f0f0;text-align:right;">${escapeHtml(data.guestName)}</td>
           </tr>
           <tr>
             <td style="color:#737373;padding:5px 0;border-bottom:1px solid #f0f0f0;">E-mail</td>
@@ -573,7 +573,7 @@ function adminEmailHtml(data: BookingEmailData): string {
         </table>
 
         <!-- Foglalás részletei -->
-        <p style="font-size:11px;font-weight:600;color:#1a3a2a;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 12px;">Foglalás részletei</p>
+        <p style="font-size:11px;font-weight:600;color:#2347a8;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 12px;">Foglalás részletei</p>
         <table width="100%" cellpadding="0" cellspacing="0" style="font-size:13px;margin-bottom:24px;">
           <tr>
             <td style="color:#737373;padding:5px 0;border-bottom:1px solid #f0f0f0;">Érkezés</td>
@@ -603,7 +603,7 @@ function adminEmailHtml(data: BookingEmailData): string {
         </table>
 
         <!-- Ár összesítő -->
-        <p style="font-size:11px;font-weight:600;color:#1a3a2a;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 12px;">Ár összesítő</p>
+        <p style="font-size:11px;font-weight:600;color:#2347a8;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 12px;">Ár összesítő</p>
         <table width="100%" cellpadding="0" cellspacing="0" style="font-size:13px;margin-bottom:24px;">
           ${data.basePrice ? `
           <tr>
@@ -655,8 +655,8 @@ function adminEmailHtml(data: BookingEmailData): string {
             <td style="color:#2a2a2a;font-weight:500;padding:5px 0;border-bottom:1px solid #f0f0f0;text-align:right;">${formatHuf(data.touristTax)}</td>
           </tr>` : ""}
           <tr>
-            <td style="color:#1a3a2a;font-weight:700;font-size:15px;padding:10px 0 0;">Végösszeg</td>
-            <td style="color:#1a3a2a;font-weight:700;font-size:17px;padding:10px 0 0;text-align:right;">${formatHuf(data.totalPrice)}</td>
+            <td style="color:#2347a8;font-weight:700;font-size:15px;padding:10px 0 0;">Végösszeg</td>
+            <td style="color:#2347a8;font-weight:700;font-size:17px;padding:10px 0 0;text-align:right;">${formatHuf(data.totalPrice)}</td>
           </tr>
         </table>
 
@@ -666,7 +666,7 @@ function adminEmailHtml(data: BookingEmailData): string {
             <table width="100%" cellpadding="0" cellspacing="0" style="font-size:13px;">
               <tr>
                 <td style="color:#737373;padding:4px 0;">Előleg (${depositPct}%)</td>
-                <td style="color:#1a3a2a;font-weight:700;padding:4px 0;text-align:right;">${formatHuf(depositAmt)}</td>
+                <td style="color:#2347a8;font-weight:700;padding:4px 0;text-align:right;">${formatHuf(depositAmt)}</td>
               </tr>
               <tr>
                 <td style="color:#737373;padding:4px 0;">Helyszínen fizetendő</td>
@@ -691,7 +691,7 @@ function adminEmailHtml(data: BookingEmailData): string {
 
         <!-- Admin link -->
         <a href="${process.env.NEXT_PUBLIC_SITE_URL}/admin/foglalasok"
-           style="display:inline-block;background:#1a3a2a;color:#f5f0e8;padding:12px 24px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:600;">
+           style="display:inline-block;background:#2347a8;color:#f5f0e8;padding:12px 24px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:600;">
           Megtekintés az adminban →
         </a>
 
@@ -744,7 +744,7 @@ function depositConfirmationHtml(data: BookingEmailData & { depositAmount: numbe
 
       <!-- Fejléc -->
       <tr>
-        <td style="background:#1a3a2a;padding:36px 40px;text-align:center;">
+        <td style="background:#2347a8;padding:36px 40px;text-align:center;">
           <p style="color:#f5f0e8;font-size:28px;font-weight:300;margin:0;letter-spacing:-0.02em;">Gamma Apartmanok</p>
           <p style="color:rgba(245,240,232,0.6);font-size:11px;margin:8px 0 0;font-family:sans-serif;letter-spacing:0.2em;text-transform:uppercase;">Miskolctapolca · Beregi utca 11</p>
         </td>
@@ -754,7 +754,7 @@ function depositConfirmationHtml(data: BookingEmailData & { depositAmount: numbe
       <tr><td style="padding:36px 40px;">
 
         <!-- Üdvözlés -->
-        <p style="font-size:20px;color:#1a3a2a;margin:0 0 10px;">Kedves ${escapeHtml(data.guestName)}!</p>
+        <p style="font-size:20px;color:#2347a8;margin:0 0 10px;">Kedves ${escapeHtml(data.guestName)}!</p>
         <p style="font-family:sans-serif;font-size:14px;color:#525252;line-height:1.7;margin:0 0 8px;">
           A ${formatHuf(data.depositAmount)} összeg ${depositMethodText} beérkezett${data.depositPaidAt ? ` ${data.depositPaidAt} napján` : ""}, így a <strong>foglalása végleges</strong>.
         </p>
@@ -768,7 +768,7 @@ function depositConfirmationHtml(data: BookingEmailData & { depositAmount: numbe
         <!-- Foglalás részletei -->
         <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e8d9b5;border-radius:12px;margin-bottom:24px;">
           <tr><td style="padding:20px 24px;">
-            <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#1a3a2a;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 14px;">Foglalás részletei</p>
+            <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#2347a8;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 14px;">Foglalás részletei</p>
             <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;margin:0 0 4px;"><strong>Gamma Apartmanok Miskolctapolca</strong></p>
             <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 4px;">Cím: 3519 Miskolctapolca, Beregi utca 11</p>
             <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 4px;">Telefonszám: +36 20 359 9222</p>
@@ -784,14 +784,14 @@ function depositConfirmationHtml(data: BookingEmailData & { depositAmount: numbe
             <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 6px;">
               Érkezés napján <strong>15 órától</strong> lehet elfoglalni a szállást és elutazás napján <strong>11 óráig</strong> kérjük elhagyni.
             </p>
-            <p style="font-family:sans-serif;font-size:13px;color:#1a3a2a;font-weight:600;margin:0;">
+            <p style="font-family:sans-serif;font-size:13px;color:#2347a8;font-weight:600;margin:0;">
               Érkezésük napján mobilos vagy email-es tájékoztatást küldünk a bejutás részleteiről!
             </p>
           </td></tr>
         </table>
 
         <!-- Fizetési mód -->
-        <table width="100%" cellpadding="0" cellspacing="0" style="background:#1a3a2a;border-radius:12px;margin-bottom:24px;">
+        <table width="100%" cellpadding="0" cellspacing="0" style="background:#2347a8;border-radius:12px;margin-bottom:24px;">
           <tr><td style="padding:22px 24px;">
             <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:rgba(245,240,232,0.6);text-transform:uppercase;letter-spacing:0.15em;margin:0 0 14px;">Fizetési mód</p>
             <p style="font-family:sans-serif;font-size:14px;color:#f5f0e8;margin:0 0 4px;">
@@ -811,7 +811,7 @@ function depositConfirmationHtml(data: BookingEmailData & { depositAmount: numbe
         <!-- Ár összesítő -->
         <table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f0e8;border-radius:12px;margin-bottom:24px;">
           <tr><td style="padding:20px 24px;">
-            <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#1a3a2a;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 14px;">Ár összesítő</p>
+            <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#2347a8;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 14px;">Ár összesítő</p>
             <table width="100%" cellpadding="0" cellspacing="0">
               ${data.apartments && data.apartments.length > 0
       ? apartmentPriceRowsHtml(data.apartments)
@@ -859,8 +859,8 @@ function depositConfirmationHtml(data: BookingEmailData & { depositAmount: numbe
               </tr>`;
       }).join("")}
               <tr>
-                <td style="font-family:sans-serif;font-size:15px;font-weight:700;color:#1a3a2a;padding:10px 0 0;">Ár összesen (ÁFA-val)</td>
-                <td style="font-family:sans-serif;font-size:17px;font-weight:700;color:#1a3a2a;text-align:right;padding:10px 0 0;">${formatHuf(data.totalPrice)}</td>
+                <td style="font-family:sans-serif;font-size:15px;font-weight:700;color:#2347a8;padding:10px 0 0;">Ár összesen (ÁFA-val)</td>
+                <td style="font-family:sans-serif;font-size:17px;font-weight:700;color:#2347a8;text-align:right;padding:10px 0 0;">${formatHuf(data.totalPrice)}</td>
               </tr>
             </table>
             ${data.notes ? `<p style="font-family:sans-serif;font-size:13px;color:#525252;margin:12px 0 0;padding-top:12px;border-top:1px solid #e8d9b5;">Megjegyzés: ${escapeHtml(data.notes)}</p>` : ""}
@@ -870,7 +870,7 @@ function depositConfirmationHtml(data: BookingEmailData & { depositAmount: numbe
         <!-- Lemondási feltételek -->
         <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e8d9b5;border-radius:12px;margin-bottom:24px;">
           <tr><td style="padding:20px 24px;">
-            <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#1a3a2a;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 10px;">Lemondási feltételek</p>
+            <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#2347a8;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 10px;">Lemondási feltételek</p>
             <p style="font-family:sans-serif;font-size:13px;color:#525252;line-height:1.7;margin:0;">
               Érkezés előtti ${freeCancelDays + 1}. napig kötbérmentesen lemondható a foglalás. Az érkezési nap előtti ${penaltyFromDay + 1}. nap és az érkezési nap között a foglalás értékének ${depositPct}%-a a kötbér.
             </p>
@@ -881,7 +881,7 @@ function depositConfirmationHtml(data: BookingEmailData & { depositAmount: numbe
         ${data.guestAddress ? `
         <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e8d9b5;border-radius:12px;margin-bottom:24px;">
           <tr><td style="padding:20px 24px;">
-            <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#1a3a2a;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 10px;">Számlázási cím</p>
+            <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#2347a8;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 10px;">Számlázási cím</p>
             <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;margin:0 0 3px;">Név: ${escapeHtml(data.guestName)}</p>
             <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 6px;">Cím: ${escapeHtml(data.guestAddress)}</p>
           </td></tr>
@@ -890,7 +890,7 @@ function depositConfirmationHtml(data: BookingEmailData & { depositAmount: numbe
         <!-- Az ár tartalmazza -->
         <table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f0e8;border-radius:12px;margin-bottom:24px;">
           <tr><td style="padding:20px 24px;">
-            <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#1a3a2a;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 12px;">Az ár tartalmazza</p>
+            <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#2347a8;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 12px;">Az ár tartalmazza</p>
             ${[
       "Extra gyors ingyenes WiFi",
       "Automata redőnyök",
@@ -912,7 +912,7 @@ function depositConfirmationHtml(data: BookingEmailData & { depositAmount: numbe
         <!-- Vendég elérhetősége -->
         <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e8d9b5;border-radius:12px;margin-bottom:24px;">
           <tr><td style="padding:20px 24px;">
-            <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#1a3a2a;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 10px;">Vendég elérhetősége</p>
+            <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#2347a8;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 10px;">Vendég elérhetősége</p>
             <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;font-weight:600;margin:0 0 3px;">${escapeHtml(data.guestName)}</p>
             ${data.guestPhone ? `<p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 3px;">Telefon: ${escapeHtml(data.guestPhone)}</p>` : ""}
             ${data.guestAddress ? `<p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0 0 3px;">Cím: ${escapeHtml(data.guestAddress)}</p>` : ""}
@@ -925,7 +925,7 @@ function depositConfirmationHtml(data: BookingEmailData & { depositAmount: numbe
           Köszönjük, hogy minket választottak!<br>
           Bármilyen kérésük/kérdésük merülne föl, forduljanak hozzánk bizalommal!
         </p>
-        <p style="font-family:sans-serif;font-size:14px;color:#1a3a2a;font-weight:600;margin:0 0 20px;">
+        <p style="font-family:sans-serif;font-size:14px;color:#2347a8;font-weight:600;margin:0 0 20px;">
           Szeretettel várjuk Önöket ${formatDateWithDay(data.checkIn)} napján 15 óra után!<br>
           <span style="font-weight:700;font-size:13px;color:#525252;text-decoration:underline;">Az érkezésük körülbelüli időpontját, kérjük legyenek szívesek előre jelezni.</span>
         </p>
@@ -1130,7 +1130,7 @@ function cancellationEmailHtml(data: {
     <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
 
       <!-- Fejléc -->
-      <tr><td style="background:#1a3a2a;border-radius:16px 16px 0 0;padding:32px;text-align:center;">
+      <tr><td style="background:#2347a8;border-radius:16px 16px 0 0;padding:32px;text-align:center;">
         <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:rgba(245,240,232,0.5);text-transform:uppercase;letter-spacing:0.2em;margin:0 0 8px;">Gamma Apartmanok</p>
         <h1 style="font-family:Georgia,serif;font-size:26px;font-weight:300;color:#f5f0e8;margin:0;">Foglalás törölve</h1>
       </td></tr>
@@ -1253,7 +1253,7 @@ function paymentReminderHtml(p: {
     : "";
 
   const bankDetailsHtml = `
-        <table width="100%" cellpadding="0" cellspacing="0" style="background:#1a3a2a;border-radius:12px;margin-bottom:24px;">
+        <table width="100%" cellpadding="0" cellspacing="0" style="background:#2347a8;border-radius:12px;margin-bottom:24px;">
           <tr><td style="padding:20px 24px;">
             <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:rgba(245,240,232,0.6);text-transform:uppercase;letter-spacing:0.15em;margin:0 0 14px;">Átutaláshoz az adatok</p>
             <table width="100%" cellpadding="0" cellspacing="0">
@@ -1276,7 +1276,7 @@ function paymentReminderHtml(p: {
   const szepHtml = !isSzep ? "" : `
         <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e8d9b5;border-radius:12px;margin-bottom:24px;">
           <tr><td style="padding:20px 24px;">
-            <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#1a3a2a;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 10px;">OTP SZÉP kártyás fizetés</p>
+            <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#2347a8;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 10px;">OTP SZÉP kártyás fizetés</p>
             <p style="font-family:sans-serif;font-size:13px;color:#525252;line-height:1.7;margin:0;">
               A SZÉP kártyás fizetés előreutalással történik: lépjen be az <strong>OTP SZÉP kártya portálra</strong> (szepkartya.otpportalok.hu), válassza az <strong>„Előlegfizetés"</strong> menüpontot, keresse meg szálláshelyünket az elfogadóhelyek között, adja meg a teljes összeget és erősítse meg, illetve a bizonylatot küldje el nekünk. Az összeg 5 munkanapon belül érkezik meg hozzánk.
             </p>
@@ -1297,7 +1297,7 @@ function paymentReminderHtml(p: {
     <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(26,58,42,0.08);">
 
       <tr>
-        <td style="background:#1a3a2a;padding:36px 40px;text-align:center;">
+        <td style="background:#2347a8;padding:36px 40px;text-align:center;">
           <p style="color:#f5f0e8;font-size:28px;font-weight:300;margin:0;letter-spacing:-0.02em;">Gamma Apartmanok</p>
           <p style="color:rgba(245,240,232,0.6);font-size:11px;margin:8px 0 0;font-family:sans-serif;letter-spacing:0.2em;text-transform:uppercase;">Miskolctapolca · Beregi utca 11</p>
         </td>
@@ -1305,7 +1305,7 @@ function paymentReminderHtml(p: {
 
       <tr><td style="padding:36px 40px;">
 
-        <p style="font-size:20px;color:#1a3a2a;margin:0 0 10px;">Kedves ${escapeHtml(p.guestName)}!</p>
+        <p style="font-size:20px;color:#2347a8;margin:0 0 10px;">Kedves ${escapeHtml(p.guestName)}!</p>
         <p style="font-family:sans-serif;font-size:14px;color:#525252;line-height:1.7;margin:0 0 28px;">
           Emlékeztetjük, hogy a <strong>${escapeHtml(p.bookingId)}</strong> azonosítójú foglalásához tartozó fizetés még nem érkezett meg. Kérjük, hogy az alábbi határidőig rendezze az összeget.
         </p>
@@ -1313,7 +1313,7 @@ function paymentReminderHtml(p: {
         <!-- Foglalás összefoglalója -->
         <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e8d9b5;border-radius:12px;margin-bottom:24px;">
           <tr><td style="padding:20px 24px;">
-            <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#1a3a2a;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 14px;">Foglalás részletei</p>
+            <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#2347a8;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 14px;">Foglalás részletei</p>
             ${aptSorHtml}
             <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;margin:0 0 4px;"><strong>Dátum:</strong> ${formatDateWithDay(p.checkIn)} – ${formatDateWithDay(p.checkOut)} (${p.nights} éjszaka)</p>
             <p style="font-family:sans-serif;font-size:13px;color:#525252;margin:0;"><strong>Foglalási szám:</strong> ${escapeHtml(p.bookingId)}</p>
@@ -1321,7 +1321,7 @@ function paymentReminderHtml(p: {
         </table>
 
         <!-- Fizetési infó -->
-        <table width="100%" cellpadding="0" cellspacing="0" style="background:#1a3a2a;border-radius:12px;margin-bottom:24px;">
+        <table width="100%" cellpadding="0" cellspacing="0" style="background:#2347a8;border-radius:12px;margin-bottom:24px;">
           <tr><td style="padding:22px 24px;">
             <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:rgba(245,240,232,0.6);text-transform:uppercase;letter-spacing:0.15em;margin:0 0 14px;">Fizetendő összeg</p>
             <p style="font-family:sans-serif;font-size:14px;color:#f5f0e8;margin:0 0 6px;">
