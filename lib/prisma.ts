@@ -1,22 +1,14 @@
-import { PrismaPg } from "@prisma/adapter-pg";
+import { neon } from "@neondatabase/serverless";
+import { PrismaNeon } from "@prisma/adapter-neon";
 import { PrismaClient } from "@prisma/client";
-import { Pool } from "pg";
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
 
 function createPrismaClient() {
-  const dbUrl = new URL(process.env.DATABASE_URL!);
-  dbUrl.searchParams.delete("sslmode");
-  const pool = new Pool({
-    connectionString: dbUrl.toString(),
-    ssl: { rejectUnauthorized: false },
-  });
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const adapter = new PrismaPg(pool as any);
-
+  const sql = neon(process.env.DATABASE_URL!);
+  const adapter = new PrismaNeon(sql);
   return new PrismaClient({
     adapter,
     log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
@@ -24,9 +16,6 @@ function createPrismaClient() {
 }
 
 export const prisma = globalForPrisma.prisma ?? createPrismaClient();
-
-if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma;
-}
+globalForPrisma.prisma = prisma;
 
 export default prisma;
