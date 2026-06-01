@@ -158,7 +158,8 @@ export default function AdminCalendar({ bookings, blocked: initialBlocked, apart
     .map(({ dateFrom }) => new Date(dateFrom));
 
   const handleBlock = async () => {
-    if (!range.from || !range.to) return;
+    if (!range.from) return;
+    const toDate = range.to ?? range.from;
     setLoading(true);
     try {
       const res = await fetch("/api/admin/block", {
@@ -166,7 +167,7 @@ export default function AdminCalendar({ bookings, blocked: initialBlocked, apart
         headers: { "Content-Type": "application/json" },
         body:    JSON.stringify({
           dateFrom:    format(range.from, "yyyy-MM-dd"),
-          dateTo:      format(range.to,   "yyyy-MM-dd"),
+          dateTo:      format(toDate,     "yyyy-MM-dd"),
           reason:      reason || null,
           apartmentId: activeTab ?? null,
         }),
