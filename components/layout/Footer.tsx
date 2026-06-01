@@ -25,7 +25,7 @@ export default function Footer() {
               <p className="text-xs text-cream/50 tracking-[0.25em] uppercase mt-1">Miskolctapolca</p>
             </Link>
             <p className="text-sm leading-relaxed text-cream/60 mb-6">
-              4 különálló apartman privát jakuzzival, panorámás terasszal és teljes felszereltséggel –
+              4 különálló apartman időpontra foglalható privát jakuzzival, panorámás terasszal és teljes felszereltséggel –
               Miskolctapolca szívében, a Bükk természeti kincseitől karnyújtásnyira.
             </p>
 
