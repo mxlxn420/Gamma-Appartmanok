@@ -415,14 +415,14 @@ export default function BookingCalendar({ apartmentGuests, onBack, onNext }: Pro
               </div>
 
               {discountAmount > 0 && discount && (
-                <div className="flex justify-between items-center bg-green-50 px-3 py-2 rounded-lg mb-3 text-sm">
-                  <span className="text-green-700 font-medium">
+                <div className="flex justify-between items-center bg-forest-50 px-3 py-2 rounded-lg mb-3 text-sm">
+                  <span className="text-forest-700 font-medium">
                     Kedvezmény – {discount.name}
                     {discount.isLastMinute && discountedNights > 0 && (
                       <span> ({discountedNights} éj)</span>
                     )}
                   </span>
-                  <span className="text-green-700 font-medium">−{formatCurrency(discountAmount)}</span>
+                  <span className="text-forest-700 font-medium">−{formatCurrency(discountAmount)}</span>
                 </div>
               )}
 

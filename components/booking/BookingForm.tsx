@@ -473,7 +473,7 @@ export default function BookingForm({ bookingData, onBack, onSuccess }: Props) {
             <span>{formatCurrency(bookingData.touristTax)}</span>
           </div>
           {bookingData.discountAmount > 0 && (
-            <div className="flex justify-between text-green-300">
+            <div className="flex justify-between text-forest-300">
               <span>Kedvezmény ({bookingData.discountPercent}%)</span>
               <span>−{formatCurrency(bookingData.discountAmount)}</span>
             </div>
@@ -602,12 +602,12 @@ export default function BookingForm({ bookingData, onBack, onSuccess }: Props) {
 
           {/* Kedvezmény */}
           {bookingData.discountAmount > 0 && (
-            <div className="flex justify-between items-start bg-green-900/30 -mx-1 px-2 py-1.5 rounded-lg">
+            <div className="flex justify-between items-start bg-forest-900/30 -mx-1 px-2 py-1.5 rounded-lg">
               <div>
-                <p className="text-green-300 font-medium">Kedvezmény – {bookingData.discountName}</p>
-                <p className="text-xs text-green-400/70 mt-0.5">{bookingData.discountPercent}%</p>
+                <p className="text-forest-300 font-medium">Kedvezmény – {bookingData.discountName}</p>
+                <p className="text-xs text-forest-400/70 mt-0.5">{bookingData.discountPercent}%</p>
               </div>
-              <span className="text-green-300 font-medium shrink-0 ml-2">−{formatCurrency(bookingData.discountAmount)}</span>
+              <span className="text-forest-300 font-medium shrink-0 ml-2">−{formatCurrency(bookingData.discountAmount)}</span>
             </div>
           )}
 
