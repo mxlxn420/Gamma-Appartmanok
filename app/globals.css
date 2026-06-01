@@ -90,6 +90,12 @@
 /* Navbar link aláhúzás */
 .bg-terra-400 { background-color: #60a5fa !important; }
 
+/* ─── Checkbox + focus ring overrides ────────────────────────── */
+.accent-forest-900 { accent-color: #2347a8 !important; }
+.accent-forest-500 { accent-color: #3469d6 !important; }
+.focus\:ring-forest-500\/10:focus { --tw-ring-color: rgba(52,105,214,0.1) !important; }
+.focus\:border-forest-500:focus { border-color: #3469d6 !important; }
+
 /* ─── Admin hover/focus/border overrides ─────────────────────── */
 .hover\:bg-forest-600:hover { background-color: #2a57c5 !important; }
 .hover\:border-forest-300:hover { border-color: #8db4f1 !important; }
