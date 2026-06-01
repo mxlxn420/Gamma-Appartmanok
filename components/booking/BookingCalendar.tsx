@@ -313,7 +313,7 @@ export default function BookingCalendar({ apartmentGuests, onBack, onNext }: Pro
           disabled={(day) => {
             const d = startOfDay(day);
             const latest  = startOfDay(addDays(new Date(), 365));
-            const advance = getGlobalApplicableRule(d, rules)?.minAdvanceDays ?? 2;
+            const advance = getGlobalApplicableRule(d, rules)?.minAdvanceDays ?? 0;
             const earliest = startOfDay(addDays(new Date(), advance));
             if (d < earliest || d > latest) return true;
             return bookedRanges.some(r => d > startOfDay(r.from) && d < startOfDay(r.to));
@@ -329,7 +329,7 @@ export default function BookingCalendar({ apartmentGuests, onBack, onNext }: Pro
             },
             tooSoon: (day) => {
               const d = startOfDay(day);
-              const advance = getGlobalApplicableRule(d, rules)?.minAdvanceDays ?? 2;
+              const advance = getGlobalApplicableRule(d, rules)?.minAdvanceDays ?? 0;
               const earliest = startOfDay(addDays(new Date(), advance));
               return d >= startOfDay(new Date()) && d < earliest;
             },
