@@ -7,10 +7,15 @@ const globalForPrisma = globalThis as unknown as {
 };
 
 function createPrismaClient() {
+  const dbUrl = new URL(process.env.DATABASE_URL!);
+  dbUrl.searchParams.delete("sslmode");
+
   const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    max: 1,
+    connectionString: dbUrl.toString(),
     ssl: { rejectUnauthorized: false },
+    max: 1,
+    idleTimeoutMillis: 10000,
+    connectionTimeoutMillis: 10000,
   });
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
