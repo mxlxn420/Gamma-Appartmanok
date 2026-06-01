@@ -271,11 +271,11 @@ export default function AdminCalendar({ bookings, blocked: initialBlocked, apart
             blockedSingle:   blockedSingleDays,
           }}
           modifiersStyles={{
-            booked:           { background: "#dde8fb", color: "#2347a8" },
-            blocked:          { background: "#f5e6d8", color: "#a86435" },
-            blockedArrival:   { background: "linear-gradient(to bottom right, transparent 50%, #f5e6d8 50%)", color: "#a86435" },
-            blockedDeparture: { background: "linear-gradient(to bottom right, #f5e6d8 50%, transparent 50%)", color: "#a86435" },
-            blockedSingle:    { background: "linear-gradient(to bottom right, #f5e6d8 50%, transparent 50%)", color: "#a86435" },
+            booked:           { backgroundColor: "#dde8fb", color: "#2347a8" },
+            blocked:          { backgroundColor: "#bbd1f7", color: "#2347a8" },
+            blockedArrival:   { backgroundColor: "transparent", backgroundImage: "linear-gradient(to bottom right, transparent 50%, #bbd1f7 50%)", color: "#2347a8" },
+            blockedDeparture: { backgroundColor: "transparent", backgroundImage: "linear-gradient(to bottom right, #bbd1f7 50%, transparent 50%)", color: "#2347a8" },
+            blockedSingle:    { backgroundColor: "transparent", backgroundImage: "linear-gradient(to bottom right, #bbd1f7 50%, transparent 50%)", color: "#2347a8" },
           }}
           {...(activeTab === null ? { components: { DayButton: CustomDayButton } } : {})}
         />
@@ -285,7 +285,6 @@ export default function AdminCalendar({ bookings, blocked: initialBlocked, apart
           {[
             { color: "bg-forest-900", label: "Kiválasztott" },
             { color: "bg-forest-100", label: "Foglalt"       },
-            { color: "bg-terra-100",  label: "Zárva"         },
           ].map(({ color, label }) => (
             <div key={label} className="flex items-center gap-2 text-xs text-stone-500">
               <span className={`w-4 h-4 rounded-full ${color} inline-block`} />
@@ -293,11 +292,15 @@ export default function AdminCalendar({ bookings, blocked: initialBlocked, apart
             </div>
           ))}
           <div className="flex items-center gap-2 text-xs text-stone-500">
-            <span className="w-4 h-4 rounded-full inline-block" style={{ background: "linear-gradient(to bottom right, transparent 50%, #f5e6d8 50%)", border: "1px solid #e7c9aa" }} />
+            <span className="w-4 h-4 rounded-full inline-block" style={{ backgroundColor: "#bbd1f7" }} />
+            Zárva
+          </div>
+          <div className="flex items-center gap-2 text-xs text-stone-500">
+            <span className="w-4 h-4 rounded-full inline-block" style={{ backgroundImage: "linear-gradient(to bottom right, transparent 50%, #bbd1f7 50%)", border: "1px solid #bbd1f7" }} />
             Érkezés
           </div>
           <div className="flex items-center gap-2 text-xs text-stone-500">
-            <span className="w-4 h-4 rounded-full inline-block" style={{ background: "linear-gradient(to bottom right, #f5e6d8 50%, transparent 50%)", border: "1px solid #e7c9aa" }} />
+            <span className="w-4 h-4 rounded-full inline-block" style={{ backgroundImage: "linear-gradient(to bottom right, #bbd1f7 50%, transparent 50%)", border: "1px solid #bbd1f7" }} />
             Távozás
           </div>
           {activeTab === null && apartments.length > 0 && (
