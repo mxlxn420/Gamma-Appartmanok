@@ -178,8 +178,8 @@ function depositDeadlineDate(checkIn: string, freeCancelDays: number): string {
 // ─── VENDÉG EMAIL HTML ───────────────────────────────────────
 function guestEmailHtml(data: BookingEmailData): string {
   const depositPct = data.depositPercent ?? 30;
-  const depositAmt = data.totalPrice;
-  const remaining = 0;
+  const depositAmt = data.depositAmount ?? data.totalPrice;
+  const remaining = data.totalPrice - depositAmt;
   const adults = data.numberOfAdults ?? data.guests;
   const freeCancelDays = data.freeCancelDays ?? 11;
   const deadline = depositDeadlineDate(data.checkIn, freeCancelDays);
@@ -512,7 +512,7 @@ function guestEmailHtml(data: BookingEmailData): string {
 // ─── ADMIN ÉRTESÍTŐ EMAIL HTML ───────────────────────────────
 function adminEmailHtml(data: BookingEmailData): string {
   const depositPct = data.depositPercent ?? 30;
-  const depositAmt = data.totalPrice;
+  const depositAmt = data.depositAmount ?? data.totalPrice;
   const extras = data.extraServices?.filter(s => s.total > 0) ?? [];
   const adminAdults = data.numberOfAdults ?? data.guests;
 
