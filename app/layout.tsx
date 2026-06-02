@@ -20,36 +20,37 @@ const jost = Jost({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://gamma-apartmanok.hu"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://gammaapartmanok.hu"),
   title: {
     default: "Gamma Apartmanok | Prémium pihenés Miskolctapolcán",
     template: "%s | Gamma Apartmanok",
   },
   description:
-    "Romantikus vendégház privát jacuzzival és kandallóval Miskolctapolcán. Foglaljon közvetlenül – nincsenek extra díjak!",
+    "4 prémium apartman időpontra foglalható privát jacuzzival Miskolctapolcán. Foglaljon közvetlenül – nincsenek extra díjak!",
   keywords: [
-    "milán kuckó",
+    "gamma apartmanok",
     "miskolctapolca szállás",
-    "jacuzzi szállás",
-    "romantikus vendégház miskolc",
+    "jacuzzi szállás miskolctapolca",
     "privát jacuzzi szállás",
-    "vendégház miskolctapolca",
+    "romantikus vendégház miskolc",
+    "apartman miskolctapolca",
     "hétvégi pihenés borsod",
-    "kandalló szállás",
+    "szállás miskolc közelében",
+    "bükk apartman",
   ],
   openGraph: {
     type:        "website",
     locale:      "hu_HU",
-    url:         "https://gamma-apartmanok.hu",
+    url:         "https://gammaapartmanok.hu",
     siteName:    "Gamma Apartmanok",
     title:       "Gamma Apartmanok | Prémium pihenés Miskolctapolcán",
-    description: "Romantikus vendégház privát jacuzzival Miskolctapolcán.",
-    images: [{ url: "/og-image.jpg", width: 1200, height: 630 }],
+    description: "4 prémium apartman időpontra foglalható privát jacuzzival Miskolctapolcán.",
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "Gamma Apartmanok Miskolctapolca" }],
   },
   twitter: {
     card:        "summary_large_image",
     title:       "Gamma Apartmanok | Prémium pihenés Miskolctapolcán",
-    description: "Romantikus vendégház privát jacuzzival Miskolctapolcán.",
+    description: "4 prémium apartman időpontra foglalható privát jacuzzival Miskolctapolcán.",
     images:      ["/og-image.jpg"],
   },
   robots: {
@@ -57,14 +58,14 @@ export const metadata: Metadata = {
     follow: true,
   },
   alternates: {
-    canonical: "https://gamma-apartmanok.hu",
+    canonical: "https://gammaapartmanok.hu",
   },
 };
 
 export const viewport: Viewport = {
   width:        "device-width",
   initialScale: 1,
-  themeColor:   "#1a3a2a",
+  themeColor:   "#2347a8",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -79,7 +80,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               "@type":     "LodgingBusiness",
               name:        "Gamma Apartmanok",
               description: "Romantikus vendégház privát jacuzzival és kandallóval Miskolctapolcán",
-              url:         "https://gamma-apartmanok.hu",
+              url:         "https://gammaapartmanok.hu",
               telephone:   "+36 20 359 9222",
               email:       "gammaapartmanok@gmail.com",
               address: {
