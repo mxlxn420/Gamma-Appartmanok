@@ -17,6 +17,9 @@ const APARTMENT_SOURCES = [
   { envKey: "ICAL_BOOKING_COM_GAMMA_2", label: "booking.com", apartmentSlug: "gamma-2" },
   { envKey: "ICAL_BOOKING_COM_GAMMA_3", label: "booking.com", apartmentSlug: "gamma-3" },
   { envKey: "ICAL_BOOKING_COM_GAMMA_4", label: "booking.com", apartmentSlug: "gamma-4" },
+  { envKey: "ICAL_AIRBNB_GAMMA_2",      label: "airbnb",      apartmentSlug: "gamma-2" },
+  { envKey: "ICAL_AIRBNB_GAMMA_3",      label: "airbnb",      apartmentSlug: "gamma-3" },
+  { envKey: "ICAL_AIRBNB_GAMMA_4",      label: "airbnb",      apartmentSlug: "gamma-4" },
 ];
 
 function parseIcalDate(s: string): Date {

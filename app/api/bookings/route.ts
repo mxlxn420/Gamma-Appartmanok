@@ -254,9 +254,9 @@ export async function POST(req: NextRequest) {
     }
     const discountAmount  = Number(body.discountAmount) || 0;
 
-    const depositPercent  = (applicableRule as any)?.policy?.depositPercent ?? 30;
+    const depositPercent  = (applicableRule as any)?.policy?.depositPercent ?? 100;
     const freeCancelDays  = (applicableRule as any)?.policy?.freeCancelDays ?? 11;
-    const depositAmount  = Math.round((finalTotal - Number(touristTax)) * depositPercent / 100);
+    const depositAmount  = Math.round(finalTotal * depositPercent / 100);
 
     // Foglalás ID
     const bookingRef = "GA-" + Math.random().toString(36).substring(2, 8).toUpperCase();
