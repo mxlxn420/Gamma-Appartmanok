@@ -102,12 +102,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               checkinTime:  "15:00",
               checkoutTime: "11:00",
               amenityFeature: [
-                { "@type": "LocationFeatureSpecification", name: "Privát jacuzzi",   value: true },
-                { "@type": "LocationFeatureSpecification", name: "Kandalló",         value: true },
-                { "@type": "LocationFeatureSpecification", name: "Wi-Fi",            value: true },
-                { "@type": "LocationFeatureSpecification", name: "Klíma",            value: true },
-                { "@type": "LocationFeatureSpecification", name: "Ingyenes parkoló", value: true },
-                { "@type": "LocationFeatureSpecification", name: "Privát kert",      value: true },
+                { "@type": "LocationFeatureSpecification", name: "Jacuzzi",                    value: true },
+                { "@type": "LocationFeatureSpecification", name: "Panorámás tetőterasz",       value: true },
+                { "@type": "LocationFeatureSpecification", name: "Wi-Fi",                      value: true },
+                { "@type": "LocationFeatureSpecification", name: "Klíma",                      value: true },
+                { "@type": "LocationFeatureSpecification", name: "Ingyenes parkoló",           value: true },
+                { "@type": "LocationFeatureSpecification", name: "Teljesen felszerelt konyha", value: true },
               ],
               sameAs: [
                 "https://www.facebook.com/profile.php?id=100070831690258",
