@@ -343,43 +343,9 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // Kártyás fizetés: Stripe Checkout session létrehozás
-    if (isCardPayment) {
-      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-      const session = await stripe.checkout.sessions.create({
-        mode: "payment",
-        payment_method_types: ["card"],
-        line_items: [
-          {
-            price_data: {
-              currency: "huf",
-              unit_amount: Math.round(finalTotal * 100), // HUF: fillérben kell megadni
-              product_data: {
-                name: `Gamma Apartman foglalás – ${bookingRef}`,
-                description: `${nights} éj, ${guestName}, ${checkIn} – ${checkOut}`,
-              },
-            },
-            quantity: 1,
-          },
-        ],
-        metadata: { bookingId: bookingRef },
-        customer_email: guestEmail,
-        success_url: `${siteUrl}/foglalas/sikeres?bookingId=${bookingRef}&session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url:  `${siteUrl}/foglalas?cancelled=1`,
-      });
-
-      await prisma.booking.update({
-        where: { id: bookingRef },
-        data:  { paymentIntentId: session.id },
-      });
-
-      return NextResponse.json(
-        { success: true, data: { id: bookingRef, stripeUrl: session.url } },
-        { status: 201 }
-      );
-    }
-
-    // Email (opcionális, nem töri el a foglalást)
+    // Email (opcionális, nem töri el a foglalást) – kártyás fizetésnél is azonnal megy az adminnak,
+    // így akkor is értesül a foglalási kísérletről, ha a fizetés végül nem sikerül.
+    // A vendég kártyás fizetésnél csak a sikeres fizetés után kap visszaigazolást (Stripe webhook).
     try {
       const { sendBookingEmails } = await import("@/lib/email");
       await sendBookingEmails({
@@ -421,9 +387,45 @@ export async function POST(req: NextRequest) {
         childPrice2to6:        Number(body.childPrice2to6)  || 0,
         childPrice6to12:       Number(body.childPrice6to12) || 0,
         apartments:            emailApartments.length > 0 ? emailApartments : undefined,
-      });
+      }, { adminOnly: isCardPayment });
     } catch (emailErr) {
       console.error("Email hiba (foglalás mentve):", emailErr);
+    }
+
+    // Kártyás fizetés: Stripe Checkout session létrehozás
+    if (isCardPayment) {
+      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+      const session = await stripe.checkout.sessions.create({
+        mode: "payment",
+        payment_method_types: ["card"],
+        line_items: [
+          {
+            price_data: {
+              currency: "huf",
+              unit_amount: Math.round(finalTotal * 100), // HUF: fillérben kell megadni
+              product_data: {
+                name: `Gamma Apartman foglalás – ${bookingRef}`,
+                description: `${nights} éj, ${guestName}, ${checkIn} – ${checkOut}`,
+              },
+            },
+            quantity: 1,
+          },
+        ],
+        metadata: { bookingId: bookingRef },
+        customer_email: guestEmail,
+        success_url: `${siteUrl}/foglalas/sikeres?bookingId=${bookingRef}&session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url:  `${siteUrl}/foglalas?cancelled=1`,
+      });
+
+      await prisma.booking.update({
+        where: { id: bookingRef },
+        data:  { paymentIntentId: session.id },
+      });
+
+      return NextResponse.json(
+        { success: true, data: { id: bookingRef, stripeUrl: session.url } },
+        { status: 201 }
+      );
     }
 
     return NextResponse.json(

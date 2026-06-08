@@ -1081,27 +1081,29 @@ async function sendWithRetry(payload: object, apiKey: string, label: string): Pr
   console.error(`${label} email hiba (2. próba, feladva):`, err2);
 }
 
-export async function sendBookingEmails(data: BookingEmailData): Promise<void> {
+export async function sendBookingEmails(data: BookingEmailData, options?: { adminOnly?: boolean }): Promise<void> {
   const RESEND_API_KEY = process.env.RESEND_API_KEY;
   const FROM_EMAIL = process.env.FROM_EMAIL ?? "info@gamma-apartmanok.hu";
   const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? process.env.FROM_EMAIL ?? "info@gamma-apartmanok.hu";
 
   if (!RESEND_API_KEY || RESEND_API_KEY === "re_xxxxxxxxxxxx") {
     console.log("📧 [DEV] Email küldés szimulálva:", {
-      to: data.guestEmail,
+      to: options?.adminOnly ? ADMIN_EMAIL : data.guestEmail,
       subject: `Foglalás visszaigazolása – ${data.bookingId}`,
     });
     return;
   }
 
-  await sendWithRetry({
-    from: `Gamma Apartmanok <${FROM_EMAIL}>`,
-    to: [data.guestEmail],
-    bcc: [ADMIN_EMAIL],
-    reply_to: [ADMIN_EMAIL],
-    subject: `✓ Foglalás visszaigazolása – ${data.bookingId}`,
-    html: guestEmailHtml(data),
-  }, RESEND_API_KEY, "Vendég");
+  if (!options?.adminOnly) {
+    await sendWithRetry({
+      from: `Gamma Apartmanok <${FROM_EMAIL}>`,
+      to: [data.guestEmail],
+      bcc: [ADMIN_EMAIL],
+      reply_to: [ADMIN_EMAIL],
+      subject: `✓ Foglalás visszaigazolása – ${data.bookingId}`,
+      html: guestEmailHtml(data),
+    }, RESEND_API_KEY, "Vendég");
+  }
 
   await sendWithRetry({
     from: `Gamma Apartmanok Foglalások <${FROM_EMAIL}>`,
