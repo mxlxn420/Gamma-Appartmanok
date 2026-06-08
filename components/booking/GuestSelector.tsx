@@ -123,7 +123,7 @@ export default function GuestSelector({ apartments, onBack, onNext }: Props) {
               />
               <Counter
                 label="Gyerek (2–17 év)"
-                sublabel="Felnőtt ár, IFA nélkül"
+                sublabel="IFA nélkül"
                 value={g.children}
                 atMax={atMax}
                 onChange={(v) => setField(g.id, "children", v)}
