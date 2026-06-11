@@ -175,16 +175,24 @@ function depositDeadlineDate(checkIn: string, freeCancelDays: number): string {
   return formatShortDate(d);
 }
 
+// ─── LEMONDÁSI FELTÉTELEK ────────────────────────────────────
+const CANCELLATION_FREE_DAYS = 15;
+const CANCELLATION_MID_PENALTY_PCT = 50;
+const CANCELLATION_LATE_DAYS = 3;
+const CANCELLATION_LATE_PENALTY_PCT = 100;
+
+function cancellationPolicyText(): string {
+  return `Érkezés előtti ${CANCELLATION_FREE_DAYS}. napig kötbérmentesen lemondható a foglalás. Az érkezés előtti 14–${CANCELLATION_LATE_DAYS}. nap közötti lemondás esetén a foglalás értékének ${CANCELLATION_MID_PENALTY_PCT}%-a, az érkezés előtti ${CANCELLATION_LATE_DAYS} napon belüli lemondás esetén ${CANCELLATION_LATE_PENALTY_PCT}%-a a kötbér.`;
+}
+
 // ─── VENDÉG EMAIL HTML ───────────────────────────────────────
 function guestEmailHtml(data: BookingEmailData): string {
-  const depositPct = data.depositPercent ?? 30;
   const depositAmt = data.depositAmount ?? data.totalPrice;
   const remaining = data.totalPrice - depositAmt;
   const adults = data.numberOfAdults ?? data.guests;
   const freeCancelDays = data.freeCancelDays ?? 11;
   const deadline = depositDeadlineDate(data.checkIn, freeCancelDays);
   const extras = data.extraServices?.filter(s => s.total > 0) ?? [];
-  const penaltyFromDay = freeCancelDays - 1;
   const isCardPayment    = data.paymentMethod === "card";
   const isCashPayment    = data.paymentMethod === "cash";
   const isRevolutPayment = data.paymentMethod === "revolut";
@@ -360,12 +368,12 @@ function guestEmailHtml(data: BookingEmailData): string {
             </p>
             ` : isCashPayment ? `` : `
             <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;line-height:1.7;margin:0 0 14px;">
-              A foglalást az előleg beérkezésével tudjuk véglegesíteni. Ha a járványügyi helyzet úgy alakul, akkor természetesen a foglaló összegét visszatérítjük, vagy módosíthatják a foglalás dátumát.
+              A foglalást a fizetendő összeg határidőre történő beérkezésével tudjuk véglegesíteni.
             </p>
             `}
             <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#2347a8;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 10px;">Lemondási feltételek</p>
             <p style="font-family:sans-serif;font-size:13px;color:#525252;line-height:1.7;margin:0;">
-              Érkezés előtti ${freeCancelDays + 1}. napig kötbérmentesen lemondható a foglalás. Az érkezési nap előtti ${penaltyFromDay + 1}. nap és az érkezési nap között a foglalás értékének ${depositPct}%-a a kötbér.
+              ${cancellationPolicyText()}
             </p>
           </td></tr>
         </table>
@@ -714,10 +722,7 @@ function adminEmailHtml(data: BookingEmailData): string {
 
 // ─── ELŐLEG VISSZAIGAZOLÓ EMAIL HTML ────────────────────────
 function depositConfirmationHtml(data: BookingEmailData & { depositAmount: number; remaining: number; depositMethod?: string | null; depositPaidAt?: string | null }): string {
-  const depositPct = data.depositPercent ?? 30;
   const adults = data.numberOfAdults ?? data.guests;
-  const freeCancelDays = data.freeCancelDays ?? 11;
-  const penaltyFromDay = freeCancelDays - 1;
   const extras = data.extraServices?.filter(s => s.total > 0) ?? [];
 
   const depositMethodText = (() => {
@@ -872,7 +877,7 @@ function depositConfirmationHtml(data: BookingEmailData & { depositAmount: numbe
           <tr><td style="padding:20px 24px;">
             <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:#2347a8;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 10px;">Lemondási feltételek</p>
             <p style="font-family:sans-serif;font-size:13px;color:#525252;line-height:1.7;margin:0;">
-              Érkezés előtti ${freeCancelDays + 1}. napig kötbérmentesen lemondható a foglalás. Az érkezési nap előtti ${penaltyFromDay + 1}. nap és az érkezési nap között a foglalás értékének ${depositPct}%-a a kötbér.
+              ${cancellationPolicyText()}
             </p>
           </td></tr>
         </table>

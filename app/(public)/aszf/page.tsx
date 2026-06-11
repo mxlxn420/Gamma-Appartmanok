@@ -68,17 +68,18 @@ export default function AszfPage() {
               <li>OTP SZÉP kártya</li>
             </ul>
             <p className="mt-3">
-              Előleg fizetése esetén annak összege és határideje a visszaigazoló e-mailben kerül közlésre.
-              Az előleg megfizetésével a foglalás véglegesnek minősül.
+              A fizetendő összeg mértéke és a fizetési határidő a visszaigazoló e-mailben kerül közlésre.
+              A foglalás a fizetendő összeg határidőre történő beérkezésével válik véglegessé.
             </p>
           </section>
 
           <section>
             <h2 className="font-serif text-xl text-forest-900 mb-3">5. Lemondási feltételek</h2>
             <p>
-              A lemondási feltételek szezononként eltérhetnek, és a foglalás visszaigazolásában kerülnek feltüntetésre.
-              Amennyiben a vendég a megadott határidőn belül mondja le a foglalást, az előleg visszajár.
-              Késői lemondás esetén az előleg megtartásra kerülhet.
+              Érkezés előtti 15. napig kötbérmentesen lemondható a foglalás, ilyenkor a befizetett összeg
+              teljes egészében visszajár. Az érkezés előtti 14–3. nap közötti lemondás esetén a foglalás
+              értékének 50%-a, az érkezés előtti 3 napon belüli lemondás esetén 100%-a kötbérként kerül
+              felszámításra.
             </p>
             <p>
               Lemondani telefonon (+36 20 359 9222) vagy e-mailben (gammaapartmanok@gmail.com) lehetséges.
