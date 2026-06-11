@@ -1403,3 +1403,66 @@ export async function sendPaymentReminderEmail(params: {
     throw new Error(`Reminder email hiba: ${err}`);
   }
 }
+
+// ─── ICAL SZINKRON HIBA ÉRTESÍTŐ EMAIL ───────────────────────
+
+const ICAL_SYNC_ALERT_EMAIL = "milanmartis007@gmail.com";
+
+export async function sendIcalSyncErrorEmail(
+  failed: { source: string; apartment?: string; error?: string }[]
+): Promise<void> {
+  const RESEND_API_KEY = process.env.RESEND_API_KEY;
+  const FROM_EMAIL = process.env.FROM_EMAIL ?? "info@gamma-apartmanok.hu";
+
+  const itemsHtml = failed.map(f => `
+    <li style="margin-bottom:6px;">
+      <strong>${escapeHtml(f.source)}</strong>${f.apartment ? ` (${escapeHtml(f.apartment)})` : ""}:
+      ${escapeHtml(f.error ?? "Ismeretlen hiba")}
+    </li>`).join("");
+
+  const html = `
+<!DOCTYPE html>
+<html lang="hu">
+<body style="margin:0;padding:0;background:#f5f0e8;font-family:Georgia,serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f0e8;padding:40px 20px;">
+  <tr><td align="center">
+    <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(26,58,42,0.08);">
+      <tr><td style="padding:36px 40px;">
+        <p style="font-size:18px;color:#b3261e;margin:0 0 16px;">⚠️ iCal szinkronizációs hiba</p>
+        <p style="font-family:sans-serif;font-size:14px;color:#525252;line-height:1.7;margin:0 0 16px;">
+          Az óránkénti iCal szinkron során a következő forrás(ok) nem sikerültek:
+        </p>
+        <ul style="font-family:sans-serif;font-size:13px;color:#3d3d3d;line-height:1.7;margin:0 0 16px;padding-left:20px;">
+          ${itemsHtml}
+        </ul>
+        <p style="font-family:sans-serif;font-size:13px;color:#737373;line-height:1.7;margin:0;">
+          Érdemes ellenőrizni az érintett iCal feed URL-eket (lejárhattak vagy elérhetetlenné váltak).
+        </p>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>`;
+
+  if (!RESEND_API_KEY || RESEND_API_KEY === "re_xxxxxxxxxxxx") {
+    console.log("📧 [DEV] iCal szinkron hiba email szimulálva:", failed);
+    return;
+  }
+
+  const res = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${RESEND_API_KEY}` },
+    body: JSON.stringify({
+      from: `Gamma Apartmanok <${FROM_EMAIL}>`,
+      to: [ICAL_SYNC_ALERT_EMAIL],
+      subject: "⚠️ iCal szinkronizációs hiba",
+      html,
+    }),
+  });
+
+  if (!res.ok) {
+    const err = await res.text();
+    console.error("iCal szinkron hiba email hiba:", err);
+  }
+}
