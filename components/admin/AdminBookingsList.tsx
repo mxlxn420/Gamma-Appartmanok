@@ -1477,7 +1477,6 @@ export default function AdminBookingsList({ bookings }: Props) {
                 {[
                   { value: "transfer", label: "Átutalás" },
                   { value: "revolut",  label: "Revolut" },
-                  { value: "cash",     label: "Készpénz" },
                   { value: "szep",     label: "OTP SZÉP kártya" },
                 ].map(({ value, label }) => (
                   <button

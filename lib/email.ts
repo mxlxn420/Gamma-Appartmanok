@@ -194,7 +194,6 @@ function guestEmailHtml(data: BookingEmailData): string {
   const deadline = depositDeadlineDate(data.checkIn, freeCancelDays);
   const extras = data.extraServices?.filter(s => s.total > 0) ?? [];
   const isCardPayment    = data.paymentMethod === "card";
-  const isCashPayment    = data.paymentMethod === "cash";
   const isRevolutPayment = data.paymentMethod === "revolut";
   const isSzepPayment    = (data.paymentMethod ?? "").startsWith("szep");
 
@@ -269,17 +268,6 @@ function guestEmailHtml(data: BookingEmailData): string {
             </p>
             <p style="font-family:sans-serif;font-size:12px;color:rgba(245,240,232,0.65);margin:0;">
               Bankkártyával fizetve
-            </p>
-            ` : isCashPayment ? `
-            <p style="font-family:sans-serif;font-size:14px;color:#f5f0e8;margin:0 0 6px;">
-              <strong>Fizetendő összeg:</strong>
-              &nbsp;<span style="font-size:18px;font-weight:700;color:#d4a878;">${formatHuf(depositAmt)}</span>
-            </p>
-            <p style="font-family:sans-serif;font-size:13px;color:rgba(245,240,232,0.8);margin:0 0 10px;">
-              A szállás átvétele előtt a teljes összeget kérjük készpénzben befizetni.
-            </p>
-            <p style="font-family:sans-serif;font-size:13px;color:rgba(245,240,232,0.8);margin:0;">
-              Amennyiben nem történt előzetes telefonos egyeztetés a tulajdonossal, a foglalást töröljük.
             </p>
             ` : `
             <p style="font-family:sans-serif;font-size:14px;color:#f5f0e8;margin:0 0 6px;">
@@ -366,7 +354,7 @@ function guestEmailHtml(data: BookingEmailData): string {
             <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;line-height:1.7;margin:0 0 14px;">
               Foglalása végleges, további teendője nincs. Ha bármilyen kérdése van, keressen minket e-mailben vagy telefonon.
             </p>
-            ` : isCashPayment ? `` : `
+            ` : `
             <p style="font-family:sans-serif;font-size:13px;color:#3d3d3d;line-height:1.7;margin:0 0 14px;">
               A foglalást a fizetendő összeg határidőre történő beérkezésével tudjuk véglegesíteni.
             </p>
@@ -379,7 +367,7 @@ function guestEmailHtml(data: BookingEmailData): string {
         </table>
 
         <!-- Átutalás adatai (csak banki átutalásnál) -->
-        ${!isCardPayment && !isCashPayment && !isRevolutPayment && !isSzepPayment ? `
+        ${!isCardPayment && !isRevolutPayment && !isSzepPayment ? `
         <table width="100%" cellpadding="0" cellspacing="0" style="background:#2347a8;border-radius:12px;margin-bottom:24px;">
           <tr><td style="padding:20px 24px;">
             <p style="font-family:sans-serif;font-size:11px;font-weight:600;color:rgba(245,240,232,0.6);text-transform:uppercase;letter-spacing:0.15em;margin:0 0 14px;">Átutaláshoz az adatok</p>
@@ -528,7 +516,6 @@ function adminEmailHtml(data: BookingEmailData): string {
     const m = data.paymentMethod ?? "";
     if (m === "transfer") return "Átutalás";
     if (m === "revolut") return "Revolut";
-    if (m === "cash") return "Készpénz";
     if (m === "card") return "Bankkártya";
     if (m.startsWith("szep")) return "OTP Szép kártya";
     return m || "—";
@@ -729,7 +716,6 @@ function depositConfirmationHtml(data: BookingEmailData & { depositAmount: numbe
     const m = data.depositMethod ?? "";
     if (m === "transfer") return "átutalással";
     if (m === "revolut") return "Revoluttal";
-    if (m === "cash") return "készpénzzel";
     if (m.startsWith("szep")) return "OTP Szép kártyával";
     return "átutalással";
   })();
@@ -808,7 +794,7 @@ function depositConfirmationHtml(data: BookingEmailData & { depositAmount: numbe
             </p>
             ${data.remaining > 0 ? `
             <p style="font-family:sans-serif;font-size:13px;color:rgba(245,240,232,0.8);margin:8px 0 0;">
-              Fennmaradó összeg: <strong style="color:#d4a878;">${formatHuf(data.remaining)}</strong> – fizetés a szálláson (készpénz / átutalás / OTP Szép kártya) lehetséges.
+              Fennmaradó összeg: <strong style="color:#d4a878;">${formatHuf(data.remaining)}</strong> – fizetés a szálláson (átutalás / OTP Szép kártya) lehetséges.
             </p>` : ""}
           </td></tr>
         </table>

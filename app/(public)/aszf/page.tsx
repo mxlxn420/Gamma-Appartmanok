@@ -62,7 +62,6 @@ export default function AszfPage() {
             <h2 className="font-serif text-xl text-forest-900 mb-3">4. Fizetési feltételek</h2>
             <p>Az elfogadott fizetési módok:</p>
             <ul className="list-disc pl-5 space-y-1 mt-2">
-              <li>Készpénz</li>
               <li>Bankkártya</li>
               <li>Banki átutalás</li>
               <li>OTP SZÉP kártya</li>

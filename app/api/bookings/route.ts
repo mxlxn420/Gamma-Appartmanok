@@ -295,7 +295,7 @@ export async function POST(req: NextRequest) {
           extraServices:     extraServices     ?? null,
           extraServicesTotal: Number(extraServicesTotal) || 0,
           paymentMethod:     body.paymentMethod ?? null,
-          status: body.paymentMethod === "cash" ? "CONFIRMED" : "PENDING",
+          status: "PENDING",
         },
       });
 

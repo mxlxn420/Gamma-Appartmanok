@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import {
   ArrowLeft, ArrowRight, User, Mail, Phone, MessageSquare, MapPin,
-  Moon, CalendarCheck, Check, ImageOff, Plus, Minus, CreditCard, Banknote, Building2, Smartphone, Wallet,
+  Moon, CalendarCheck, Check, ImageOff, Plus, Minus, CreditCard, Building2, Smartphone, Wallet,
 } from "lucide-react";
 import { formatDateHu, formatCurrency } from "@/lib/utils";
 import type { BookingData, SelectedService } from "./BookingPage";
@@ -231,28 +231,10 @@ export default function BookingForm({ bookingData, onBack, onSuccess }: Props) {
               <CreditCard size={12} className="inline mr-1" />Fizetési mód *
             </label>
             <div className="space-y-3">
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 {[
                   { value: "transfer", label: "Átutalás", Icon: Building2 },
                   { value: "revolut", label: "Revolut", Icon: Smartphone },
-                  { value: "cash", label: "Készpénz", Icon: Banknote },
-                ].map(({ value, label, Icon }) => (
-                  <button
-                    key={value}
-                    type="button"
-                    onClick={() => setForm({ ...form, paymentMethod: value, szepType: "" })}
-                    className={`flex flex-col items-center gap-2 py-3 px-2 min-h-[56px] rounded-2xl border-2 transition-all text-sm font-medium ${form.paymentMethod === value
-                      ? "border-forest-600 bg-forest-50 text-forest-800"
-                      : "border-stone-200 text-stone-500 hover:border-stone-300"
-                      }`}
-                  >
-                    <Icon size={20} className={form.paymentMethod === value ? "text-forest-600" : "text-stone-400"} />
-                    {label}
-                  </button>
-                ))}
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                {[
                   { value: "card", label: "Bankkártya", Icon: CreditCard },
                   { value: "szep", label: "SZÉP kártya", Icon: Wallet },
                 ].map(({ value, label, Icon }) => (
@@ -272,13 +254,6 @@ export default function BookingForm({ bookingData, onBack, onSuccess }: Props) {
               </div>
             </div>
             <p className="text-xs text-stone-400 mt-2">Ez a teljes összeg fizetési módjára vonatkozik.</p>
-
-            {/* Készpénz megjegyzés */}
-            {form.paymentMethod === "cash" && (
-              <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2.5 mt-3 leading-relaxed">
-                Készpénzes fizetéshez előzetes egyeztetés szükséges telefonon a tulajdonossal. Kérjük, hívj minket ezen a számon: <span className="font-semibold">+36 20 359 9222</span> – ellenkező esetben a foglalás törlésre kerül.
-              </p>
-            )}
 
             {/* SZÉP kártya bank választó */}
             {form.paymentMethod === "szep" && (
