@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth";
+import { deleteFromR2 } from "@/lib/r2";
 
 const DEFAULTS = {
   id:           "singleton",
@@ -44,11 +45,27 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ success: false, error: "Hiányzó kötelező mezők" }, { status: 400 });
     }
 
+    const existing = await prisma.aboutContent.findUnique({ where: { id: "singleton" } });
+    const r2Base = process.env.NEXT_PUBLIC_R2_ABOUT_URL;
+    const toDelete: string[] = [];
+    if (r2Base && existing) {
+      const oldUrls = [
+        (existing.mainImage  as { src: string } | null)?.src,
+        (existing.floatImage as { src: string } | null)?.src,
+      ].filter((s): s is string => !!s && s.startsWith(r2Base));
+      const newUrls = new Set([(mainImage as { src: string })?.src, (floatImage as { src: string })?.src].filter(Boolean));
+      oldUrls.forEach(url => { if (!newUrls.has(url)) toDelete.push(url); });
+    }
+
     const about = await prisma.aboutContent.upsert({
       where:  { id: "singleton" },
       update: { heading1, heading2, description1, description2, mainImage, floatImage, values, nearby },
       create: { id: "singleton", heading1, heading2, description1, description2, mainImage, floatImage, values, nearby },
     });
+
+    for (const url of toDelete) {
+      try { await deleteFromR2("about", url); } catch { /* nem blokkolja */ }
+    }
 
     return NextResponse.json({ success: true, data: about });
   } catch (error: any) {

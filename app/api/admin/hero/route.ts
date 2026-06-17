@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth";
+import { deleteFromR2 } from "@/lib/r2";
 
 const DEFAULTS = {
   id:            "singleton",
@@ -39,11 +40,24 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ success: false, error: "Hiányzó kötelező mezők" }, { status: 400 });
     }
 
+    const existing = await prisma.heroContent.findUnique({ where: { id: "singleton" } });
+    const r2Base = process.env.NEXT_PUBLIC_R2_HERO_URL;
+    const toDelete: string[] = [];
+    if (r2Base && existing?.slides) {
+      const oldUrls = (existing.slides as Array<{ src: string }>).map(s => s.src).filter(s => s && s.startsWith(r2Base));
+      const newUrls = new Set((slides as Array<{ src: string }>).map(s => s.src).filter(Boolean));
+      oldUrls.forEach(url => { if (!newUrls.has(url)) toDelete.push(url); });
+    }
+
     const hero = await prisma.heroContent.upsert({
       where:  { id: "singleton" },
       update: { subtitle, titleBefore, titleEmphasis, titleAfter, description, highlights, slides },
       create: { id: "singleton", subtitle, titleBefore, titleEmphasis, titleAfter, description, highlights, slides },
     });
+
+    for (const url of toDelete) {
+      try { await deleteFromR2("hero", url); } catch { /* nem blokkolja */ }
+    }
 
     return NextResponse.json({ success: true, data: hero });
   } catch (error: any) {

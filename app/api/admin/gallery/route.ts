@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth";
+import { deleteFromR2 } from "@/lib/r2";
 
 const DEFAULT_FEATURED = [
   { src: "/images/haz/IMG_8537 kicsi.jpg",   alt: "Kuck\u00F3 k\u00FCls\u0151"    },
@@ -58,11 +59,30 @@ export async function PATCH(req: NextRequest) {
       }
     }
 
+    const existing = await prisma.galleryContent.findUnique({ where: { id: "singleton" } });
+    const r2Base = process.env.NEXT_PUBLIC_R2_GALLERY_URL;
+    const toDelete: string[] = [];
+    if (r2Base && existing) {
+      const oldFeatured = (existing.featured as Array<{ src: string }> ?? []).map(f => f.src);
+      const oldCats = (existing.categories as Array<{ images?: Array<{ src: string }> }> ?? [])
+        .flatMap(c => (c.images ?? []).map(i => i.src));
+      const oldUrls = [...oldFeatured, ...oldCats].filter(s => s && s.startsWith(r2Base));
+      const newFeatured = (featured as Array<{ src: string }>).map(f => f.src);
+      const newCats = (categories as Array<{ images?: Array<{ src: string }> }>)
+        .flatMap(c => (c.images ?? []).map(i => i.src));
+      const newUrls = new Set([...newFeatured, ...newCats].filter(Boolean));
+      oldUrls.forEach(url => { if (!newUrls.has(url)) toDelete.push(url); });
+    }
+
     const row = await prisma.galleryContent.upsert({
       where:  { id: "singleton" },
       update: { featured, categories },
       create: { id: "singleton", featured, categories },
     });
+
+    for (const url of toDelete) {
+      try { await deleteFromR2("gallery", url); } catch { /* nem blokkolja */ }
+    }
 
     return NextResponse.json({ success: true, data: row });
   } catch (error: any) {
