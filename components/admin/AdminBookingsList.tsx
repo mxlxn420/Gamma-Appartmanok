@@ -1414,6 +1414,33 @@ export default function AdminBookingsList({ bookings }: Props) {
                     </section>
                   )}
 
+                  {/* Visszaigazoló email újraküldése */}
+                  {selected.status !== "CANCELLED" && selected.status !== "BLOCKED" && (
+                    <section className="pt-1">
+                      <button
+                        onClick={async () => {
+                          if (loading === selected.id) return;
+                          setLoading(selected.id);
+                          try {
+                            const res = await fetch(`/api/admin/bookings/${selected.id}/resend-confirmation`, { method: "POST" });
+                            const data = await res.json();
+                            if (!data.success) throw new Error(data.error);
+                            alert("Visszaigazoló email elküldve!");
+                          } catch (e: any) {
+                            alert("Hiba: " + (e?.message ?? "Ismeretlen hiba"));
+                          } finally {
+                            setLoading(null);
+                          }
+                        }}
+                        disabled={loading === selected.id}
+                        className="w-full py-3 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-700 text-sm font-semibold transition-colors flex items-center justify-center gap-2"
+                      >
+                        <Mail className="w-4 h-4" />
+                        Visszaigazoló email újraküldése
+                      </button>
+                    </section>
+                  )}
+
                   {/* Státusz műveletek */}
                   {(selected.status === "PENDING" || selected.status === "CONFIRMED") && (
                     <section className="flex gap-2 pt-1">
