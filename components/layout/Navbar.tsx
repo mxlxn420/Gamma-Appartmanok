@@ -40,12 +40,14 @@ export default function Navbar() {
     return () => { document.body.style.overflow = ""; };
   }, [mobileOpen]);
 
+  const isDark = isScrolled || !isHeroPage;
+
   return (
     <>
       <motion.header
         className="fixed top-0 left-0 right-0 z-50 border-b"
-        animate={isScrolled || !isHeroPage
-          ? { backgroundColor: "rgba(110,78,50,0.97)", backdropFilter: "blur(20px)", borderColor: "rgba(255,255,255,0.06)" }
+        animate={isDark
+          ? { backgroundColor: "rgba(245,240,232,0.97)", backdropFilter: "blur(20px)", borderColor: "rgba(110,78,50,0.12)" }
           : { backgroundColor: "rgba(0,0,0,0)", backdropFilter: "blur(0px)", borderColor: "rgba(255,255,255,0)" }
         }
         transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
@@ -54,10 +56,10 @@ export default function Navbar() {
         <div className="container-custom h-full flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex flex-col leading-none">
-            <span className="font-serif text-2xl font-light text-cream tracking-tight">
+            <span className={`font-serif text-2xl font-light tracking-tight transition-colors duration-300 ${isDark ? "text-forest-900" : "text-cream"}`}>
               Gamma Apartmanok
             </span>
-            <span className="text-[10px] font-sans tracking-[0.25em] uppercase text-cream/60">
+            <span className={`text-[10px] font-sans tracking-[0.25em] uppercase transition-colors duration-300 ${isDark ? "text-forest-600" : "text-cream/60"}`}>
               Miskolctapolca
             </span>
           </Link>
@@ -68,7 +70,7 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="relative text-xs font-sans font-medium tracking-[0.08em] uppercase text-cream/80 hover:text-cream transition-colors duration-200 group"
+                className={`relative text-xs font-sans font-medium tracking-[0.08em] uppercase transition-colors duration-200 group ${isDark ? "text-forest-700 hover:text-forest-900" : "text-cream/80 hover:text-cream"}`}
               >
                 {link.label}
                 <span className="absolute -bottom-0.5 left-0 right-0 h-px bg-terra-400 origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
@@ -89,7 +91,7 @@ export default function Navbar() {
 
           {/* Hamburger */}
           <button
-            className="lg:hidden flex items-center justify-center w-10 h-10 text-cream"
+            className={`lg:hidden flex items-center justify-center w-10 h-10 transition-colors duration-300 ${isDark ? "text-forest-900" : "text-cream"}`}
             onClick={() => setMobileOpen((v) => !v)}
             aria-label={mobileOpen ? "Menü bezárása" : "Menü megnyitása"}
           >
@@ -120,13 +122,13 @@ export default function Navbar() {
               onClick={() => setMobileOpen(false)}
             />
             <motion.div
-              className="fixed top-0 right-0 bottom-0 z-50 w-[280px] bg-forest-900 lg:hidden flex flex-col"
+              className="fixed top-0 right-0 bottom-0 z-50 w-[280px] bg-[#f5f0e8] lg:hidden flex flex-col border-l border-forest-200"
               initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
             >
-              <div className="flex items-center justify-between px-6 py-5 border-b border-white/10">
-                <span className="font-serif text-xl text-cream">Gamma Apartmanok</span>
-                <button onClick={() => setMobileOpen(false)} className="text-cream/60 hover:text-cream">
+              <div className="flex items-center justify-between px-6 py-5 border-b border-forest-200">
+                <span className="font-serif text-xl text-forest-900">Gamma Apartmanok</span>
+                <button onClick={() => setMobileOpen(false)} className="text-forest-600 hover:text-forest-900">
                   <X size={20} />
                 </button>
               </div>
@@ -137,7 +139,7 @@ export default function Navbar() {
                     transition={{ delay: i * 0.06, duration: 0.35 }}
                   >
                     <Link href={link.href}
-                      className="block py-3 px-4 text-cream/80 hover:text-cream text-sm tracking-[0.12em] uppercase rounded-xl hover:bg-white/5 transition-colors"
+                      className="block py-3 px-4 text-forest-800 hover:text-forest-900 text-sm tracking-[0.12em] uppercase rounded-xl hover:bg-forest-100 transition-colors"
                       onClick={() => setMobileOpen(false)}
                     >
                       {link.label}
