@@ -343,7 +343,7 @@ export default function BookingCalendar({ apartmentGuests, onBack, onNext }: Pro
         />
         <div className="flex items-center gap-6 mt-4 pt-4 border-t border-stone-100">
           <div className="flex items-center gap-2 text-xs text-stone-500">
-            <span className="w-3.5 h-3.5 rounded-full bg-forest-900 inline-block" /> Kiválasztva
+            <span className="w-3.5 h-3.5 rounded-full bg-forest-600 inline-block" /> Kiválasztva
           </div>
           <div className="flex items-center gap-2 text-xs text-stone-500">
             <span className="w-3.5 h-3.5 rounded-full bg-stone-200 inline-block" /> Szabad

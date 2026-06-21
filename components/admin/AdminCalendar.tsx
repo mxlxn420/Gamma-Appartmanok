@@ -284,7 +284,7 @@ export default function AdminCalendar({ bookings, blocked: initialBlocked, apart
         {/* Jelmagyarázat */}
         <div className="flex flex-wrap gap-5 mt-4 pt-4 border-t border-stone-100">
           {[
-            { color: "bg-forest-900", label: "Kiválasztott" },
+            { color: "bg-forest-600", label: "Kiválasztott" },
             { color: "bg-forest-100", label: "Foglalt"       },
           ].map(({ color, label }) => (
             <div key={label} className="flex items-center gap-2 text-xs text-stone-500">

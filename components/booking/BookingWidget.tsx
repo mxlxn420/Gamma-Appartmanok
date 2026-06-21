@@ -182,7 +182,7 @@ export default function BookingWidget() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.97 }}
               onClick={handleBooking}
-              className="flex items-center gap-2 px-7 py-3 bg-forest-900 hover:bg-forest-700 text-cream text-xs font-semibold tracking-[0.15em] uppercase rounded-xl transition-colors whitespace-nowrap"
+              className="flex items-center gap-2 px-7 py-3 bg-terra-400 hover:bg-terra-500 text-white text-xs font-semibold tracking-[0.15em] uppercase rounded-xl transition-colors whitespace-nowrap"
             >
               Foglalás <ArrowRight size={14} />
             </motion.button>

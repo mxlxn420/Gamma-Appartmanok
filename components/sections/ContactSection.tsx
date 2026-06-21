@@ -18,7 +18,7 @@ function GoogleMap() {
         </p>
         <button
           onClick={() => setAccepted(true)}
-          className="px-4 py-2 bg-forest-900 text-cream text-xs font-medium rounded-full hover:bg-forest-800 transition-colors"
+          className="px-4 py-2 bg-terra-400 text-white text-xs font-medium rounded-full hover:bg-terra-500 transition-colors"
         >
           Térkép megjelenítése
         </button>

@@ -177,7 +177,7 @@ function ApartmentCard({ apt }: { apt: Apartment }) {
         type="button"
         onClick={handleSave}
         disabled={saving}
-        className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-forest-900 text-cream text-sm font-medium hover:bg-forest-700 transition-colors disabled:opacity-60"
+        className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-terra-400 text-white text-sm font-medium hover:bg-terra-500 transition-colors disabled:opacity-60"
       >
         {saving ? <Loader2 size={15} className="animate-spin" /> : <Save size={15} />}
         {saved ? "Mentve!" : saving ? "Mentés..." : "Mentés"}

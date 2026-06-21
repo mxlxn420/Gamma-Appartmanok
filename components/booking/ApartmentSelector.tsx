@@ -73,7 +73,7 @@ export default function ApartmentSelector({ onNext }: Props) {
             >
               {/* Borítókép */}
               {/* Pipa */}
-              <div className={`absolute top-4 right-4 z-10 w-6 h-6 rounded-full flex items-center justify-center transition-all duration-200 ${isSelected ? "bg-forest-900" : "bg-stone-100"}`}>
+              <div className={`absolute top-4 right-4 z-10 w-6 h-6 rounded-full flex items-center justify-center transition-all duration-200 ${isSelected ? "bg-terra-400" : "bg-stone-100"}`}>
                 {isSelected && <Check size={13} className="text-white" strokeWidth={3} />}
               </div>
 
