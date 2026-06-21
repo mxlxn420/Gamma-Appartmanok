@@ -39,7 +39,7 @@ function getPriceForDay(date: Date, rule: PricingRule): number {
 }
 
 const RULE_COLORS = [
-  { bg: "bg-blue-50",   border: "border-blue-200",   text: "text-blue-800",   badge: "bg-blue-100 text-blue-700"   },
+  { bg: "bg-forest-50", border: "border-forest-200",  text: "text-forest-800", badge: "bg-forest-100 text-forest-700" },
   { bg: "bg-amber-50",  border: "border-amber-200",  text: "text-amber-800",  badge: "bg-amber-100 text-amber-700" },
   { bg: "bg-purple-50", border: "border-purple-200", text: "text-purple-800", badge: "bg-purple-100 text-purple-700" },
   { bg: "bg-teal-50",   border: "border-teal-200",   text: "text-teal-800",   badge: "bg-teal-100 text-teal-700"   },

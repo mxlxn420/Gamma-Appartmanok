@@ -8,7 +8,7 @@ import type { Booking, BookingStatus, PricingRule } from "@/types";
 
 const STATUS_CONFIG: Record<BookingStatus, { label: string; color: string }> = {
   PENDING:   { label: "Előlegre vár", color: "bg-yellow-100 text-yellow-700" },
-  CONFIRMED: { label: "Jóváhagyva",   color: "bg-blue-100 text-blue-700"    },
+  CONFIRMED: { label: "Jóváhagyva",   color: "bg-forest-100 text-forest-700" },
   PAID:      { label: "Fizetve",      color: "bg-green-100 text-green-700"   },
   CANCELLED: { label: "Elutasítva",   color: "bg-red-100 text-red-700"       },
   BLOCKED:   { label: "Zárva",         color: "bg-stone-100 text-stone-600"   },

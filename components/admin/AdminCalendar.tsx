@@ -272,11 +272,11 @@ export default function AdminCalendar({ bookings, blocked: initialBlocked, apart
             blockedSingle:   blockedSingleDays,
           }}
           modifiersStyles={{
-            booked:           { backgroundColor: "#dde8fb", color: "#2347a8" },
-            blocked:          { backgroundColor: "#bbd1f7", color: "#2347a8" },
-            blockedArrival:   { backgroundColor: "transparent", backgroundImage: "linear-gradient(to bottom right, transparent 50%, #bbd1f7 50%)", color: "#2347a8" },
-            blockedDeparture: { backgroundColor: "transparent", backgroundImage: "linear-gradient(to bottom right, #bbd1f7 50%, transparent 50%)", color: "#2347a8" },
-            blockedSingle:    { backgroundColor: "transparent", backgroundImage: "linear-gradient(to bottom right, #bbd1f7 50%, transparent 50%)", color: "#2347a8" },
+            booked:           { backgroundColor: "#e8d0bc", color: "#543018" },
+            blocked:          { backgroundColor: "#d6b89c", color: "#543018" },
+            blockedArrival:   { backgroundColor: "transparent", backgroundImage: "linear-gradient(to bottom right, transparent 50%, #d6b89c 50%)", color: "#543018" },
+            blockedDeparture: { backgroundColor: "transparent", backgroundImage: "linear-gradient(to bottom right, #d6b89c 50%, transparent 50%)", color: "#543018" },
+            blockedSingle:    { backgroundColor: "transparent", backgroundImage: "linear-gradient(to bottom right, #d6b89c 50%, transparent 50%)", color: "#543018" },
           }}
           {...(activeTab === null ? { components: { DayButton: CustomDayButton } } : {})}
         />
@@ -293,15 +293,15 @@ export default function AdminCalendar({ bookings, blocked: initialBlocked, apart
             </div>
           ))}
           <div className="flex items-center gap-2 text-xs text-stone-500">
-            <span className="w-4 h-4 rounded-full inline-block" style={{ backgroundColor: "#bbd1f7" }} />
+            <span className="w-4 h-4 rounded-full inline-block" style={{ backgroundColor: "#d6b89c" }} />
             Zárva
           </div>
           <div className="flex items-center gap-2 text-xs text-stone-500">
-            <span className="w-4 h-4 rounded-full inline-block" style={{ backgroundImage: "linear-gradient(to bottom right, transparent 50%, #bbd1f7 50%)", border: "1px solid #bbd1f7" }} />
+            <span className="w-4 h-4 rounded-full inline-block" style={{ backgroundImage: "linear-gradient(to bottom right, transparent 50%, #d6b89c 50%)", border: "1px solid #d6b89c" }} />
             Érkezés
           </div>
           <div className="flex items-center gap-2 text-xs text-stone-500">
-            <span className="w-4 h-4 rounded-full inline-block" style={{ backgroundImage: "linear-gradient(to bottom right, #bbd1f7 50%, transparent 50%)", border: "1px solid #bbd1f7" }} />
+            <span className="w-4 h-4 rounded-full inline-block" style={{ backgroundImage: "linear-gradient(to bottom right, #d6b89c 50%, transparent 50%)", border: "1px solid #d6b89c" }} />
             Távozás
           </div>
           {activeTab === null && apartments.length > 0 && (

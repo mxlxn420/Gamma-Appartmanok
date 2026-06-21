@@ -37,7 +37,7 @@ const APT_COLORS: Record<number, string> = {
 
 const STATUS_CONFIG: Record<BookingStatus, { label: string; border: string }> = {
   PENDING:   { label: "Előlegre vár", border: "border-yellow-400" },
-  CONFIRMED: { label: "Jóváhagyva",  border: "border-blue-400"   },
+  CONFIRMED: { label: "Jóváhagyva",  border: "border-forest-400" },
   PAID:      { label: "Fizetve",     border: "border-green-400"  },
   CANCELLED: { label: "Elutasítva",  border: "border-red-300"    },
   BLOCKED:   { label: "Zárva",       border: "border-stone-400"  },
