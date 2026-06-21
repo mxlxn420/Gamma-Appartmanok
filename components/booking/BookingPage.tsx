@@ -99,7 +99,7 @@ export default function BookingPage() {
             return (
               <div key={key} className="flex items-center gap-2">
                 <div className={`flex items-center gap-2 px-3 py-2 rounded-full text-xs font-medium transition-all duration-300 ${
-                  isActive ? "bg-forest-900 text-cream"
+                  isActive ? "bg-forest-600 text-white"
                   : isDone  ? "bg-forest-100 text-forest-700"
                   : "bg-stone-100 text-stone-400"
                 }`}>

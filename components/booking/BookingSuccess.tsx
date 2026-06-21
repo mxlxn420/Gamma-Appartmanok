@@ -21,7 +21,7 @@ export default function BookingSuccess({ bookingData, bookingId }: Props) {
     >
       {/* Ikon */}
       <motion.div
-        className="w-20 h-20 rounded-full bg-forest-900 flex items-center justify-center mx-auto mb-6"
+        className="w-20 h-20 rounded-full bg-terra-400 flex items-center justify-center mx-auto mb-6"
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
         transition={{ delay: 0.2, type: "spring", stiffness: 200 }}

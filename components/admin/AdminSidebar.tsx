@@ -31,13 +31,13 @@ function NavContent({ pathname, onClose, onLogout }: {
   return (
     <>
       {/* Logo */}
-      <div className="px-6 py-7 border-b border-white/10 flex items-center justify-between">
+      <div className="px-6 py-7 border-b border-forest-300 flex items-center justify-between">
         <div>
-          <p className="font-serif text-xl text-cream">Gamma Apartmanok</p>
-          <p className="text-xs text-cream/50 tracking-widest uppercase mt-0.5">Admin</p>
+          <p className="font-serif text-xl text-forest-900">Gamma Apartmanok</p>
+          <p className="text-xs text-forest-600 tracking-widest uppercase mt-0.5">Admin</p>
         </div>
         {onClose && (
-          <button onClick={onClose} className="text-cream/60 hover:text-cream md:hidden">
+          <button onClick={onClose} className="text-forest-600 hover:text-forest-900 md:hidden">
             <X size={20} />
           </button>
         )}
@@ -52,8 +52,8 @@ function NavContent({ pathname, onClose, onLogout }: {
             onClick={onClose}
             className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition-colors ${
               pathname === href
-                ? "bg-white/15 text-cream font-medium"
-                : "text-cream/60 hover:text-cream hover:bg-white/8"
+                ? "bg-forest-400 text-white font-medium"
+                : "text-forest-700 hover:text-forest-900 hover:bg-forest-300"
             }`}
           >
             <Icon size={17} />
@@ -63,18 +63,18 @@ function NavContent({ pathname, onClose, onLogout }: {
       </nav>
 
       {/* Alt */}
-      <div className="px-3 py-4 border-t border-white/10 space-y-1">
+      <div className="px-3 py-4 border-t border-forest-300 space-y-1">
         <Link
           href="/"
           onClick={onClose}
-          className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-cream/60 hover:text-cream hover:bg-white/8 transition-colors"
+          className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-forest-700 hover:text-forest-900 hover:bg-forest-300 transition-colors"
         >
           <Home size={17} />
           Főoldal
         </Link>
         <button
           onClick={onLogout}
-          className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-cream/60 hover:text-red-400 hover:bg-red-400/10 transition-colors"
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-forest-700 hover:text-red-600 hover:bg-red-50 transition-colors"
         >
           <LogOut size={17} />
           Kijelentkezés
@@ -98,17 +98,17 @@ export default function AdminSidebar() {
   return (
     <>
       {/* Desktop sidebar */}
-      <aside className="hidden md:flex fixed left-0 top-0 bottom-0 w-64 bg-forest-900 flex-col z-50">
+      <aside className="hidden md:flex fixed left-0 top-0 bottom-0 w-64 bg-forest-200 flex-col z-50">
         <NavContent pathname={pathname} onLogout={handleLogout} />
       </aside>
 
       {/* Mobile top bar */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-forest-900 flex items-center justify-between px-4 py-3 border-b border-white/10">
+      <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-forest-200 flex items-center justify-between px-4 py-3 border-b border-forest-300">
         <div>
-          <p className="font-serif text-base text-cream">Gamma Apartmanok</p>
-          <p className="text-[10px] text-cream/50 tracking-widest uppercase">Admin</p>
+          <p className="font-serif text-base text-forest-900">Gamma Apartmanok</p>
+          <p className="text-[10px] text-forest-600 tracking-widest uppercase">Admin</p>
         </div>
-        <button onClick={() => setOpen(true)} className="text-cream/70 hover:text-cream p-1">
+        <button onClick={() => setOpen(true)} className="text-forest-700 hover:text-forest-900 p-1">
           <Menu size={22} />
         </button>
       </div>
@@ -126,7 +126,7 @@ export default function AdminSidebar() {
 
       {/* Mobile drawer */}
       <aside
-        className={`md:hidden fixed left-0 top-0 bottom-0 w-72 bg-forest-900 flex flex-col z-50 transition-transform duration-300 ${
+        className={`md:hidden fixed left-0 top-0 bottom-0 w-72 bg-forest-200 flex flex-col z-50 transition-transform duration-300 ${
           open ? "translate-x-0" : "-translate-x-full"
         }`}
       >

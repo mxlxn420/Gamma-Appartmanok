@@ -98,7 +98,7 @@ export default function NeighborhoodSection() {
               onClick={() => setActiveTab(id)}
               className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-200 ${
                 activeTab === id
-                  ? "bg-forest-900 text-cream shadow-md"
+                  ? "bg-forest-600 text-white shadow-md"
                   : "bg-stone-100 text-stone-600 hover:bg-stone-200"
               }`}
             >
@@ -156,7 +156,7 @@ export default function NeighborhoodSection() {
                       href={item.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="shrink-0 w-8 h-8 rounded-xl bg-forest-900 flex items-center justify-center hover:bg-forest-700 transition-colors"
+                      className="shrink-0 w-8 h-8 rounded-xl bg-forest-600 flex items-center justify-center hover:bg-forest-700 transition-colors"
                       aria-label={`${item.name} webhely`}
                     >
                       <ExternalLink size={13} className="text-cream" />

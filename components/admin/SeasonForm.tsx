@@ -72,14 +72,14 @@ export default function SeasonForm({
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
-      className="bg-forest-900 rounded-2xl p-6 text-cream"
+      className="bg-forest-100 rounded-2xl p-6 text-forest-900 border border-forest-200"
     >
       <div className="flex items-center justify-between mb-5">
-        <h3 className="font-serif text-lg text-cream">
+        <h3 className="font-serif text-lg text-forest-900">
           {isNew ? "Új szezon" : `Szerkesztés: ${rule.name}`}
         </h3>
         <button onClick={onCancel}>
-          <X size={18} className="text-cream/60 hover:text-cream" />
+          <X size={18} className="text-forest-600 hover:text-forest-900" />
         </button>
       </div>
 

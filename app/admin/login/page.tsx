@@ -39,15 +39,15 @@ export default function AdminLogin() {
   };
 
   return (
-    <div className="min-h-screen bg-forest-900 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-forest-100 flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="bg-white rounded-3xl shadow-luxury p-10 w-full max-w-md"
       >
         <div className="text-center mb-8">
-          <div className="w-14 h-14 rounded-2xl bg-forest-900 flex items-center justify-center mx-auto mb-4">
-            <Lock size={24} className="text-cream" />
+          <div className="w-14 h-14 rounded-2xl bg-terra-400 flex items-center justify-center mx-auto mb-4">
+            <Lock size={24} className="text-white" />
           </div>
           <h1 className="font-serif text-2xl text-forest-900">Admin belépés</h1>
           <p className="text-stone-500 text-sm mt-1">Gamma Apartmanok kezelőfelület</p>

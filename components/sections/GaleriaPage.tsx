@@ -196,7 +196,7 @@ export default function GaleriaPage({ categories = DEFAULT_CATEGORIES }: { categ
                                     onClick={() => setActiveCategory(null)}
                                     className={"shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 " + (
                                         activeCategory === null
-                                            ? "bg-forest-900 text-cream shadow-luxury"
+                                            ? "bg-forest-600 text-white shadow-luxury"
                                             : "bg-white text-stone-600 hover:bg-forest-50 shadow-card"
                                     )}
                                 >
@@ -213,7 +213,7 @@ export default function GaleriaPage({ categories = DEFAULT_CATEGORIES }: { categ
                                         }}
                                         className={"shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 " + (
                                             activeCategory === cat.id
-                                                ? "bg-forest-900 text-cream shadow-luxury"
+                                                ? "bg-forest-600 text-white shadow-luxury"
                                                 : "bg-white text-stone-600 hover:bg-forest-50 shadow-card"
                                         )}
                                     >
@@ -231,7 +231,7 @@ export default function GaleriaPage({ categories = DEFAULT_CATEGORIES }: { categ
                         onClick={() => setActiveCategory(null)}
                         className={"px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 " + (
                             activeCategory === null
-                                ? "bg-forest-900 text-cream shadow-luxury"
+                                ? "bg-forest-600 text-white shadow-luxury"
                                 : "bg-white text-stone-600 hover:bg-forest-50 shadow-card"
                         )}
                     >
@@ -246,7 +246,7 @@ export default function GaleriaPage({ categories = DEFAULT_CATEGORIES }: { categ
                             }}
                             className={"px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 " + (
                                 activeCategory === cat.id
-                                    ? "bg-forest-900 text-cream shadow-luxury"
+                                    ? "bg-forest-600 text-white shadow-luxury"
                                     : "bg-white text-stone-600 hover:bg-forest-50 shadow-card"
                             )}
                         >

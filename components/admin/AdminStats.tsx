@@ -15,7 +15,7 @@ export default function AdminStats({ stats }: Props) {
       icon:  Calendar,
       label: "Összes foglalás",
       value: stats.total.toString(),
-      color: "bg-forest-900",
+      color: "bg-forest-600",
     },
     {
       icon:  Clock,
