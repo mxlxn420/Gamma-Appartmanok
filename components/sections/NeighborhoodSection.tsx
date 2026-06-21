@@ -77,7 +77,7 @@ export default function NeighborhoodSection() {
   const active = CATEGORIES.find((c) => c.id === activeTab)!;
 
   return (
-    <section id="kornyek" className="section-py bg-white">
+    <section id="kornyek" className="section-py bg-cream">
       <div className="container-custom max-w-4xl">
 
         <AnimatedSection className="text-center mb-12">
@@ -156,7 +156,7 @@ export default function NeighborhoodSection() {
                       href={item.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="shrink-0 w-8 h-8 rounded-xl bg-forest-600 flex items-center justify-center hover:bg-forest-700 transition-colors"
+                      className="shrink-0 w-8 h-8 rounded-xl bg-terra-400 flex items-center justify-center hover:bg-terra-500 transition-colors"
                       aria-label={`${item.name} webhely`}
                     >
                       <ExternalLink size={13} className="text-cream" />

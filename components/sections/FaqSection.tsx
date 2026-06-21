@@ -26,7 +26,7 @@ export default function FaqSection() {
   const [open, setOpen] = useState<number | null>(null);
 
   return (
-    <section id="gyik" className="section-py bg-forest-50">
+    <section id="gyik" className="section-py bg-cream">
       <div className="container-custom max-w-3xl">
 
         <AnimatedSection className="text-center mb-14">
