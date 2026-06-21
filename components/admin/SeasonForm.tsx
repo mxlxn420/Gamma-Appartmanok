@@ -172,7 +172,7 @@ export default function SeasonForm({
                   locale={hu}
                   modifiers={{ existing: displayRanges.map((r) => ({ from: r.from, to: r.to })) }}
                   modifiersStyles={{
-                    selected: { backgroundColor: "#5c5038", color: "#f5f0e8", borderRadius: "8px" },
+                    selected: { backgroundColor: "#6e4e32", color: "#f5f0e8", borderRadius: "8px" },
                     today:    { color: "#c17f4e", fontWeight: "700" },
                     existing: { backgroundColor: "#f5e6d8", color: "#a86435", textDecoration: "line-through" },
                     disabled: { opacity: 0.3, cursor: "not-allowed" },
@@ -233,7 +233,7 @@ export default function SeasonForm({
                   locale={hu}
                   modifiers={{ existing: displayRanges.map((r) => ({ from: r.from, to: r.to })) }}
                   modifiersStyles={{
-                    selected: { backgroundColor: "#5c5038", color: "#f5f0e8", borderRadius: "8px" },
+                    selected: { backgroundColor: "#6e4e32", color: "#f5f0e8", borderRadius: "8px" },
                     today:    { color: "#c17f4e", fontWeight: "700" },
                     existing: { backgroundColor: "#f5e6d8", color: "#a86435", textDecoration: "line-through" },
                     disabled: { opacity: 0.3, cursor: "not-allowed" },

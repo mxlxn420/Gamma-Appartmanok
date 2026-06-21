@@ -52,7 +52,7 @@ const BOOKING_URL = "https://www.booking.com/hotel/hu/gamma-apartman.html?ssne=M
 
 export default function ReviewsSection() {
   return (
-    <section id="ertekelesek" className="section-py bg-forest-900 overflow-hidden">
+    <section id="ertekelesek" className="section-py bg-[#f5f0e8] overflow-hidden">
       <div className="container-custom">
 
         {/* Fejléc */}
@@ -62,19 +62,19 @@ export default function ReviewsSection() {
             Értékelések
             <span className="h-px w-8 bg-terra-400/60" />
           </div>
-          <h2 className="font-serif text-display-lg font-light text-cream mb-6">
+          <h2 className="font-serif text-display-lg font-light text-forest-900 mb-6">
             Vendégeink mondták
           </h2>
 
           {/* Összesített értékelés */}
-          <div className="inline-flex flex-col items-center gap-3 bg-white/10 rounded-2xl px-8 py-5 border border-white/10">
+          <div className="inline-flex flex-col items-center gap-3 bg-forest-100 rounded-2xl px-8 py-5 border border-forest-200">
             <div className="flex items-center gap-4">
-              <span className="font-serif text-5xl font-light text-cream">
+              <span className="font-serif text-5xl font-light text-forest-900">
                 {OVERALL_RATING.toFixed(1)}
               </span>
               <div className="flex flex-col items-start gap-1.5">
                 <span className="text-sm font-semibold text-terra-400">/ 10</span>
-                <p className="text-cream/60 text-xs">
+                <p className="text-forest-600 text-xs">
                   Booking.com értékelések alapján
                 </p>
               </div>
@@ -96,33 +96,33 @@ export default function ReviewsSection() {
             <AnimatedSection
               key={i}
               delay={i * 0.1}
-              className="w-full md:w-[calc(50%-10px)] lg:w-[calc(25%-15px)] bg-white/8 border border-white/10 rounded-2xl p-6 flex flex-col hover:bg-white/12 transition-colors duration-300"
+              className="w-full md:w-[calc(50%-10px)] lg:w-[calc(25%-15px)] bg-white border border-forest-200 rounded-2xl p-6 flex flex-col hover:bg-forest-50 transition-colors duration-300"
             >
               {/* Idézőjel */}
               <Quote size={22} className="text-terra-400/40 mb-4 shrink-0" />
 
               {/* Szöveg */}
-              <p className="text-cream/75 text-sm leading-relaxed flex-1 mb-5">
+              <p className="text-forest-800 text-sm leading-relaxed flex-1 mb-5">
                 {review.text}
               </p>
 
               {/* Lábléc */}
-              <div className="pt-4 border-t border-white/10">
+              <div className="pt-4 border-t border-forest-200">
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-full bg-forest-700 flex items-center justify-center text-cream font-medium text-xs shrink-0">
+                    <div className="w-8 h-8 rounded-full bg-forest-200 flex items-center justify-center text-forest-800 font-medium text-xs shrink-0">
                       {review.initials}
                     </div>
                     <div>
-                      <p className="text-cream text-sm font-medium leading-none mb-0.5">
+                      <p className="text-forest-900 text-sm font-medium leading-none mb-0.5">
                         {review.name}
                       </p>
-                      <p className="text-cream/40 text-xs">Booking.com</p>
+                      <p className="text-forest-500 text-xs">Booking.com</p>
                     </div>
                   </div>
                   <div className="flex items-baseline gap-0.5">
                     <span className="font-serif text-xl font-light text-terra-400">{review.score}</span>
-                    <span className="text-xs text-cream/30">/10</span>
+                    <span className="text-xs text-forest-400">/10</span>
                   </div>
                 </div>
                 <span className="text-xs text-terra-400 bg-terra-400/10 px-2 py-0.5 rounded-full">
@@ -138,7 +138,7 @@ export default function ReviewsSection() {
           <a href={BOOKING_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs text-cream/30 hover:text-cream/50 transition-colors"
+            className="text-xs text-forest-400 hover:text-forest-600 transition-colors"
           >
             Powered by Booking.com
           </a>

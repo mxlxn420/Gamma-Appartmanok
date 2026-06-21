@@ -10,17 +10,17 @@ const config: Config = {
     extend: {
       colors: {
         forest: {
-          50:  "#faf8f3",
-          100: "#f0ece2",
-          200: "#e0d8ca",
-          300: "#cec4b0",
-          400: "#bab096",
-          500: "#a49880",
-          600: "#92846a",
-          700: "#7e7056",
-          800: "#6c5e44",
-          900: "#5c5038",
-          950: "#3c3422",
+          50:  "#fdfaf5",
+          100: "#f7f0e4",
+          200: "#eddecb",
+          300: "#e5d3bc",
+          400: "#d4bc9e",
+          500: "#bfa07e",
+          600: "#9e7e5c",
+          700: "#7e6048",
+          800: "#5e4636",
+          900: "#6e4e32",
+          950: "#3c2818",
         },
         cream: {
           50:  "#fdfaf4",
@@ -64,9 +64,9 @@ const config: Config = {
         "display-md":  ["clamp(1.75rem, 3vw, 2.5rem)", { lineHeight: "1.2",  letterSpacing: "-0.01em" }],
       },
       boxShadow: {
-        "luxury":     "0 25px 50px -12px rgba(92, 80, 56, 0.18)",
-        "card":       "0 4px 24px rgba(92, 80, 56, 0.08)",
-        "card-hover": "0 12px 40px rgba(92, 80, 56, 0.16)",
+        "luxury":     "0 25px 50px -12px rgba(110, 78, 50, 0.18)",
+        "card":       "0 4px 24px rgba(110, 78, 50, 0.08)",
+        "card-hover": "0 12px 40px rgba(110, 78, 50, 0.16)",
       },
       borderRadius: {
         "4xl": "2rem",

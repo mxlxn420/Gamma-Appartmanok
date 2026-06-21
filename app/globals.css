@@ -4,51 +4,50 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ─── Forest szín → semleges meleg bézs felülírás ────────────── */
-.bg-forest-50  { background-color: #faf8f3 !important; }
-.bg-forest-100 { background-color: #f0ece2 !important; }
-.bg-forest-200 { background-color: #e0d8ca !important; }
-.bg-forest-300 { background-color: #cec4b0 !important; }
-.bg-forest-400 { background-color: #bab096 !important; }
-.bg-forest-500 { background-color: #a49880 !important; }
-.bg-forest-600 { background-color: #92846a !important; }
-.bg-forest-700 { background-color: #7e7056 !important; }
-.bg-forest-800 { background-color: #6c5e44 !important; }
-.bg-forest-900 { background-color: #5c5038 !important; }
+/* ─── Forest szín → homokos parchment (#E5D3BC = forest-300) ── */
+.bg-forest-50  { background-color: #fdfaf5 !important; }
+.bg-forest-100 { background-color: #f7f0e4 !important; }
+.bg-forest-200 { background-color: #eddecb !important; }
+.bg-forest-300 { background-color: #e5d3bc !important; }
+.bg-forest-400 { background-color: #d4bc9e !important; }
+.bg-forest-500 { background-color: #bfa07e !important; }
+.bg-forest-600 { background-color: #9e7e5c !important; }
+.bg-forest-700 { background-color: #7e6048 !important; }
+.bg-forest-800 { background-color: #5e4636 !important; }
+.bg-forest-900 { background-color: #6e4e32 !important; }
 
-.text-forest-50  { color: #faf8f3 !important; }
-.text-forest-100 { color: #f0ece2 !important; }
-.text-forest-200 { color: #e0d8ca !important; }
-.text-forest-300 { color: #cec4b0 !important; }
-.text-forest-400 { color: #bab096 !important; }
-.text-forest-500 { color: #a49880 !important; }
-.text-forest-600 { color: #92846a !important; }
-.text-forest-700 { color: #7e7056 !important; }
-.text-forest-800 { color: #6c5e44 !important; }
-.text-forest-900 { color: #5c5038 !important; }
+.text-forest-50  { color: #fdfaf5 !important; }
+.text-forest-100 { color: #f7f0e4 !important; }
+.text-forest-200 { color: #eddecb !important; }
+.text-forest-300 { color: #e5d3bc !important; }
+.text-forest-400 { color: #d4bc9e !important; }
+.text-forest-500 { color: #bfa07e !important; }
+.text-forest-600 { color: #9e7e5c !important; }
+.text-forest-700 { color: #7e6048 !important; }
+.text-forest-800 { color: #5e4636 !important; }
+.text-forest-900 { color: #6e4e32 !important; }
 
-.border-forest-50  { border-color: #faf8f3 !important; }
-.border-forest-100 { border-color: #f0ece2 !important; }
-.border-forest-200 { border-color: #e0d8ca !important; }
-.border-forest-300 { border-color: #cec4b0 !important; }
-.border-forest-400 { border-color: #bab096 !important; }
-.border-forest-500 { border-color: #a49880 !important; }
-.border-forest-600 { border-color: #92846a !important; }
-.border-forest-700 { border-color: #7e7056 !important; }
-.border-forest-800 { border-color: #6c5e44 !important; }
-.border-forest-900 { border-color: #5c5038 !important; }
+.border-forest-50  { border-color: #fdfaf5 !important; }
+.border-forest-100 { border-color: #f7f0e4 !important; }
+.border-forest-200 { border-color: #eddecb !important; }
+.border-forest-300 { border-color: #e5d3bc !important; }
+.border-forest-400 { border-color: #d4bc9e !important; }
+.border-forest-500 { border-color: #bfa07e !important; }
+.border-forest-600 { border-color: #9e7e5c !important; }
+.border-forest-700 { border-color: #7e6048 !important; }
+.border-forest-800 { border-color: #5e4636 !important; }
+.border-forest-900 { border-color: #6e4e32 !important; }
 
-.hover\:bg-forest-700:hover { background-color: #7e7056 !important; }
-.hover\:bg-forest-800:hover { background-color: #6c5e44 !important; }
-.hover\:bg-forest-900:hover { background-color: #5c5038 !important; }
-.hover\:text-forest-900:hover { color: #5c5038 !important; }
-.focus\:border-forest-500:focus { border-color: #a49880 !important; }
-.focus\:ring-forest-500\/10 { --tw-ring-color: rgba(164,152,128,0.1) !important; }
-.ring-forest-500 { --tw-ring-color: #a49880 !important; }
-.group:hover .group-hover\:opacity-100 { opacity: 1; }
-.bg-forest-900\/8 { background-color: rgba(92,80,56,0.08) !important; }
-.bg-forest-900\/30 { background-color: rgba(92,80,56,0.3) !important; }
-.border-forest-900\/30 { border-color: rgba(92,80,56,0.3) !important; }
+.hover\:bg-forest-700:hover { background-color: #7e6048 !important; }
+.hover\:bg-forest-800:hover { background-color: #5e4636 !important; }
+.hover\:bg-forest-900:hover { background-color: #6e4e32 !important; }
+.hover\:text-forest-900:hover { color: #6e4e32 !important; }
+.focus\:border-forest-500:focus { border-color: #bfa07e !important; }
+.focus\:ring-forest-500\/10 { --tw-ring-color: rgba(191,160,126,0.1) !important; }
+.ring-forest-500 { --tw-ring-color: #bfa07e !important; }
+.bg-forest-900\/8 { background-color: rgba(110,78,50,0.08) !important; }
+.bg-forest-900\/30 { background-color: rgba(110,78,50,0.3) !important; }
+.border-forest-900\/30 { border-color: rgba(110,78,50,0.3) !important; }
 
 /* ─── Terra szín → meleg arany felülírás ─────────────────────── */
 .bg-terra-100 { background-color: #fef3dc !important; }
@@ -72,17 +71,11 @@
 .bg-terra-400\/20 { background-color: rgba(232,168,50,0.2) !important; }
 .bg-terra-400\/60 { background-color: rgba(232,168,50,0.6) !important; }
 
-/* Scrollbar */
-::-webkit-scrollbar-thumb { background: #5c5038 !important; }
-
 /* ─── Hover állapot overrides ─────────────────────────────────── */
-.btn-primary:hover  { background-color: #7e7056 !important; }
-.btn-secondary:hover { background-color: #5c5038 !important; color: #f5f0e8 !important; }
+.btn-primary:hover  { background-color: #7e6048 !important; }
+.btn-secondary:hover { background-color: #6e4e32 !important; color: #f5f0e8 !important; }
 .btn-accent:hover   { background-color: #c88a1a !important; }
-.hover\:bg-forest-700:hover { background-color: #7e7056 !important; }
-.hover\:bg-forest-800:hover { background-color: #6c5e44 !important; }
-.hover\:bg-forest-900:hover { background-color: #5c5038 !important; }
-.hover\:text-forest-900:hover { color: #5c5038 !important; }
+.hover\:bg-forest-600:hover { background-color: #9e7e5c !important; }
 .hover\:bg-terra-400:hover  { background-color: #e8a832 !important; }
 .hover\:bg-terra-500:hover  { background-color: #c88a1a !important; }
 .hover\:text-terra-200:hover { color: #fce3a8 !important; }
@@ -90,31 +83,22 @@
 .bg-terra-400 { background-color: #e8a832 !important; }
 
 /* ─── Checkbox + focus ring overrides ────────────────────────── */
-.accent-forest-900 { accent-color: #5c5038 !important; }
-.accent-forest-500 { accent-color: #a49880 !important; }
-.focus\:ring-forest-500\/10:focus { --tw-ring-color: rgba(164,152,128,0.1) !important; }
-.focus\:border-forest-500:focus { border-color: #a49880 !important; }
+.accent-forest-900 { accent-color: #6e4e32 !important; }
+.accent-forest-500 { accent-color: #bfa07e !important; }
+.focus\:ring-forest-500\/10:focus { --tw-ring-color: rgba(191,160,126,0.1) !important; }
 .input-base:focus {
-  border-color: #a49880 !important;
-  --tw-ring-color: rgba(164,152,128,0.1) !important;
+  border-color: #bfa07e !important;
+  --tw-ring-color: rgba(191,160,126,0.1) !important;
 }
 
 /* ─── Admin hover/focus/border overrides ─────────────────────── */
-.hover\:bg-forest-600:hover { background-color: #92846a !important; }
-.hover\:border-forest-300:hover { border-color: #cec4b0 !important; }
-.hover\:border-forest-400:hover { border-color: #bab096 !important; }
-.hover\:text-forest-700:hover { color: #7e7056 !important; }
-.hover\:text-forest-800:hover { color: #6c5e44 !important; }
-.focus\:ring-forest-400 { --tw-ring-color: #bab096 !important; }
+.hover\:border-forest-300:hover { border-color: #e5d3bc !important; }
+.hover\:border-forest-400:hover { border-color: #d4bc9e !important; }
+.hover\:text-forest-700:hover { color: #7e6048 !important; }
+.hover\:text-forest-800:hover { color: #5e4636 !important; }
+.focus\:ring-forest-400 { --tw-ring-color: #d4bc9e !important; }
 .bg-terra-50 { background-color: #fef9ee !important; }
-.border-forest-100 { border-color: #f0ece2 !important; }
-.border-forest-200 { border-color: #e0d8ca !important; }
-.border-forest-300 { border-color: #cec4b0 !important; }
-.border-forest-400 { border-color: #bab096 !important; }
-.text-forest-600 { color: #92846a !important; }
-.bg-forest-600 { background-color: #92846a !important; }
-.ring-forest-400 { --tw-ring-color: #bab096 !important; }
-.ring-offset-forest-400 { --tw-ring-offset-color: #bab096 !important; }
+.ring-forest-400 { --tw-ring-color: #d4bc9e !important; }
 
 :root {
   --navbar-h: 80px;
@@ -133,8 +117,8 @@
   }
   ::-webkit-scrollbar { width: 5px; }
   ::-webkit-scrollbar-track { background: #f5f0e8; }
-  ::-webkit-scrollbar-thumb { background: #5c5038; border-radius: 3px; }
-  ::selection { background: #5c5038; color: #f5f0e8; }
+  ::-webkit-scrollbar-thumb { background: #6e4e32; border-radius: 3px; }
+  ::selection { background: #6e4e32; color: #f5f0e8; }
   :target { scroll-margin-top: calc(var(--navbar-h) + 1.5rem); }
   @media (max-width: 768px) {
     input, select, textarea { font-size: 16px !important; }
@@ -204,23 +188,23 @@
   .bg-hero-overlay {
     background: linear-gradient(
       to bottom,
-      rgba(92,80,56,0.35) 0%,
-      rgba(92,80,56,0.08) 40%,
-      rgba(92,80,56,0.65) 100%
+      rgba(110,78,50,0.35) 0%,
+      rgba(110,78,50,0.08) 40%,
+      rgba(110,78,50,0.65) 100%
     );
   }
 }
 
 /* ─── React Day Picker v9 ───────────────────────────────────── */
 html .rdp-root {
-  --rdp-accent-color:                      #5c5038;
-  --rdp-accent-background-color:           #faf8f3;
-  --rdp-range_middle-background-color:     #f0ece2;
-  --rdp-range_middle-color:                #5c5038;
+  --rdp-accent-color:                      #6e4e32;
+  --rdp-accent-background-color:           #fdfaf5;
+  --rdp-range_middle-background-color:     #f7f0e4;
+  --rdp-range_middle-color:                #6e4e32;
   --rdp-range_start-color:                 #f5f0e8;
   --rdp-range_end-color:                   #f5f0e8;
-  --rdp-range_start-date-background-color: #5c5038;
-  --rdp-range_end-date-background-color:   #5c5038;
+  --rdp-range_start-date-background-color: #6e4e32;
+  --rdp-range_end-date-background-color:   #6e4e32;
   --rdp-today-color:                       #e8a832;
   --rdp-day_button-border-radius:          8px;
   --rdp-selected-border:                   2px solid transparent;
@@ -238,18 +222,18 @@ html .rdp-root .rdp-day {
 }
 
 html .rdp-root .rdp-day_button:hover:not(:disabled) {
-  background-color: #f0ece2 !important;
-  color: #5c5038 !important;
+  background-color: #f7f0e4 !important;
+  color: #6e4e32 !important;
 }
 
 html .rdp-root .rdp-selected .rdp-day_button {
-  background-color: #5c5038 !important;
+  background-color: #6e4e32 !important;
   color: #f5f0e8 !important;
   font-weight: 600 !important;
 }
 
 html .rdp-root .rdp-selected .rdp-day_button:hover {
-  background-color: #5c5038 !important;
+  background-color: #6e4e32 !important;
   color: #f5f0e8 !important;
 }
 
@@ -262,7 +246,7 @@ html .rdp-root .rdp-disabled:not(.rdp-selected) {
 }
 
 html .rdp-root .rdp-caption_label {
-  color: #5c5038 !important;
+  color: #6e4e32 !important;
   font-weight: 600 !important;
   font-size: 15px !important;
 }
@@ -275,12 +259,12 @@ html .rdp-root .rdp-weekday {
 
 html .rdp-root .rdp-button_previous,
 html .rdp-root .rdp-button_next {
-  color: #5c5038 !important;
+  color: #6e4e32 !important;
   border-radius: 8px !important;
 }
 html .rdp-root .rdp-button_previous:hover,
 html .rdp-root .rdp-button_next:hover {
-  background-color: #f0ece2 !important;
+  background-color: #f7f0e4 !important;
 }
 
 html .rdp-root .rdp-outside {

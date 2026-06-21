@@ -336,7 +336,7 @@ function DatePickerField({
                 fromDate={fromDate}
                 locale={hu}
                 modifiersStyles={{
-                  selected: { backgroundColor: "#5c5038", color: "#f5f0e8", borderRadius: "8px" },
+                  selected: { backgroundColor: "#6e4e32", color: "#f5f0e8", borderRadius: "8px" },
                   today:    { color: "#c17f4e", fontWeight: "700" },
                 }}
               />
