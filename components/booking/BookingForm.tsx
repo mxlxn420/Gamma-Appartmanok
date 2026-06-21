@@ -417,49 +417,49 @@ export default function BookingForm({ bookingData, onBack, onSuccess }: Props) {
         )}
 
         {/* Mobil összefoglaló – csak mobilon látszik */}
-        <div className="lg:hidden bg-forest-900 rounded-3xl shadow-card p-5 text-cream space-y-2.5 text-sm">
-          <h3 className="font-serif text-lg text-cream mb-3">Foglalás összefoglalója</h3>
+        <div className="lg:hidden bg-forest-100 rounded-3xl shadow-card p-5 text-forest-900 space-y-2.5 text-sm border border-forest-200">
+          <h3 className="font-serif text-lg text-forest-900 mb-3">Foglalás összefoglalója</h3>
           <div className="flex justify-between">
-            <span className="text-cream/60">Érkezés</span>
+            <span className="text-forest-600">Érkezés</span>
             <span>{formatDateHu(bookingData.checkIn)}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-cream/60">Távozás</span>
+            <span className="text-forest-600">Távozás</span>
             <span>{formatDateHu(bookingData.checkOut)}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-cream/60">Éjszakák</span>
+            <span className="text-forest-600">Éjszakák</span>
             <span>{bookingData.nights} éj</span>
           </div>
           {bookingData.weekdayNights > 0 && (
             <div className="flex justify-between">
-              <span className="text-cream/60">{bookingData.weekendNights > 0 ? "Szállás – hétköznap" : "Szállás"}</span>
+              <span className="text-forest-600">{bookingData.weekendNights > 0 ? "Szállás – hétköznap" : "Szállás"}</span>
               <span>{formatCurrency(bookingData.weekdayNights * bookingData.weekdayRate)}</span>
             </div>
           )}
           {bookingData.weekendNights > 0 && (
             <div className="flex justify-between">
-              <span className="text-cream/60">{bookingData.weekdayNights > 0 ? "Szállás – hétvége" : "Szállás"}</span>
+              <span className="text-forest-600">{bookingData.weekdayNights > 0 ? "Szállás – hétvége" : "Szállás"}</span>
               <span>{formatCurrency(bookingData.weekendNights * bookingData.weekendRate)}</span>
             </div>
           )}
           <div className="flex justify-between">
-            <span className="text-cream/60">IFA</span>
+            <span className="text-forest-600">IFA</span>
             <span>{formatCurrency(bookingData.touristTax)}</span>
           </div>
           {bookingData.discountAmount > 0 && (
-            <div className="flex justify-between text-forest-300">
+            <div className="flex justify-between text-terra-500">
               <span>Kedvezmény ({bookingData.discountPercent}%)</span>
               <span>−{formatCurrency(bookingData.discountAmount)}</span>
             </div>
           )}
           {selected.length > 0 && selected.map((s) => (
             <div key={s.id} className="flex justify-between">
-              <span className="text-cream/60">{s.name}</span>
+              <span className="text-forest-600">{s.name}</span>
               <span>{formatCurrency(s.total)}</span>
             </div>
           ))}
-          <div className="border-t border-white/10 pt-3 flex justify-between items-center">
+          <div className="border-t border-forest-300 pt-3 flex justify-between items-center">
             <span className="font-medium">Végösszeg</span>
             <span className="font-serif text-xl">{formatCurrency(grandTotal)}</span>
           </div>
@@ -512,24 +512,24 @@ export default function BookingForm({ bookingData, onBack, onSuccess }: Props) {
       </form>
 
       {/* Összefoglaló – csak desktopon */}
-      <div className="hidden lg:block bg-forest-900 rounded-3xl shadow-card p-6 text-cream h-fit sticky top-8">
-        <h3 className="font-serif text-xl mb-6 text-cream">Foglalás összefoglalója</h3>
+      <div className="hidden lg:block bg-forest-100 rounded-3xl shadow-card p-6 text-forest-900 h-fit sticky top-8 border border-forest-200">
+        <h3 className="font-serif text-xl mb-6 text-forest-900">Foglalás összefoglalója</h3>
 
         <div className="space-y-3 text-sm mb-6">
           <div className="flex justify-between">
-            <span className="text-cream/60">Érkezés</span>
+            <span className="text-forest-600">Érkezés</span>
             <span>{formatDateHu(bookingData.checkIn)}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-cream/60">Távozás</span>
+            <span className="text-forest-600">Távozás</span>
             <span>{formatDateHu(bookingData.checkOut)}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-cream/60">Éjszakák</span>
+            <span className="text-forest-600">Éjszakák</span>
             <span>{bookingData.nights} éj</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-cream/60">Vendégek</span>
+            <span className="text-forest-600">Vendégek</span>
             <span className="text-right text-sm">
               {bookingData.adults} felnőtt (18+)
               {bookingData.children > 0 && `, ${bookingData.children} gyerek (2–17)`}
@@ -538,15 +538,15 @@ export default function BookingForm({ bookingData, onBack, onSuccess }: Props) {
           </div>
         </div>
 
-        <div className="border-t border-white/10 pt-4 space-y-2.5 text-sm mb-6">
+        <div className="border-t border-forest-200 pt-4 space-y-2.5 text-sm mb-6">
           {/* Szállás */}
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-cream/80">Szállás ({bookingData.nights} éj)</p>
+              <p className="text-forest-800">Szállás ({bookingData.nights} éj)</p>
               {bookingData.apartmentGuests.map((apt) => {
                 const personCount = apt.adults + apt.children + Math.max(0, apt.babies - 1);
                 return (
-                  <p key={apt.id} className="text-xs text-cream/40 mt-0.5">
+                  <p key={apt.id} className="text-xs text-forest-500 mt-0.5">
                     {apt.name}: {personCount} fő ({apt.adults} felnőtt{apt.children > 0 ? ` + ${apt.children} gyerek` : ""}{apt.babies > 0 ? ` + ${apt.babies} baba` : ""})
                   </p>
                 );
@@ -559,8 +559,8 @@ export default function BookingForm({ bookingData, onBack, onSuccess }: Props) {
           {/* IFA */}
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-cream/80">IFA</p>
-              <p className="text-xs text-cream/40 mt-0.5">
+              <p className="text-forest-800">IFA</p>
+              <p className="text-xs text-forest-500 mt-0.5">
                 {bookingData.adults} felnőtt × {bookingData.nights} éj × 450 Ft/éj
               </p>
             </div>
@@ -570,34 +570,34 @@ export default function BookingForm({ bookingData, onBack, onSuccess }: Props) {
           {/* Extra vendég pótdíj */}
           {bookingData.guestSurcharge > 0 && (
             <div className="flex justify-between">
-              <span className="text-cream/80">Extra vendég pótdíj</span>
+              <span className="text-forest-800">Extra vendég pótdíj</span>
               <span>{formatCurrency(bookingData.guestSurcharge)}</span>
             </div>
           )}
 
           {/* Kedvezmény */}
           {bookingData.discountAmount > 0 && (
-            <div className="flex justify-between items-start bg-forest-900/30 -mx-1 px-2 py-1.5 rounded-lg">
+            <div className="flex justify-between items-start bg-terra-400/10 -mx-1 px-2 py-1.5 rounded-lg">
               <div>
-                <p className="text-forest-300 font-medium">Kedvezmény – {bookingData.discountName}</p>
-                <p className="text-xs text-forest-400/70 mt-0.5">{bookingData.discountPercent}%</p>
+                <p className="text-terra-600 font-medium">Kedvezmény – {bookingData.discountName}</p>
+                <p className="text-xs text-terra-500 mt-0.5">{bookingData.discountPercent}%</p>
               </div>
-              <span className="text-forest-300 font-medium shrink-0 ml-2">−{formatCurrency(bookingData.discountAmount)}</span>
+              <span className="text-terra-600 font-medium shrink-0 ml-2">−{formatCurrency(bookingData.discountAmount)}</span>
             </div>
           )}
 
           {/* Kiválasztott extra szolgáltatások */}
           {selected.length > 0 && (
             <>
-              <div className="border-t border-white/10 pt-2.5 mt-1">
-                <p className="text-xs text-cream/40 uppercase tracking-wider mb-2">Extra szolgáltatások</p>
+              <div className="border-t border-forest-200 pt-2.5 mt-1">
+                <p className="text-xs text-forest-500 uppercase tracking-wider mb-2">Extra szolgáltatások</p>
               </div>
               {selected.map((s) => (
                 <div key={s.id} className="flex justify-between items-start">
                   <div>
-                    <p className="text-cream/80">{s.name}</p>
+                    <p className="text-forest-800">{s.name}</p>
                     {s.price != null && (
-                      <p className="text-xs text-cream/40 mt-0.5">
+                      <p className="text-xs text-forest-500 mt-0.5">
                         {s.pricingType === "PER_NIGHT"
                           ? `${formatCurrency(s.price)} × ${s.quantity} db × ${s.nights} éj`
                           : `${formatCurrency(s.price)} × ${s.quantity} db`}
@@ -613,14 +613,14 @@ export default function BookingForm({ bookingData, onBack, onSuccess }: Props) {
           )}
         </div>
 
-        <div className="border-t border-white/10 pt-4 flex justify-between items-center">
-          <span className="text-cream/80 font-medium">Végösszeg</span>
-          <span className="font-serif text-2xl text-cream">
+        <div className="border-t border-forest-200 pt-4 flex justify-between items-center">
+          <span className="text-forest-800 font-medium">Végösszeg</span>
+          <span className="font-serif text-2xl text-forest-900">
             {formatCurrency(grandTotal)}
           </span>
         </div>
 
-        <p className="text-xs text-cream/40 mt-4 leading-relaxed">
+        <p className="text-xs text-forest-500 mt-4 leading-relaxed">
           A foglalás elküldése után e-mailben visszaigazolást küldünk.
           A fizetéssel kapcsolatos tudnivalókat a visszaigazoló e-mailben megtalálja.
         </p>

@@ -109,14 +109,14 @@ export default function ContactSection() {
             </div>
 
             {/* Bejelentkezési infó */}
-            <div className="bg-forest-900 rounded-2xl p-6 text-cream">
-              <p className="text-xs tracking-[0.2em] uppercase text-cream/50 mb-4">Tudnivalók</p>
+            <div className="bg-forest-200 rounded-2xl p-6 text-forest-900 border border-forest-300">
+              <p className="text-xs tracking-[0.2em] uppercase text-forest-600 mb-4">Tudnivalók</p>
               <div className="space-y-2 text-sm">
-                <div className="flex justify-between"><span className="text-cream/60">Bejelentkezés</span><span>15:00 – 00:00</span></div>
-                <div className="flex justify-between"><span className="text-cream/60">Kijelentkezés</span><span>8:00 – 11:00</span></div>
-                <div className="flex justify-between"><span className="text-cream/60">Max. vendég</span><span>20 fő</span></div>
-                <div className="flex justify-between"><span className="text-cream/60">NTAK</span><span>MA21027231</span></div>
-                <div className="flex justify-between"><span className="text-cream/60">Háziállat</span><span>Nem tudunk fogadni</span></div>
+                <div className="flex justify-between"><span className="text-forest-600">Bejelentkezés</span><span>15:00 – 00:00</span></div>
+                <div className="flex justify-between"><span className="text-forest-600">Kijelentkezés</span><span>8:00 – 11:00</span></div>
+                <div className="flex justify-between"><span className="text-forest-600">Max. vendég</span><span>20 fő</span></div>
+                <div className="flex justify-between"><span className="text-forest-600">NTAK</span><span>MA21027231</span></div>
+                <div className="flex justify-between"><span className="text-forest-600">Háziállat</span><span>Nem tudunk fogadni</span></div>
               </div>
             </div>
 
@@ -129,13 +129,13 @@ export default function ContactSection() {
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="bg-forest-900 rounded-3xl p-10 text-center text-cream"
+                className="bg-forest-100 rounded-3xl p-10 text-center text-forest-900 border border-forest-300"
               >
                 <div className="w-16 h-16 rounded-full bg-terra-400/20 flex items-center justify-center mx-auto mb-5">
-                  <Send size={28} className="text-terra-300" />
+                  <Send size={28} className="text-terra-400" />
                 </div>
                 <h3 className="font-serif text-2xl mb-3">Üzenet elküldve!</h3>
-                <p className="text-cream/60">Hamarosan felvesszük Önnel a kapcsolatot.</p>
+                <p className="text-forest-600">Hamarosan felvesszük Önnel a kapcsolatot.</p>
               </motion.div>
             ) : (
               <form onSubmit={handleSubmit} className="bg-white rounded-3xl p-8 shadow-card space-y-5">

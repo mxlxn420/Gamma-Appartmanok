@@ -39,28 +39,28 @@ export default async function PricingSection() {
 
         {/* Legalacsonyabb ár */}
         <AnimatedSection className="flex flex-col items-center mb-12">
-          <div className="bg-forest-900 rounded-3xl px-12 py-10 text-center shadow-luxury max-w-sm w-full">
-            <p className="text-xs font-medium tracking-[0.15em] uppercase text-cream/50 mb-3">
+          <div className="bg-forest-300 rounded-3xl px-12 py-10 text-center shadow-luxury max-w-sm w-full border border-forest-400">
+            <p className="text-xs font-medium tracking-[0.15em] uppercase text-forest-700 mb-3">
               Már ennyitől
             </p>
             {minPrice ? (
               <>
                 <div className="flex items-baseline justify-center gap-2 mb-1">
-                  <span className="font-serif text-5xl font-light text-cream">
+                  <span className="font-serif text-5xl font-light text-forest-900">
                     {formatPrice(minPrice)}
                   </span>
-                  <span className="text-cream/60 text-lg">Ft</span>
+                  <span className="text-forest-700 text-lg">Ft</span>
                 </div>
-                <p className="text-cream/50 text-sm mb-6">/ éj</p>
+                <p className="text-forest-600 text-sm mb-6">/ éj</p>
               </>
             ) : (
-              <p className="text-cream/60 text-sm mb-6">Hamarosan</p>
+              <p className="text-forest-700 text-sm mb-6">Hamarosan</p>
             )}
             <ul className="space-y-2 mb-6 text-left">
               {["Jakuzzi a tetőteraszon", "Ingyenes WiFi", "Ingyenes parkoló"].map((f) => (
                 <li key={f} className="flex items-center gap-2 text-sm">
                   <Check size={14} className="text-terra-400 shrink-0" />
-                  <span className="text-cream/80">{f}</span>
+                  <span className="text-forest-800">{f}</span>
                 </li>
               ))}
             </ul>
