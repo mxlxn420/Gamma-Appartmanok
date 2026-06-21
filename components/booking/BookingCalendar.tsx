@@ -335,9 +335,9 @@ export default function BookingCalendar({ apartmentGuests, onBack, onNext }: Pro
             },
           }}
           modifiersStyles={{
-            booked:       { backgroundColor: "#e8d0bc", color: "#543018", textDecoration: "line-through", cursor: "not-allowed", opacity: 0.7 },
-            tooSoon:      { backgroundColor: "#e8d0bc", color: "#543018", textDecoration: "line-through", cursor: "not-allowed", opacity: 0.7 },
-            checkoutOnly: { backgroundImage: "linear-gradient(135deg, #fff 50%, #e8d0bc 50%)", backgroundColor: "transparent", color: "#543018", cursor: "pointer" },
+            booked:       { backgroundColor: "#ede4c4", color: "#6a5018", textDecoration: "line-through", cursor: "not-allowed", opacity: 0.7 },
+            tooSoon:      { backgroundColor: "#ede4c4", color: "#6a5018", textDecoration: "line-through", cursor: "not-allowed", opacity: 0.7 },
+            checkoutOnly: { backgroundImage: "linear-gradient(135deg, #fff 50%, #ede4c4 50%)", backgroundColor: "transparent", color: "#6a5018", cursor: "pointer" },
           }}
           styles={{ months: { gap: "1rem" } }}
         />
@@ -352,7 +352,7 @@ export default function BookingCalendar({ apartmentGuests, onBack, onNext }: Pro
             <span className="w-3.5 h-3.5 rounded-full bg-terra-200 inline-block" /> Foglalt
           </div>
           <div className="flex items-center gap-2 text-xs text-stone-500">
-            <span className="w-3.5 h-3.5 rounded-full inline-block" style={{ backgroundImage: "linear-gradient(135deg, #fff 50%, #e8d0bc 50%)", border: "1px solid #c0a080" }} /> Csak távozás
+            <span className="w-3.5 h-3.5 rounded-full inline-block" style={{ backgroundImage: "linear-gradient(135deg, #fff 50%, #ede4c4 50%)", border: "1px solid #ceb87c" }} /> Csak távozás
           </div>
         </div>
       </div>

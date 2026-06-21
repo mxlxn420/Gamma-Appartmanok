@@ -45,7 +45,7 @@ export default function Navbar() {
       <motion.header
         className="fixed top-0 left-0 right-0 z-50 border-b"
         animate={isScrolled || !isHeroPage
-          ? { backgroundColor: "rgba(84,48,24,0.97)", backdropFilter: "blur(20px)", borderColor: "rgba(255,255,255,0.06)" }
+          ? { backgroundColor: "rgba(106,80,24,0.97)", backdropFilter: "blur(20px)", borderColor: "rgba(255,255,255,0.06)" }
           : { backgroundColor: "rgba(0,0,0,0)", backdropFilter: "blur(0px)", borderColor: "rgba(255,255,255,0)" }
         }
         transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}

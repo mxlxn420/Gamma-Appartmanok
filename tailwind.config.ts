@@ -10,17 +10,17 @@ const config: Config = {
     extend: {
       colors: {
         forest: {
-          50:  "#f5ece4",
-          100: "#e8d0bc",
-          200: "#d6b89c",
-          300: "#c0a080",
-          400: "#ac8868",
-          500: "#987458",
-          600: "#886248",
-          700: "#765238",
-          800: "#664228",
-          900: "#543018",
-          950: "#381e0a",
+          50:  "#faf5e8",
+          100: "#ede4c4",
+          200: "#decfa0",
+          300: "#ceb87c",
+          400: "#bca464",
+          500: "#aa9050",
+          600: "#9a8040",
+          700: "#8a7030",
+          800: "#7a6024",
+          900: "#6a5018",
+          950: "#483608",
         },
         cream: {
           50:  "#fdfaf4",
@@ -64,9 +64,9 @@ const config: Config = {
         "display-md":  ["clamp(1.75rem, 3vw, 2.5rem)", { lineHeight: "1.2",  letterSpacing: "-0.01em" }],
       },
       boxShadow: {
-        "luxury":     "0 25px 50px -12px rgba(84, 48, 24, 0.18)",
-        "card":       "0 4px 24px rgba(84, 48, 24, 0.08)",
-        "card-hover": "0 12px 40px rgba(84, 48, 24, 0.16)",
+        "luxury":     "0 25px 50px -12px rgba(106, 80, 24, 0.18)",
+        "card":       "0 4px 24px rgba(106, 80, 24, 0.08)",
+        "card-hover": "0 12px 40px rgba(106, 80, 24, 0.16)",
       },
       borderRadius: {
         "4xl": "2rem",
