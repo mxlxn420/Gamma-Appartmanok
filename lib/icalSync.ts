@@ -72,7 +72,10 @@ export async function syncIcalFeeds(): Promise<SyncResult[]> {
     if (!url) continue;
 
     try {
-      const res = await fetch(url, { cache: "no-store" });
+      const res = await fetch(url, {
+        cache: "no-store",
+        headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" },
+      });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const events = parseIcal(await res.text());
 
@@ -113,7 +116,10 @@ export async function syncIcalFeeds(): Promise<SyncResult[]> {
       });
       if (!apartment) throw new Error(`Apartman nem található: ${apartmentSlug}`);
 
-      const res = await fetch(url, { cache: "no-store" });
+      const res = await fetch(url, {
+        cache: "no-store",
+        headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" },
+      });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const events = parseIcal(await res.text());
 
