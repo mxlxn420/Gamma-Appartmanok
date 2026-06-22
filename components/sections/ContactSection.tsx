@@ -44,9 +44,16 @@ export default function ContactSection() {
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [privacyConsent, setPrivacyConsent] = useState(false);
+  const [consentError, setConsentError] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!privacyConsent) {
+      setConsentError(true);
+      return;
+    }
+    setConsentError(false);
     setLoading(true);
     setError(null);
 
@@ -161,19 +168,25 @@ export default function ContactSection() {
                   <textarea className="input-base resize-none" rows={5} placeholder="Írjon nekünk..." required
                     value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} />
                 </div>
-                <div className="flex items-start gap-3">
-                  <input
-                    type="checkbox"
-                    id="privacy-consent"
-                    required
-                    className="mt-1 accent-terra-400 shrink-0"
-                  />
-                  <label htmlFor="privacy-consent" className="text-sm text-stone-500 leading-relaxed">
-                    Hozzájárulok adataim kezeléséhez a megkeresésem megválaszolása céljából.{" "}
-                    <a href="/adatvedelem" target="_blank" className="underline text-forest-700 hover:text-forest-900">
-                      Adatvédelmi tájékoztató
-                    </a>
-                  </label>
+                <div className="space-y-1">
+                  <div className="flex items-start gap-3">
+                    <input
+                      type="checkbox"
+                      id="privacy-consent"
+                      checked={privacyConsent}
+                      onChange={(e) => { setPrivacyConsent(e.target.checked); setConsentError(false); }}
+                      className="mt-1 w-4 h-4 shrink-0 cursor-pointer rounded"
+                    />
+                    <label htmlFor="privacy-consent" className="text-sm text-stone-500 leading-relaxed cursor-pointer">
+                      Hozzájárulok adataim kezeléséhez a megkeresésem megválaszolása céljából.{" "}
+                      <a href="/adatvedelem" target="_blank" className="underline text-forest-700 hover:text-forest-900">
+                        Adatvédelmi tájékoztató
+                      </a>
+                    </label>
+                  </div>
+                  {consentError && (
+                    <p className="text-red-500 text-xs pl-7">Kérjük fogadja el az adatkezelési nyilatkozatot.</p>
+                  )}
                 </div>
                 <button
                   type="submit"
