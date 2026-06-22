@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { MapPin, Phone, Mail, Send } from "lucide-react";
+import { MapPin, Phone, Mail, Send, Check } from "lucide-react";
 import AnimatedSection from "@/components/ui/AnimatedSection";
 
 function GoogleMap() {
@@ -170,15 +170,18 @@ export default function ContactSection() {
                 </div>
                 <div className="space-y-1">
                   <div className="flex items-start gap-3">
-                    <input
-                      type="checkbox"
-                      id="privacy-consent"
-                      checked={privacyConsent}
-                      onChange={(e) => { setPrivacyConsent(e.target.checked); setConsentError(false); }}
-                      className="mt-1 shrink-0 cursor-pointer"
-                      style={{ width: 16, height: 16, appearance: "auto" }}
-                    />
-                    <label htmlFor="privacy-consent" className="text-sm text-stone-500 leading-relaxed cursor-pointer">
+                    <div
+                      role="checkbox"
+                      aria-checked={privacyConsent}
+                      tabIndex={0}
+                      onClick={() => { setPrivacyConsent(!privacyConsent); setConsentError(false); }}
+                      onKeyDown={(e) => { if (e.key === " " || e.key === "Enter") { e.preventDefault(); setPrivacyConsent(!privacyConsent); setConsentError(false); } }}
+                      className={`mt-1 shrink-0 cursor-pointer rounded border-2 flex items-center justify-center transition-colors ${privacyConsent ? "bg-terra-400 border-terra-400" : consentError ? "border-red-400 bg-white" : "border-stone-300 bg-white"}`}
+                      style={{ width: 18, height: 18, minWidth: 18, minHeight: 18 }}
+                    >
+                      {privacyConsent && <Check size={11} strokeWidth={3} className="text-white" />}
+                    </div>
+                    <label onClick={() => { setPrivacyConsent(!privacyConsent); setConsentError(false); }} className="text-sm text-stone-500 leading-relaxed cursor-pointer">
                       Hozzájárulok adataim kezeléséhez a megkeresésem megválaszolása céljából.{" "}
                       <a href="/adatvedelem" target="_blank" className="underline text-forest-700 hover:text-forest-900">
                         Adatvédelmi tájékoztató
