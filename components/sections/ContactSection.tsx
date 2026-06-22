@@ -175,7 +175,8 @@ export default function ContactSection() {
                       id="privacy-consent"
                       checked={privacyConsent}
                       onChange={(e) => { setPrivacyConsent(e.target.checked); setConsentError(false); }}
-                      className="mt-1 w-4 h-4 shrink-0 cursor-pointer rounded"
+                      className="mt-1 shrink-0 cursor-pointer"
+                      style={{ width: 16, height: 16, appearance: "auto" }}
                     />
                     <label htmlFor="privacy-consent" className="text-sm text-stone-500 leading-relaxed cursor-pointer">
                       Hozzájárulok adataim kezeléséhez a megkeresésem megválaszolása céljából.{" "}
