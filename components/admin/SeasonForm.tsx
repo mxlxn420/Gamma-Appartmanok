@@ -87,11 +87,11 @@ export default function SeasonForm({
 
         {/* Név */}
         <div className="md:col-span-2">
-          <label className="text-xs text-cream/60 uppercase tracking-wider block mb-1.5">
+          <label className="text-xs text-forest-600 uppercase tracking-wider block mb-1.5">
             Szezon neve *
           </label>
           <input
-            className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-cream placeholder:text-cream/40 text-sm focus:outline-none focus:border-white/50"
+            className="w-full px-4 py-3 rounded-xl bg-white border border-forest-300 text-forest-900 placeholder:text-forest-400 text-sm focus:outline-none focus:border-forest-500"
             placeholder="pl. Nyári főszezon, Karácsonyi időszak..."
             value={rule.name}
             onChange={(e) => setRule({ ...rule, name: e.target.value })}
@@ -105,18 +105,18 @@ export default function SeasonForm({
               className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all ${
                 rule.featured
                   ? "bg-terra-400 border-terra-400"
-                  : "bg-white/10 border-white/30 group-hover:border-white/50"
+                  : "bg-white border-forest-300 group-hover:border-forest-500"
               }`}
               onClick={() => setRule({ ...rule, featured: !rule.featured })}
             >
               {rule.featured && <Star size={11} className="text-white fill-white" />}
             </div>
             <div>
-              <p className="text-sm font-medium text-cream flex items-center gap-1.5">
+              <p className="text-sm font-medium text-forest-900 flex items-center gap-1.5">
                 <Star size={13} className="text-terra-300" />
                 Kiemelt időszak
               </p>
-              <p className="text-xs text-cream/50">
+              <p className="text-xs text-forest-500">
                 Pl. karácsony, húsvét – felülírja az átfedő szezonokat
               </p>
             </div>
@@ -125,7 +125,7 @@ export default function SeasonForm({
 
         {/* Dátumtól */}
         <div className="relative">
-          <label className="text-xs text-cream/60 uppercase tracking-wider block mb-1.5">
+          <label className="text-xs text-forest-600 uppercase tracking-wider block mb-1.5">
             <Calendar size={11} className="inline mr-1" />Kezdő dátum
           </label>
           <button
@@ -133,8 +133,8 @@ export default function SeasonForm({
             onClick={() => setDatePanel(datePanel === `${panelPrefix}-from` ? null : `${panelPrefix}-from`)}
             className={`w-full px-4 py-3 rounded-xl border text-sm text-left transition-all ${
               rule.dateFrom
-                ? "bg-white/15 border-white/50 text-cream"
-                : "bg-white/10 border-white/20 text-cream/50"
+                ? "bg-forest-50 border-forest-500 text-forest-900"
+                : "bg-white border-forest-300 text-forest-500"
             }`}
           >
             <Calendar size={13} className="inline mr-2 opacity-60" />
@@ -185,7 +185,7 @@ export default function SeasonForm({
 
         {/* Dátumig */}
         <div className="relative">
-          <label className="text-xs text-cream/60 uppercase tracking-wider block mb-1.5">
+          <label className="text-xs text-forest-600 uppercase tracking-wider block mb-1.5">
             <Calendar size={11} className="inline mr-1" />Záró dátum
           </label>
           <button
@@ -193,8 +193,8 @@ export default function SeasonForm({
             onClick={() => setDatePanel(datePanel === `${panelPrefix}-to` ? null : `${panelPrefix}-to`)}
             className={`w-full px-4 py-3 rounded-xl border text-sm text-left transition-all ${
               rule.dateTo
-                ? "bg-white/15 border-white/50 text-cream"
-                : "bg-white/10 border-white/20 text-cream/50"
+                ? "bg-forest-50 border-forest-500 text-forest-900"
+                : "bg-white border-forest-300 text-forest-500"
             }`}
           >
             <Calendar size={13} className="inline mr-2 opacity-60" />
@@ -245,8 +245,8 @@ export default function SeasonForm({
         </div>
 
         {/* Árinfó */}
-        <div className="md:col-span-2 bg-white/5 rounded-xl p-3 text-xs text-cream/60 flex items-center gap-2">
-          <Star size={12} className={rule.featured ? "text-terra-300" : "text-cream/30"} />
+        <div className="md:col-span-2 bg-forest-50 rounded-xl p-3 text-xs text-forest-600 flex items-center gap-2">
+          <Star size={12} className={rule.featured ? "text-terra-300" : "text-forest-300"} />
           {rule.featured
             ? "Kiemelt – felülírja az átfedő szezonokat"
             : "Normál – felülírja az alap árat, de kiemelt felülírhatja"
@@ -255,34 +255,34 @@ export default function SeasonForm({
 
         {/* Árak szekció fejléc */}
         <div className="md:col-span-2">
-          <p className="text-xs text-cream/60 uppercase tracking-wider mb-1 pt-2 border-t border-white/10">
+          <p className="text-xs text-forest-600 uppercase tracking-wider mb-1 pt-2 border-t border-forest-200">
             Hétköznapi árak (Ft/éj)
           </p>
         </div>
 
         {/* Hétköznapi 1-2 fő */}
         <div>
-          <label className="text-xs text-cream/60 uppercase tracking-wider block mb-1.5">
+          <label className="text-xs text-forest-600 uppercase tracking-wider block mb-1.5">
             1–2 fő *
           </label>
           <input
             type="number"
-            className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-cream text-sm focus:outline-none focus:border-white/50"
+            className="w-full px-4 py-3 rounded-xl bg-white border border-forest-300 text-forest-900 text-sm focus:outline-none focus:border-forest-500"
             value={rule.pricePerNight || ""}
             onChange={(e) => setRule({ ...rule, pricePerNight: Number(e.target.value) })}
           />
-          <p className="text-xs text-cream/40 mt-1">Alap ár: {formatCurrency(basePrice)}</p>
+          <p className="text-xs text-forest-400 mt-1">Alap ár: {formatCurrency(basePrice)}</p>
         </div>
 
         {/* Hétköznapi 3 fő */}
         {maxGuests >= 3 && (
           <div>
-            <label className="text-xs text-cream/60 uppercase tracking-wider block mb-1.5">
+            <label className="text-xs text-forest-600 uppercase tracking-wider block mb-1.5">
               3 fő
             </label>
             <input
               type="number"
-              className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-cream text-sm focus:outline-none focus:border-white/50"
+              className="w-full px-4 py-3 rounded-xl bg-white border border-forest-300 text-forest-900 text-sm focus:outline-none focus:border-forest-500"
               placeholder="Ha üres = 1–2 fő ár"
               value={rule.price3 || ""}
               onChange={(e) => setRule({ ...rule, price3: Number(e.target.value) })}
@@ -293,12 +293,12 @@ export default function SeasonForm({
         {/* Hétköznapi 4 fő */}
         {maxGuests >= 4 && (
           <div>
-            <label className="text-xs text-cream/60 uppercase tracking-wider block mb-1.5">
+            <label className="text-xs text-forest-600 uppercase tracking-wider block mb-1.5">
               4 fő
             </label>
             <input
               type="number"
-              className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-cream text-sm focus:outline-none focus:border-white/50"
+              className="w-full px-4 py-3 rounded-xl bg-white border border-forest-300 text-forest-900 text-sm focus:outline-none focus:border-forest-500"
               placeholder="Ha üres = 3 fő ár"
               value={rule.price4 || ""}
               onChange={(e) => setRule({ ...rule, price4: Number(e.target.value) })}
@@ -309,12 +309,12 @@ export default function SeasonForm({
         {/* Hétköznapi 5 fő */}
         {maxGuests >= 5 && (
           <div>
-            <label className="text-xs text-cream/60 uppercase tracking-wider block mb-1.5">
+            <label className="text-xs text-forest-600 uppercase tracking-wider block mb-1.5">
               5 fő
             </label>
             <input
               type="number"
-              className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-cream text-sm focus:outline-none focus:border-white/50"
+              className="w-full px-4 py-3 rounded-xl bg-white border border-forest-300 text-forest-900 text-sm focus:outline-none focus:border-forest-500"
               placeholder="Ha üres = 4 fő ár"
               value={rule.price5 || ""}
               onChange={(e) => setRule({ ...rule, price5: Number(e.target.value) })}
@@ -325,12 +325,12 @@ export default function SeasonForm({
         {/* Hétköznapi 6 fő */}
         {maxGuests >= 6 && (
           <div>
-            <label className="text-xs text-cream/60 uppercase tracking-wider block mb-1.5">
+            <label className="text-xs text-forest-600 uppercase tracking-wider block mb-1.5">
               6 fő
             </label>
             <input
               type="number"
-              className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-cream text-sm focus:outline-none focus:border-white/50"
+              className="w-full px-4 py-3 rounded-xl bg-white border border-forest-300 text-forest-900 text-sm focus:outline-none focus:border-forest-500"
               placeholder="Ha üres = 5 fő ár"
               value={rule.price6 || ""}
               onChange={(e) => setRule({ ...rule, price6: Number(e.target.value) })}
@@ -340,19 +340,19 @@ export default function SeasonForm({
 
         {/* Hétvégi árak fejléc */}
         <div className="md:col-span-2">
-          <p className="text-xs text-cream/60 uppercase tracking-wider mb-1 pt-2 border-t border-white/10">
+          <p className="text-xs text-forest-600 uppercase tracking-wider mb-1 pt-2 border-t border-forest-200">
             {"H\u00E9tv\u00E9gi \u00E1rak (P\u2013Szo, Ft/\u00E9j)"}
           </p>
         </div>
 
         {/* Hétvégi 1-2 fő */}
         <div>
-          <label className="text-xs text-cream/60 uppercase tracking-wider block mb-1.5">
+          <label className="text-xs text-forest-600 uppercase tracking-wider block mb-1.5">
             1–2 fő
           </label>
           <input
             type="number"
-            className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-cream text-sm focus:outline-none focus:border-white/50"
+            className="w-full px-4 py-3 rounded-xl bg-white border border-forest-300 text-forest-900 text-sm focus:outline-none focus:border-forest-500"
             placeholder="Ha üres = hétköznapi"
             value={rule.weekendPrice || ""}
             onChange={(e) => setRule({ ...rule, weekendPrice: Number(e.target.value) })}
@@ -362,12 +362,12 @@ export default function SeasonForm({
         {/* Hétvégi 3 fő */}
         {maxGuests >= 3 && (
           <div>
-            <label className="text-xs text-cream/60 uppercase tracking-wider block mb-1.5">
+            <label className="text-xs text-forest-600 uppercase tracking-wider block mb-1.5">
               3 fő
             </label>
             <input
               type="number"
-              className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-cream text-sm focus:outline-none focus:border-white/50"
+              className="w-full px-4 py-3 rounded-xl bg-white border border-forest-300 text-forest-900 text-sm focus:outline-none focus:border-forest-500"
               placeholder="Ha üres = 3 fő hétköznapi"
               value={rule.weekendPrice3 || ""}
               onChange={(e) => setRule({ ...rule, weekendPrice3: Number(e.target.value) })}
@@ -378,12 +378,12 @@ export default function SeasonForm({
         {/* Hétvégi 4 fő */}
         {maxGuests >= 4 && (
           <div>
-            <label className="text-xs text-cream/60 uppercase tracking-wider block mb-1.5">
+            <label className="text-xs text-forest-600 uppercase tracking-wider block mb-1.5">
               4 fő
             </label>
             <input
               type="number"
-              className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-cream text-sm focus:outline-none focus:border-white/50"
+              className="w-full px-4 py-3 rounded-xl bg-white border border-forest-300 text-forest-900 text-sm focus:outline-none focus:border-forest-500"
               placeholder="Ha üres = 4 fő hétköznapi"
               value={rule.weekendPrice4 || ""}
               onChange={(e) => setRule({ ...rule, weekendPrice4: Number(e.target.value) })}
@@ -394,12 +394,12 @@ export default function SeasonForm({
         {/* Hétvégi 5 fő */}
         {maxGuests >= 5 && (
           <div>
-            <label className="text-xs text-cream/60 uppercase tracking-wider block mb-1.5">
+            <label className="text-xs text-forest-600 uppercase tracking-wider block mb-1.5">
               5 fő
             </label>
             <input
               type="number"
-              className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-cream text-sm focus:outline-none focus:border-white/50"
+              className="w-full px-4 py-3 rounded-xl bg-white border border-forest-300 text-forest-900 text-sm focus:outline-none focus:border-forest-500"
               placeholder="Ha üres = 5 fő hétköznapi"
               value={rule.weekendPrice5 || ""}
               onChange={(e) => setRule({ ...rule, weekendPrice5: Number(e.target.value) })}
@@ -410,12 +410,12 @@ export default function SeasonForm({
         {/* Hétvégi 6 fő */}
         {maxGuests >= 6 && (
           <div>
-            <label className="text-xs text-cream/60 uppercase tracking-wider block mb-1.5">
+            <label className="text-xs text-forest-600 uppercase tracking-wider block mb-1.5">
               6 fő
             </label>
             <input
               type="number"
-              className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-cream text-sm focus:outline-none focus:border-white/50"
+              className="w-full px-4 py-3 rounded-xl bg-white border border-forest-300 text-forest-900 text-sm focus:outline-none focus:border-forest-500"
               placeholder="Ha üres = 6 fő hétköznapi"
               value={rule.weekendPrice6 || ""}
               onChange={(e) => setRule({ ...rule, weekendPrice6: Number(e.target.value) })}
@@ -425,12 +425,12 @@ export default function SeasonForm({
 
         {/* Min éjszaka */}
         <div>
-          <label className="text-xs text-cream/60 uppercase tracking-wider block mb-1.5">
+          <label className="text-xs text-forest-600 uppercase tracking-wider block mb-1.5">
             Minimum éjszaka
           </label>
           <input
             type="number"
-            className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-cream text-sm focus:outline-none focus:border-white/50"
+            className="w-full px-4 py-3 rounded-xl bg-white border border-forest-300 text-forest-900 text-sm focus:outline-none focus:border-forest-500"
             value={rule.minNights}
             onChange={(e) => setRule({ ...rule, minNights: Number(e.target.value) })}
           />
@@ -438,17 +438,17 @@ export default function SeasonForm({
 
         {/* Min előfoglalás */}
         <div>
-          <label className="text-xs text-cream/60 uppercase tracking-wider block mb-1.5">
+          <label className="text-xs text-forest-600 uppercase tracking-wider block mb-1.5">
             Min. előfoglalás (nap)
           </label>
           <input
             type="number"
             min={0}
-            className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-cream text-sm focus:outline-none focus:border-white/50"
+            className="w-full px-4 py-3 rounded-xl bg-white border border-forest-300 text-forest-900 text-sm focus:outline-none focus:border-forest-500"
             value={rule.minAdvanceDays}
             onChange={(e) => setRule({ ...rule, minAdvanceDays: Math.max(0, Number(e.target.value)) })}
           />
-          <p className="text-xs text-cream/40 mt-1">
+          <p className="text-xs text-forest-400 mt-1">
             {rule.minAdvanceDays === 0 ? "Azonnal foglalható" : `Legalább ${rule.minAdvanceDays} nappal előre`}
           </p>
         </div>
@@ -457,11 +457,11 @@ export default function SeasonForm({
         {/* Előleg / lemondási szabály */}
         {policies.length > 0 && (
           <div className="md:col-span-2">
-            <label className="text-xs text-cream/60 uppercase tracking-wider block mb-1.5">
+            <label className="text-xs text-forest-600 uppercase tracking-wider block mb-1.5">
               Előleg és lemondási szabály
             </label>
             <select
-              className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-cream text-sm focus:outline-none focus:border-white/50"
+              className="w-full px-4 py-3 rounded-xl bg-white border border-forest-300 text-forest-900 text-sm focus:outline-none focus:border-forest-500"
               value={rule.policyId ?? ""}
               onChange={(e) => setRule({ ...rule, policyId: e.target.value || null })}
             >
@@ -476,7 +476,7 @@ export default function SeasonForm({
         {/* Aktív (csak szerkesztésnél) */}
         {!isNew && (
           <div className="md:col-span-2">
-            <label className="flex items-center gap-2 text-sm text-cream/70 cursor-pointer">
+            <label className="flex items-center gap-2 text-sm text-forest-700 cursor-pointer">
               <input
                 type="checkbox"
                 checked={rule.isActive}
@@ -506,10 +506,10 @@ export default function SeasonForm({
       </div>
 
       {/* Gombok */}
-      <div className="flex gap-3 pt-2 border-t border-white/10">
+      <div className="flex gap-3 pt-2 border-t border-forest-200">
         <button
           onClick={onCancel}
-          className="px-6 py-3 rounded-full border border-white/30 text-cream text-sm hover:bg-white/10 transition-colors"
+          className="px-6 py-3 rounded-full border border-forest-300 text-forest-900 text-sm hover:bg-white transition-colors"
         >
           Mégse
         </button>
