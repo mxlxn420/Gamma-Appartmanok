@@ -29,7 +29,7 @@ export default function AdminLogin() {
         router.push("/admin");
         router.refresh();
       } else {
-        setError("Hibás jelszó!");
+        setError(res.status === 429 ? "Túl sok próbálkozás, próbáld újra később." : "Hibás jelszó!");
       }
     } catch {
       setError("Szerver hiba. Próbálja újra!");
