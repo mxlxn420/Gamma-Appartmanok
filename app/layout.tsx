@@ -48,13 +48,13 @@ export const metadata: Metadata = {
     siteName:    "Gamma Apartmanok",
     title:       "Gamma Apartmanok | Prémium pihenés Miskolctapolcán",
     description: "4 különálló prémium apartman Miskolctapolcán – időpontra foglalható privát jacuzzival, panorámás tetőterasszal. Max. 20 fő.",
-    images: [{ url: "/og-image.jpg?v=2", width: 1200, height: 630, alt: "Gamma Apartmanok Miskolctapolca" }],
+    images: [{ url: "/og-image.jpg?v=4", width: 1200, height: 630, alt: "Gamma Apartmanok Miskolctapolca" }],
   },
   twitter: {
     card:        "summary_large_image",
     title:       "Gamma Apartmanok | Prémium pihenés Miskolctapolcán",
     description: "4 különálló prémium apartman Miskolctapolcán – időpontra foglalható privát jacuzzival, panorámás tetőterasszal. Max. 20 fő.",
-    images:      ["/og-image.jpg?v=2"],
+    images:      ["/og-image.jpg?v=4"],
   },
   robots: {
     index:  true,
