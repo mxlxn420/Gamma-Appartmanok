@@ -1,9 +1,11 @@
 import { cookies }               from "next/headers";
 import { redirect }              from "next/navigation";
+import dynamic                   from "next/dynamic";
 import { prisma }                from "@/lib/prisma";
-import AdminCalendar             from "@/components/admin/AdminCalendar";
-import AdminPriceCalendar        from "@/components/admin/AdminPriceCalendar";
-import AdminBookingCalendar      from "@/components/admin/AdminBookingCalendar";
+
+const AdminCalendar        = dynamic(() => import("@/components/admin/AdminCalendar"));
+const AdminPriceCalendar   = dynamic(() => import("@/components/admin/AdminPriceCalendar"));
+const AdminBookingCalendar = dynamic(() => import("@/components/admin/AdminBookingCalendar"));
 
 export default async function AdminNaptar() {
   const cookieStore = await cookies();
@@ -11,9 +13,12 @@ export default async function AdminNaptar() {
 
   if (!token) redirect("/admin/login");
 
+  const historyCutoff = new Date();
+  historyCutoff.setMonth(historyCutoff.getMonth() - 3);
+
   const [bookings, blocked, rules, apartments] = await Promise.all([
     prisma.booking.findMany({
-      where:   { status: { in: ["PENDING", "CONFIRMED", "PAID"] } },
+      where:   { status: { in: ["PENDING", "CONFIRMED", "PAID"] }, checkOut: { gte: historyCutoff } },
       select:  { checkIn: true, checkOut: true, status: true, guestName: true, id: true,
                  apartments: { select: { apartmentId: true } } },
       orderBy: { checkIn: "asc" },

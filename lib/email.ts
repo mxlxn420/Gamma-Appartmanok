@@ -1,3 +1,15 @@
+import { fetchWithTimeout } from "@/lib/fetchWithTimeout";
+
+const RESEND_TIMEOUT_MS = 8000;
+
+function resendFetch(payload: object, apiKey: string): Promise<Response> {
+  return fetchWithTimeout("https://api.resend.com/emails", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${apiKey}` },
+    body: JSON.stringify(payload),
+  }, RESEND_TIMEOUT_MS);
+}
+
 function escapeHtml(str: string): string {
   return str
     .replace(/&/g, "&amp;")
@@ -1008,68 +1020,54 @@ export async function sendDepositConfirmationEmail(params: {
     return;
   }
 
-  const guestRes = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${RESEND_API_KEY}`,
-    },
-    body: JSON.stringify({
+  const [guestResult, adminResult] = await Promise.allSettled([
+    resendFetch({
       from: `Gamma Apartmanok <${FROM_EMAIL}>`,
       to: [params.guestEmail],
       reply_to: [ADMIN_EMAIL],
       subject: `✅ Előleg befizetve – ${params.bookingId}`,
       html,
-    }),
-  });
-
-  if (!guestRes.ok) {
-    const err = await guestRes.text();
-    console.error("Előleg email hiba (vendég):", err);
-  }
-
-  // Admin másolat
-  const adminRes = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${RESEND_API_KEY}`,
-    },
-    body: JSON.stringify({
+    }, RESEND_API_KEY),
+    resendFetch({
       from: `Gamma Apartmanok Foglalások <${FROM_EMAIL}>`,
       to: [ADMIN_EMAIL],
       subject: `✅ Előleg befizetve: ${params.guestName} – ${params.bookingId}`,
       html,
-    }),
-  });
+    }, RESEND_API_KEY),
+  ]);
 
-  if (!adminRes.ok) {
-    const err = await adminRes.text();
-    console.error("Előleg email hiba (admin):", err);
+  if (guestResult.status === "rejected") {
+    console.error("Előleg email hiba (vendég, hálózat/timeout):", guestResult.reason);
+  } else if (!guestResult.value.ok) {
+    console.error("Előleg email hiba (vendég):", await guestResult.value.text());
+  }
+
+  if (adminResult.status === "rejected") {
+    console.error("Előleg email hiba (admin, hálózat/timeout):", adminResult.reason);
+  } else if (!adminResult.value.ok) {
+    console.error("Előleg email hiba (admin):", await adminResult.value.text());
   }
 }
 
 // ─── FŐ EMAIL KÜLDŐ FÜGGVÉNY ─────────────────────────────────
 async function sendWithRetry(payload: object, apiKey: string, label: string): Promise<void> {
-  const send = () => fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${apiKey}` },
-    body: JSON.stringify(payload),
-  });
-
-  const res = await send();
-  if (res.ok) return;
-
-  const err1 = await res.text();
-  console.warn(`${label} email hiba (1. próba):`, err1, "– újrapróbálkozás 2mp múlva...");
+  try {
+    const res = await resendFetch(payload, apiKey);
+    if (res.ok) return;
+    console.warn(`${label} email hiba (1. próba):`, await res.text(), "– újrapróbálkozás 2mp múlva...");
+  } catch (err) {
+    console.warn(`${label} email hiba (1. próba, hálózat/timeout):`, err, "– újrapróbálkozás 2mp múlva...");
+  }
 
   await new Promise((r) => setTimeout(r, 2000));
 
-  const res2 = await send();
-  if (res2.ok) return;
-
-  const err2 = await res2.text();
-  console.error(`${label} email hiba (2. próba, feladva):`, err2);
+  try {
+    const res2 = await resendFetch(payload, apiKey);
+    if (res2.ok) return;
+    console.error(`${label} email hiba (2. próba, feladva):`, await res2.text());
+  } catch (err) {
+    console.error(`${label} email hiba (2. próba, feladva, hálózat/timeout):`, err);
+  }
 }
 
 export async function sendBookingEmails(data: BookingEmailData, options?: { adminOnly?: boolean }): Promise<void> {
@@ -1085,23 +1083,27 @@ export async function sendBookingEmails(data: BookingEmailData, options?: { admi
     return;
   }
 
+  const sends: Promise<void>[] = [
+    sendWithRetry({
+      from: `Gamma Apartmanok Foglalások <${FROM_EMAIL}>`,
+      to: [ADMIN_EMAIL],
+      subject: `🏡 Új foglalás: ${data.guestName} – ${formatDate(data.checkIn)}`,
+      html: adminEmailHtml(data),
+    }, RESEND_API_KEY, "Admin"),
+  ];
+
   if (!options?.adminOnly) {
-    await sendWithRetry({
+    sends.push(sendWithRetry({
       from: `Gamma Apartmanok <${FROM_EMAIL}>`,
       to: [data.guestEmail],
       bcc: [ADMIN_EMAIL],
       reply_to: [ADMIN_EMAIL],
       subject: `✓ Foglalás visszaigazolása – ${data.bookingId}`,
       html: guestEmailHtml(data),
-    }, RESEND_API_KEY, "Vendég");
+    }, RESEND_API_KEY, "Vendég"));
   }
 
-  await sendWithRetry({
-    from: `Gamma Apartmanok Foglalások <${FROM_EMAIL}>`,
-    to: [ADMIN_EMAIL],
-    subject: `🏡 Új foglalás: ${data.guestName} – ${formatDate(data.checkIn)}`,
-    html: adminEmailHtml(data),
-  }, RESEND_API_KEY, "Admin");
+  await Promise.all(sends);
 }
 
 // ─── TÖRLÉSI / ELUTASÍTÁSI EMAIL ─────────────────────────────
@@ -1204,24 +1206,20 @@ export async function sendCancellationEmail(params: {
     return;
   }
 
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${RESEND_API_KEY}`,
-    },
-    body: JSON.stringify({
+  try {
+    const res = await resendFetch({
       from: `Gamma Apartmanok <${FROM_EMAIL}>`,
       to: [params.guestEmail],
       reply_to: [ADMIN_EMAIL],
       subject: `Foglalás törölve – ${params.bookingId}`,
       html: cancellationEmailHtml(params),
-    }),
-  });
+    }, RESEND_API_KEY);
 
-  if (!res.ok) {
-    const err = await res.text();
-    console.error("Törlési email hiba:", err);
+    if (!res.ok) {
+      console.error("Törlési email hiba:", await res.text());
+    }
+  } catch (err) {
+    console.error("Törlési email hiba (hálózat/timeout):", err);
   }
 }
 
@@ -1372,17 +1370,13 @@ export async function sendPaymentReminderEmail(params: {
     return;
   }
 
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${RESEND_API_KEY}` },
-    body: JSON.stringify({
-      from: `Gamma Apartmanok <${FROM_EMAIL}>`,
-      to: [params.guestEmail],
-      reply_to: [ADMIN_EMAIL],
-      subject: `⏰ Fizetési emlékeztető – ${params.bookingId}`,
-      html,
-    }),
-  });
+  const res = await resendFetch({
+    from: `Gamma Apartmanok <${FROM_EMAIL}>`,
+    to: [params.guestEmail],
+    reply_to: [ADMIN_EMAIL],
+    subject: `⏰ Fizetési emlékeztető – ${params.bookingId}`,
+    html,
+  }, RESEND_API_KEY);
 
   if (!res.ok) {
     const err = await res.text();
@@ -1436,19 +1430,18 @@ export async function sendIcalSyncErrorEmail(
     return;
   }
 
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${RESEND_API_KEY}` },
-    body: JSON.stringify({
+  try {
+    const res = await resendFetch({
       from: `Gamma Apartmanok <${FROM_EMAIL}>`,
       to: [ICAL_SYNC_ALERT_EMAIL],
       subject: "⚠️ iCal szinkronizációs hiba",
       html,
-    }),
-  });
+    }, RESEND_API_KEY);
 
-  if (!res.ok) {
-    const err = await res.text();
-    console.error("iCal szinkron hiba email hiba:", err);
+    if (!res.ok) {
+      console.error("iCal szinkron hiba email hiba:", await res.text());
+    }
+  } catch (err) {
+    console.error("iCal szinkron hiba email hiba (hálózat/timeout):", err);
   }
 }

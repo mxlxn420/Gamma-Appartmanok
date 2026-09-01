@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
+import { fetchWithTimeout } from "@/lib/fetchWithTimeout";
+
+const RESEND_TIMEOUT_MS = 8000;
 
 const ratelimit = new Ratelimit({
   redis: Redis.fromEnv(),
@@ -63,13 +66,14 @@ export async function POST(req: NextRequest) {
     const FROM_EMAIL     = process.env.FROM_EMAIL  ?? "onboarding@resend.dev";
 
     if (RESEND_API_KEY && RESEND_API_KEY !== "re_xxxxxxxxxxxx") {
-      await fetch("https://api.resend.com/emails", {
-        method:  "POST",
-        headers: {
-          "Content-Type":  "application/json",
-          "Authorization": "Bearer " + RESEND_API_KEY,
-        },
-        body: JSON.stringify({
+      try {
+        await fetchWithTimeout("https://api.resend.com/emails", {
+          method:  "POST",
+          headers: {
+            "Content-Type":  "application/json",
+            "Authorization": "Bearer " + RESEND_API_KEY,
+          },
+          body: JSON.stringify({
           from:     "Gamma Apartmanok <" + FROM_EMAIL + ">",
           to:       [ADMIN_EMAIL],
           reply_to: email,
@@ -111,8 +115,11 @@ export async function POST(req: NextRequest) {
               </div>
             </div>
           `,
-        }),
-      });
+          }),
+        }, RESEND_TIMEOUT_MS);
+      } catch (err) {
+        console.error("Kapcsolat email hiba (hálózat/timeout):", err);
+      }
     } else {
       console.log("📧 [DEV] Kapcsolat email szimulálva:", { name, email, message });
     }

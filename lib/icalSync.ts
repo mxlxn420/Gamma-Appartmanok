@@ -1,4 +1,10 @@
 import { prisma } from "@/lib/prisma";
+import { fetchWithTimeout } from "@/lib/fetchWithTimeout";
+
+const ICAL_FETCH_TIMEOUT_MS = 10000;
+const ICAL_FETCH_HEADERS = {
+  "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+};
 
 // Globális (apartman-független) források
 const GLOBAL_SOURCES = [
@@ -63,92 +69,87 @@ export interface SyncResult {
   error?:      string;
 }
 
+async function syncGlobalSource({ envKey, label }: (typeof GLOBAL_SOURCES)[number]): Promise<SyncResult | null> {
+  const url = process.env[envKey];
+  if (!url) return null;
+
+  try {
+    const res = await fetchWithTimeout(url, { cache: "no-store", headers: ICAL_FETCH_HEADERS }, ICAL_FETCH_TIMEOUT_MS);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const events = parseIcal(await res.text());
+
+    const deleted = await prisma.blockedPeriod.deleteMany({
+      where: { reason: { startsWith: `[${label}]` }, apartmentId: null },
+    });
+
+    if (events.length > 0) {
+      await prisma.blockedPeriod.createMany({
+        data: events.map((e) => ({
+          dateFrom: e.start,
+          dateTo:   e.end,
+          reason:   `[${label}] ${e.summary}`,
+        })),
+      });
+    }
+
+    return { source: label, added: events.length, removed: deleted.count };
+  } catch (err: unknown) {
+    return {
+      source:  label,
+      added:   0,
+      removed: 0,
+      error:   err instanceof Error ? err.message : "Ismeretlen hiba",
+    };
+  }
+}
+
+async function syncApartmentSource({ envKey, label, apartmentSlug }: (typeof APARTMENT_SOURCES)[number]): Promise<SyncResult | null> {
+  const url = process.env[envKey];
+  if (!url) return null;
+
+  try {
+    const apartment = await prisma.apartment.findUnique({
+      where: { slug: apartmentSlug },
+      select: { id: true },
+    });
+    if (!apartment) throw new Error(`Apartman nem található: ${apartmentSlug}`);
+
+    const res = await fetchWithTimeout(url, { cache: "no-store", headers: ICAL_FETCH_HEADERS }, ICAL_FETCH_TIMEOUT_MS);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const events = parseIcal(await res.text());
+
+    const deleted = await prisma.blockedPeriod.deleteMany({
+      where: { reason: { startsWith: `[${label}]` }, apartmentId: apartment.id },
+    });
+
+    if (events.length > 0) {
+      await prisma.blockedPeriod.createMany({
+        data: events.map((e) => ({
+          dateFrom:    e.start,
+          dateTo:      e.end,
+          reason:      `[${label}] ${e.summary}`,
+          apartmentId: apartment.id,
+        })),
+      });
+    }
+
+    return { source: label, apartment: apartmentSlug, added: events.length, removed: deleted.count };
+  } catch (err: unknown) {
+    return {
+      source:    label,
+      apartment: apartmentSlug,
+      added:     0,
+      removed:   0,
+      error:     err instanceof Error ? err.message : "Ismeretlen hiba",
+    };
+  }
+}
+
 export async function syncIcalFeeds(): Promise<SyncResult[]> {
-  const results: SyncResult[] = [];
+  const [globalResults, apartmentResults] = await Promise.all([
+    Promise.all(GLOBAL_SOURCES.map(syncGlobalSource)),
+    Promise.all(APARTMENT_SOURCES.map(syncApartmentSource)),
+  ]);
 
-  // 1. Globális szinkron
-  for (const { envKey, label } of GLOBAL_SOURCES) {
-    const url = process.env[envKey];
-    if (!url) continue;
-
-    try {
-      const res = await fetch(url, {
-        cache: "no-store",
-        headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" },
-      });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const events = parseIcal(await res.text());
-
-      const deleted = await prisma.blockedPeriod.deleteMany({
-        where: { reason: { startsWith: `[${label}]` }, apartmentId: null },
-      });
-
-      if (events.length > 0) {
-        await prisma.blockedPeriod.createMany({
-          data: events.map((e) => ({
-            dateFrom: e.start,
-            dateTo:   e.end,
-            reason:   `[${label}] ${e.summary}`,
-          })),
-        });
-      }
-
-      results.push({ source: label, added: events.length, removed: deleted.count });
-    } catch (err: unknown) {
-      results.push({
-        source:  label,
-        added:   0,
-        removed: 0,
-        error:   err instanceof Error ? err.message : "Ismeretlen hiba",
-      });
-    }
-  }
-
-  // 2. Per-apartman szinkron (csak ha az env var be van állítva)
-  for (const { envKey, label, apartmentSlug } of APARTMENT_SOURCES) {
-    const url = process.env[envKey];
-    if (!url) continue;
-
-    try {
-      const apartment = await prisma.apartment.findUnique({
-        where: { slug: apartmentSlug },
-        select: { id: true },
-      });
-      if (!apartment) throw new Error(`Apartman nem található: ${apartmentSlug}`);
-
-      const res = await fetch(url, {
-        cache: "no-store",
-        headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" },
-      });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const events = parseIcal(await res.text());
-
-      const deleted = await prisma.blockedPeriod.deleteMany({
-        where: { reason: { startsWith: `[${label}]` }, apartmentId: apartment.id },
-      });
-
-      if (events.length > 0) {
-        await prisma.blockedPeriod.createMany({
-          data: events.map((e) => ({
-            dateFrom:    e.start,
-            dateTo:      e.end,
-            reason:      `[${label}] ${e.summary}`,
-            apartmentId: apartment.id,
-          })),
-        });
-      }
-
-      results.push({ source: label, apartment: apartmentSlug, added: events.length, removed: deleted.count });
-    } catch (err: unknown) {
-      results.push({
-        source:    label,
-        apartment: apartmentSlug,
-        added:     0,
-        removed:   0,
-        error:     err instanceof Error ? err.message : "Ismeretlen hiba",
-      });
-    }
-  }
-
-  return results;
+  return [...globalResults, ...apartmentResults].filter((r): r is SyncResult => r !== null);
 }

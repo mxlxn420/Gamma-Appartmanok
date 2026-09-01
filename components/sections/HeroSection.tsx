@@ -4,7 +4,7 @@ import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
-import { ICON_MAP } from "@/components/admin/AdminHero";
+import { ICON_MAP } from "@/lib/heroIconMap";
 
 interface Highlight {
   icon:  string;
@@ -67,7 +67,7 @@ export default function HeroSection({ data }: Props) {
               src={slides[current].src}
               alt={slides[current].alt}
               fill
-              priority
+              priority={current === 0}
               quality={85}
               sizes="100vw"
               className="object-cover object-center"

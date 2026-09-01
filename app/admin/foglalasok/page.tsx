@@ -1,9 +1,11 @@
 import { cookies }       from "next/headers";
 import { redirect }      from "next/navigation";
+import dynamic           from "next/dynamic";
 import { prisma }        from "@/lib/prisma";
-import AdminBookingsList from "@/components/admin/AdminBookingsList";
 import Link              from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+
+const AdminBookingsList = dynamic(() => import("@/components/admin/AdminBookingsList"));
 
 const PAGE_SIZE = 50;
 

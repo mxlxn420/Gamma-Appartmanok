@@ -6,6 +6,10 @@ import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { stripe } from "@/lib/stripe";
 
+// A POST a Stripe session létrehozása mellett a foglalás-visszaigazoló emaileket is várja
+// (max. ~8mp timeout + 1 retry emailenként, párhuzamosan) — ehhez elég ráhagyás.
+export const maxDuration = 30;
+
 const ratelimit = new Ratelimit({
   redis: Redis.fromEnv(),
   limiter: Ratelimit.fixedWindow(3, "60 m"),
@@ -25,22 +29,33 @@ async function isAuthed(): Promise<boolean> {
   return !!token && !!expectedToken && token === expectedToken;
 }
 
+const MAX_PAGE_SIZE = 100;
+
 // ─── GET ────────────────────────────────────────────────────
-export async function GET() {
+export async function GET(req: NextRequest) {
   if (!(await isAuthed())) {
     return NextResponse.json({ success: false, error: "Nincs jogosultság" }, { status: 401 });
   }
   try {
+    const { searchParams } = new URL(req.url);
+    const page     = Math.max(1, Number(searchParams.get("page")) || 1);
+    const pageSize = Math.min(MAX_PAGE_SIZE, Math.max(1, Number(searchParams.get("pageSize")) || 50));
+
     const prisma = await getPrisma();
-    const bookings = await prisma.booking.findMany({
-      orderBy: { createdAt: "desc" },
-      include: {
-        apartments: {
-          include: { apartment: { select: { id: true, name: true, slug: true } } },
+    const [bookings, total] = await Promise.all([
+      prisma.booking.findMany({
+        orderBy: { createdAt: "desc" },
+        take:    pageSize,
+        skip:    (page - 1) * pageSize,
+        include: {
+          apartments: {
+            include: { apartment: { select: { id: true, name: true, slug: true } } },
+          },
         },
-      },
-    });
-    return NextResponse.json({ success: true, data: bookings });
+      }),
+      prisma.booking.count(),
+    ]);
+    return NextResponse.json({ success: true, data: bookings, total, page, pageSize });
   } catch (error: any) {
     console.error("GET /api/bookings hiba:", error);
     return NextResponse.json(

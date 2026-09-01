@@ -1,8 +1,10 @@
 import { cookies }       from "next/headers";
 import { redirect }      from "next/navigation";
+import dynamic           from "next/dynamic";
 import { prisma }        from "@/lib/prisma";
 import AdminStats        from "@/components/admin/AdminStats";
-import AdminBookingsList from "@/components/admin/AdminBookingsList";
+
+const AdminBookingsList = dynamic(() => import("@/components/admin/AdminBookingsList"));
 
 export default async function AdminDashboard() {
   const cookieStore = await cookies();
@@ -12,7 +14,7 @@ export default async function AdminDashboard() {
     redirect("/admin/login");
   }
 
-  const [allBookings, pendingCount, revenueData] = await Promise.all([
+  const [allBookings, totalCount, pendingCount, revenueData] = await Promise.all([
     prisma.booking.findMany({
       orderBy: { createdAt: "desc" },
       take: 10,
@@ -22,6 +24,7 @@ export default async function AdminDashboard() {
         },
       },
     }),
+    prisma.booking.count(),
     prisma.booking.count({
       where: { status: "PENDING" },
     }),
@@ -32,7 +35,7 @@ export default async function AdminDashboard() {
   ]);
 
   const stats = {
-    total:   allBookings.length,
+    total:   totalCount,
     pending: pendingCount,
     revenue: revenueData._sum.totalPrice ?? 0,
   };

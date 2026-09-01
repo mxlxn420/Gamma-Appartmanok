@@ -1,25 +1,8 @@
-import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { Check, ArrowRight } from "lucide-react";
 import AnimatedSection from "@/components/ui/AnimatedSection";
 
-export default async function PricingSection() {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  const rules = await prisma.pricingRule.findMany({
-    where: {
-      isActive: true,
-      dateFrom: { not: null },
-      dateTo: { gte: today },
-    },
-    orderBy: { priority: "asc" },
-  });
-
-  const minPrice = rules.length > 0
-    ? Math.min(...rules.map((r) => r.pricePerNight))
-    : null;
-
+export default function PricingSection({ minPrice }: { minPrice: number | null }) {
   const formatPrice = (price: number) =>
     new Intl.NumberFormat("hu-HU").format(price);
 

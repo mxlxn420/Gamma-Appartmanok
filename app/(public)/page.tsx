@@ -69,12 +69,27 @@ const ABOUT_DEFAULTS = {
 };
 
 export default async function HomePage() {
-  const [heroRow, aboutRow, amenitiesRow, galleryRow] = await Promise.all([
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const [heroRow, aboutRow, amenitiesRow, galleryRow, pricingRules] = await Promise.all([
     prisma.heroContent.findUnique({ where: { id: "singleton" } }),
     prisma.aboutContent.findUnique({ where: { id: "singleton" } }),
     prisma.amenitiesContent.findUnique({ where: { id: "singleton" } }),
     prisma.galleryContent.findUnique({ where: { id: "singleton" } }),
+    prisma.pricingRule.findMany({
+      where: {
+        isActive: true,
+        dateFrom: { not: null },
+        dateTo: { gte: today },
+      },
+      orderBy: { priority: "asc" },
+    }),
   ]);
+
+  const minPrice = pricingRules.length > 0
+    ? Math.min(...pricingRules.map((r) => r.pricePerNight))
+    : null;
 
   const heroData = {
     subtitle:      heroRow?.subtitle      ?? HERO_DEFAULTS.subtitle,
@@ -112,7 +127,7 @@ export default async function HomePage() {
       <AboutSection data={aboutData} />
       <AmenitiesSection data={amenitiesData} />
       <GallerySection featured={galleryFeatured ?? undefined} />
-      <PricingSection />
+      <PricingSection minPrice={minPrice} />
       <ReviewsSection />
       <FaqSection />
       <NeighborhoodSection />

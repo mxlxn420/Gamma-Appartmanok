@@ -1,15 +1,11 @@
-"use client";
-
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Utensils, ShoppingBag, Waves, Landmark, IceCream, ExternalLink, Phone, MapPin, Clock } from "lucide-react";
 import AnimatedSection from "@/components/ui/AnimatedSection";
+import NeighborhoodTabs, { type NeighborhoodCategory } from "@/components/sections/NeighborhoodTabs";
 
-const CATEGORIES = [
+const CATEGORIES: NeighborhoodCategory[] = [
   {
     id: "ettermek",
     label: "Éttermek",
-    Icon: Utensils,
+    icon: "Utensils",
     items: [
       { name: "Rossita Pizzéria",                  note: "Házhozszállítás H–P: 11:00 – 22:00 Sz–V: 12:00 – 22:00",           address: "Miskolc, Meggyesalja utca 18, 3530",  url: "https://rossita.hu/",                               phone: "+36 46 344 300",    desc: "Miskolc egyik legjobb és legnépszerűbb étterme, széles ételválasztékkal. Házhozszállítást is vállalnak, szóval ha egy estét inkább otthon töltenél, ez a legjobb választás." },
       { name: "Calimbra Wellness Hotel étterme",   note: "Gyalog H–V: 0:00 – 23:59",                                         address: "Bencések útja 9, 3519",               url: "https://calimbrawellnesshotel.hu/gasztronomia",     phone: "+36 46 799 200",    desc: "A szomszédos wellness hotel elegáns étterme, ahol minőségi fogásokat kínálnak kellemes környezetben. Gyalog is elérhető az apartmanoktól." },
@@ -23,7 +19,7 @@ const CATEGORIES = [
   {
     id: "boltok",
     label: "Boltok",
-    Icon: ShoppingBag,
+    icon: "ShoppingBag",
     items: [
       { name: "Tapolca ABC", note: "Gyalog · 6:30 – 20:00",                          address: "Fagyöngy utca 3, 3519",      url: null, phone: null, desc: "Kis kisbolt gyalog pár percre, ha gyorsan kellene valami. Reggel 6-tól este 10-ig nyitva, szóval reggeli hozzávalókért vagy esti snackért tökéletes." },
       { name: "Lidl",        note: "Autóval · H–Sz: 6:30 – 21:00 V: 7:00 – 19:00",         address: "Csermőkei út 207, 3533",   url: null, phone: null, desc: "A legközelebbi nagyobb bevásárlási lehetőség autóval pár percre. Ha komolyabb bevásárlást tervezel, ide érdemes menni." },
@@ -32,7 +28,7 @@ const CATEGORIES = [
   {
     id: "furdok",
     label: "Fürdők",
-    Icon: Waves,
+    icon: "Waves",
     items: [
       { name: "Miskolctapolca Barlangfürdő",      note: "Termálvíz", address: "Pazár István sétány 1, 3519",              url: "https://barlangfurdo.hu/",    phone: "+36 46 560 030",  desc: "Az egyik leghíresebb magyar gyógyfürdő, amely egy természetes barlangrendszerben található. Egyedülálló élmény, a meleg gyógyvíz és a barlang különleges hangulata garantáltan emlékezetes marad." },
       { name: "Ellipsum Élmény és Strandfürdő",   note: "Csúszdák · HCV: 10:00 – 19:00",  address: "Aradi sétány 1, 3519",        url: "https://ellipsumfurdo.hu/",   phone: "+36 70 339 3288", desc: "Modern strandfürdő csúszdákkal, élménymedencékkel és strandolási lehetőséggel. Családoknak és fiataloknak egyaránt remek szórakozást nyújt." },
@@ -41,7 +37,7 @@ const CATEGORIES = [
   {
     id: "cukraszdak",
     label: "Cukrászdák",
-    Icon: IceCream,
+    icon: "IceCream",
     items: [
       { name: "A Fekvő Róka Cukrászda", note: "Gyalog H–V: 11:00 – 19:00", address: "Pazár István sétány 2, 3519", url: "https://fekvoroka.hu/", phone: "+36 30 080 7444", desc: "Miskolctapolca egyik legújabb és leghangulatosabb cukrászdája, közvetlenül a Barlangfürdő kapujában. A klasszikus francia hangulatot idéző enteriőrben hagyományos és mentes desszertek, helyben főzött fagylalt, gourmet franciapirítós és kávékülönlegességek várnak. Tökéletes megálló egy barlangfürdős nap előtt vagy után." },
       { name: "Balajti Cukrászda",      note: "Gyalog H–V: 11:00 – 19:00", address: "Miskolctapolcai út 41/B, 3519", url: "https://balajticukraszda.hu/", phone: "+36 46 785 882", desc: "Több mint 50 éves családi hagyomány áll e cukrászda mögött — a történet id. Balajti László forrói cukrászdájával kezdődött, és 2006 óta Miskolctapolcán folytatódik, változatlan receptúrával és minőséggel. Fürdőzés után különösen jól esik kiülni a napos teraszra egy adag frissen készült fagylaltra vagy süteményre." },
@@ -50,7 +46,7 @@ const CATEGORIES = [
   {
     id: "latnivalok",
     label: "Látnivalók",
-    Icon: Landmark,
+    icon: "Landmark",
     items: [
       { name: "Miskolci Állatkert és Kultúrpark",       note: "H–V: 9:00 – 19:00",                     address: "Miskolc, Csanyik-völgy, 3535", url: "https://www.miskolczoo.hu/", phone: "+36 46 332 121", desc: "130 állatfajt bemutató kert a Bükk lábánál, közel 700 egyeddel. Gyerekekkel különösen ajánlott, egész napot el lehet tölteni." },
       { name: "Színháztörténeti és Színészmúzeum",      note: "K–V: 9:00 – 17:00",                     address: "Miskolc, Déryné utca 3, 3525", url: "https://hermuz.hu/hullamok_hatan/", phone: "+36 70 943 2916", desc: "Magyarország első kőszínházának helyén álló múzeum, interaktív kiállításokkal és archív felvételekkel. Kultúra iránt érdeklődőknek kötelező." },
@@ -72,10 +68,6 @@ const CATEGORIES = [
 ];
 
 export default function NeighborhoodSection() {
-  const [activeTab, setActiveTab] = useState<string>(CATEGORIES[0].id);
-
-  const active = CATEGORIES.find((c) => c.id === activeTab)!;
-
   return (
     <section id="kornyek" className="section-py bg-cream">
       <div className="container-custom max-w-4xl">
@@ -90,83 +82,7 @@ export default function NeighborhoodSection() {
           </p>
         </AnimatedSection>
 
-        {/* Tab gombok */}
-        <div className="flex flex-wrap justify-center gap-2 mb-10">
-          {CATEGORIES.map(({ id, label, Icon }) => (
-            <button
-              key={id}
-              onClick={() => setActiveTab(id)}
-              className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-200 ${
-                activeTab === id
-                  ? "bg-forest-600 text-white shadow-md"
-                  : "bg-stone-100 text-stone-600 hover:bg-stone-200"
-              }`}
-            >
-              <Icon size={15} />
-              {label}
-            </button>
-          ))}
-        </div>
-
-        {/* Tartalom */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeTab}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.25 }}
-            className="grid grid-cols-1 sm:grid-cols-2 gap-3"
-          >
-            {active.items.map((item, i) => (
-              <div
-                key={i}
-                className="bg-stone-50 rounded-2xl p-4 border border-stone-100 hover:border-forest-200 hover:shadow-card transition-all duration-200"
-              >
-                <div className="flex items-start justify-between gap-2">
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium text-stone-800 text-sm leading-snug">{item.name}</p>
-                    {item.note && (
-                      <span className="inline-flex items-center gap-1 text-xs text-forest-600 bg-forest-50 px-2 py-0.5 rounded-full mt-1">
-                        <Clock size={10} />
-                        {item.note}
-                      </span>
-                    )}
-                    {item.desc && (
-                      <p className="text-xs text-stone-500 mt-2 leading-relaxed">{item.desc}</p>
-                    )}
-                    {item.address && (
-                      <p className="flex items-center gap-1 text-xs text-stone-400 mt-1.5">
-                        <MapPin size={10} className="shrink-0" />
-                        {item.address}
-                      </p>
-                    )}
-                    {item.phone && (
-                      <a
-                        href={`tel:${item.phone.replace(/\s/g, "")}`}
-                        className="flex items-center gap-1 text-xs text-stone-400 hover:text-forest-700 mt-1 transition-colors"
-                      >
-                        <Phone size={10} className="shrink-0" />
-                        {item.phone}
-                      </a>
-                    )}
-                  </div>
-                  {item.url && (
-                    <a
-                      href={item.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="shrink-0 w-8 h-8 rounded-xl bg-terra-400 flex items-center justify-center hover:bg-terra-500 transition-colors"
-                      aria-label={`${item.name} webhely`}
-                    >
-                      <ExternalLink size={13} className="text-cream" />
-                    </a>
-                  )}
-                </div>
-              </div>
-            ))}
-          </motion.div>
-        </AnimatePresence>
+        <NeighborhoodTabs categories={CATEGORIES} />
 
       </div>
     </section>
