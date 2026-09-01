@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth";
 
@@ -48,6 +49,8 @@ export async function PATCH(req: NextRequest) {
       update: { subtitle, heading, description, items },
       create: { id: "singleton", subtitle, heading, description, items },
     });
+
+    revalidatePath("/");
 
     return NextResponse.json({ success: true, data: amenities });
   } catch (error: any) {

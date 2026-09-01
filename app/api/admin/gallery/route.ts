@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth";
 import { deleteFromR2 } from "@/lib/r2";
@@ -83,6 +84,9 @@ export async function PATCH(req: NextRequest) {
     for (const url of toDelete) {
       try { await deleteFromR2("gallery", url); } catch { /* nem blokkolja */ }
     }
+
+    revalidatePath("/");
+    revalidatePath("/galeria");
 
     return NextResponse.json({ success: true, data: row });
   } catch (error: any) {

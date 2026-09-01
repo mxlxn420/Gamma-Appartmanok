@@ -1,6 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth";
+
+async function revalidateCalendars(apartmentId: string | null) {
+  revalidatePath("/api/availability");
+  revalidatePath("/api/calendar.ics");
+  const apartments = await prisma.apartment.findMany({
+    where: apartmentId ? { id: apartmentId } : {},
+    select: { slug: true },
+  });
+  for (const a of apartments) revalidatePath(`/api/calendar/${a.slug}`);
+}
 
 export async function GET() {
   const unauth = await requireAuth();
@@ -49,6 +60,8 @@ export async function POST(req: NextRequest) {
         apartmentId: apartmentId || null,
       },
     });
+
+    await revalidateCalendars(blocked.apartmentId ?? null);
 
     return NextResponse.json({ success: true, data: {
       ...blocked,

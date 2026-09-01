@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth";
 
@@ -80,6 +81,9 @@ export async function POST(req: NextRequest) {
         apartmentId:     body.apartmentId ?? null,
       },
     });
+
+    revalidatePath("/api/pricing");
+    revalidatePath("/");
 
     return NextResponse.json({
       success: true,

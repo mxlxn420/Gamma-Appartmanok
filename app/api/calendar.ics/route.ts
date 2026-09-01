@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 function formatIcalDate(date: Date): string {
   return date.toISOString().replace(/[-:]/g, "").slice(0, 8);
@@ -66,7 +66,7 @@ export async function GET() {
   return new NextResponse(lines.join("\r\n"), {
     headers: {
       "Content-Type": "text/calendar; charset=utf-8",
-      "Cache-Control": "no-cache, no-store",
+      "Cache-Control": "public, max-age=300, s-maxage=600, stale-while-revalidate=1800",
     },
   });
 }

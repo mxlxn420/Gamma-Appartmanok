@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth";
 
@@ -34,5 +35,6 @@ export async function POST(req: Request) {
       imageUrl:    imageUrl ?? null,
     },
   });
+  revalidatePath("/api/extra-services");
   return NextResponse.json({ success: true, data: service });
 }

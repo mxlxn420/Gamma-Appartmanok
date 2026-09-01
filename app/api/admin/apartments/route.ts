@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath }            from "next/cache";
 import { prisma }                    from "@/lib/prisma";
 import { requireAuth }               from "@/lib/auth";
 import { deleteFromR2 }              from "@/lib/r2";
@@ -37,6 +38,9 @@ export async function PATCH(req: NextRequest) {
   if (oldCoverImage && r2Base && oldCoverImage.startsWith(r2Base) && oldCoverImage !== (coverImage || null)) {
     try { await deleteFromR2("apartments", oldCoverImage); } catch { /* nem blokkolja */ }
   }
+
+  revalidatePath("/api/apartments");
+  revalidatePath("/");
 
   return NextResponse.json({ success: true, data: updated });
 }

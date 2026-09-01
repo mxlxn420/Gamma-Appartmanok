@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth";
 
@@ -70,6 +71,9 @@ export async function PATCH(
     });
 
 
+    revalidatePath("/api/pricing");
+    revalidatePath("/");
+
     return NextResponse.json({
       success: true,
       data: {
@@ -103,6 +107,8 @@ export async function DELETE(
   const { id } = await params;
   try {
     await prisma.pricingRule.delete({ where: { id } });
+    revalidatePath("/api/pricing");
+    revalidatePath("/");
     return NextResponse.json({ success: true });
   } catch (error: any) {
     return NextResponse.json(

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth";
 
@@ -49,6 +50,8 @@ export async function POST(req: NextRequest) {
         lastMinuteDays:  isLastMinute ? (Number(body.lastMinuteDays) || 7) : 7,
       },
     });
+
+    revalidatePath("/api/discounts");
 
     return NextResponse.json({ success: true, data: discount });
   } catch (error: any) {

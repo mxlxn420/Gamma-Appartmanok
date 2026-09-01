@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { differenceInCalendarDays } from "date-fns";
 import { cookies } from "next/headers";
+import { revalidatePath } from "next/cache";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { stripe } from "@/lib/stripe";
@@ -315,6 +316,18 @@ export async function POST(req: NextRequest) {
 
       return b;
     });
+
+    // Naptár cache frissítése — a most lefoglalt apartman(ok) iCal/availability route-jai
+    // azonnal friss adatot adjanak, a cache bevezetése (revalidate) mellett is.
+    revalidatePath("/api/availability");
+    revalidatePath("/api/calendar.ics");
+    if (selectedApartmentIds.length > 0) {
+      const bookedApartments = await prisma.apartment.findMany({
+        where: { id: { in: selectedApartmentIds } },
+        select: { slug: true },
+      });
+      for (const a of bookedApartments) revalidatePath(`/api/calendar/${a.slug}`);
+    }
 
     // Apartman nevek + árlebontás lekérése az emailhez (transaction után)
     let emailApartments: { name: string; numberOfGuests: number; numberOfAdults: number; breakdown: { count: number; rate: number }[]; aptBasePrice: number; aptTouristTax: number }[] = [];

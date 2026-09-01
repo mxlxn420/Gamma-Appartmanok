@@ -2,12 +2,23 @@ import { NextRequest, NextResponse } from "next/server";
 import { differenceInCalendarDays, format } from "date-fns";
 import { prisma } from "@/lib/prisma";
 import { cookies } from "next/headers";
+import { revalidatePath } from "next/cache";
 
 async function isAuthed(): Promise<boolean> {
   const store         = await cookies();
   const token         = store.get("admin_token")?.value;
   const expectedToken = process.env.ADMIN_SESSION_TOKEN;
   return !!token && !!expectedToken && token === expectedToken;
+}
+
+async function revalidateBookingCalendars(bookingId: string) {
+  revalidatePath("/api/availability");
+  revalidatePath("/api/calendar.ics");
+  const links = await prisma.bookingApartment.findMany({
+    where: { bookingId },
+    select: { apartment: { select: { slug: true } } },
+  });
+  for (const l of links) revalidatePath(`/api/calendar/${l.apartment.slug}`);
 }
 
 // ─── GET – egy foglalás adatai ───────────────────────────────
@@ -78,6 +89,8 @@ export async function PATCH(
           console.error("Törlési email hiba (státusz mentve):", emailErr);
         }
       }
+
+      await revalidateBookingCalendars(id);
 
       return NextResponse.json({ success: true, data: updated });
     }
@@ -169,6 +182,8 @@ export async function PATCH(
       });
     }
 
+    await revalidateBookingCalendars(id);
+
     return NextResponse.json({ success: true, data: updated });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error?.message }, { status: 500 });
@@ -203,6 +218,7 @@ export async function DELETE(
         console.error("Törlési email hiba:", emailErr);
       }
     }
+    await revalidateBookingCalendars(id);
     await prisma.booking.delete({ where: { id } });
     return NextResponse.json({ success: true });
   } catch (error: any) {

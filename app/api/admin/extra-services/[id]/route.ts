@@ -1,4 +1,5 @@
-import { NextResponse }  from "next/server";
+import { NextResponse }    from "next/server";
+import { revalidatePath }  from "next/cache";
 import { prisma }        from "@/lib/prisma";
 import { deleteFromR2 }  from "@/lib/r2";
 import { requireAuth }   from "@/lib/auth";
@@ -37,6 +38,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     try { await deleteFromR2(BUCKET, oldImageUrl); } catch { /* nem blokkolja */ }
   }
 
+  revalidatePath("/api/extra-services");
   return NextResponse.json({ success: true, data: service });
 }
 
@@ -56,5 +58,6 @@ export async function DELETE(_req: Request, { params }: { params: Promise<{ id: 
   }
 
   await prisma.extraService.delete({ where: { id } });
+  revalidatePath("/api/extra-services");
   return NextResponse.json({ success: true });
 }
