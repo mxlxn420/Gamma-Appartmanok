@@ -115,9 +115,12 @@ export default function Footer() {
       <div className="border-t border-forest-300">
         <div className="container-custom py-5 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-forest-600">
           <p>© {new Date().getFullYear()} Gamma Apartmanok – Minden jog fenntartva.</p>
-          <div className="flex gap-6">
+          <div className="flex items-center gap-6">
             <Link href="/adatvedelem" className="hover:text-forest-900 transition-colors">Adatvédelem</Link>
             <Link href="/aszf" className="hover:text-forest-900 transition-colors">ÁSZF</Link>
+            <a href="https://martismilan.hu" target="_blank" rel="noopener noreferrer" className="hover:text-forest-900 transition-colors">
+              Készítette: Martis Milán
+            </a>
           </div>
         </div>
       </div>
