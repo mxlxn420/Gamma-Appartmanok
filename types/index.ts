@@ -81,6 +81,7 @@ export interface PricingRule {
   dateTo?: Date | string | null;
   minNights: number;
   weekendMinNights: number;
+  minAdvanceDays?: number;
   childPrice2to6: number;
   childPrice6to12: number;
   extraGuestFee: number;

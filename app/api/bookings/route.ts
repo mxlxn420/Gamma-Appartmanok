@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { stripe } from "@/lib/stripe";
-import { getRuleForNight, getNightRateFromRule, getMinNightsForNight, TOURIST_TAX, CLEANING_FEE } from "@/lib/utils";
+import { getRuleForApartmentNight, getStrictestPolicy, getNightRateFromRule, getMinNightsForNight, TOURIST_TAX, CLEANING_FEE } from "@/lib/utils";
 
 // A POST a Stripe session létrehozása mellett a foglalás-visszaigazoló emaileket is várja
 // (max. ~8mp timeout + 1 retry emailenként, párhuzamosan) — ehhez elég ráhagyás.
@@ -174,18 +174,23 @@ export async function POST(req: NextRequest) {
 
     const prisma = await getPrisma();
 
-    // MinNights ellenőrzés: minden éjszakára megnézzük a szezon szabályát
     const allRules = await prisma.pricingRule.findMany({
       where: { isActive: true },
       orderBy: { priority: "desc" },
+      include: { policy: true },
     });
+    const selectedApartmentIds = apartmentGuests.map(a => a.id);
+    // Éjszakánkénti szabály: apartman-specifikus szabály előnyben, utána a globális
+    const ruleFor = (date: Date, aptId: string) => getRuleForApartmentNight(date, allRules, aptId);
+
+    // MinNights ellenőrzés: minden éjszakára és apartmanra megnézzük a szezon szabályát
     let effectiveMinNights = 1;
     const cur = new Date(checkInDate);
     while (cur < checkOutDate) {
-      const rule =
-        allRules.find((r) => r.dateFrom && r.dateTo && cur >= r.dateFrom && cur <= r.dateTo) ??
-        allRules.find((r) => !r.dateFrom && !r.dateTo);
-      if (rule) effectiveMinNights = Math.max(effectiveMinNights, getMinNightsForNight(rule, cur));
+      for (const aptId of selectedApartmentIds) {
+        const rule = ruleFor(cur, aptId);
+        if (rule) effectiveMinNights = Math.max(effectiveMinNights, getMinNightsForNight(rule, cur));
+      }
       cur.setDate(cur.getDate() + 1);
     }
     if (nights < effectiveMinNights) {
@@ -195,9 +200,19 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Min. előfoglalás: több apartmannál a legtöbb nap érvényes
+    const minAdvanceDays = Math.max(0, ...selectedApartmentIds.map((id) => ruleFor(checkInDate, id)?.minAdvanceDays ?? 0));
+    const earliestCheckIn = new Date(todayUTC);
+    earliestCheckIn.setDate(earliestCheckIn.getDate() + minAdvanceDays);
+    if (checkInDate < earliestCheckIn) {
+      return NextResponse.json(
+        { success: false, error: `Erre a dátumra legalább ${minAdvanceDays} nappal előre lehet foglalni!` },
+        { status: 400 }
+      );
+    }
+
     // Ütközés ellenőrzés — csak a kiválasztott apartmanokra
     // Kizárjuk a 2 óránál régebbi kártyás PENDING foglalásokat (Stripe session lejárt)
-    const selectedApartmentIds = apartmentGuests.map(a => a.id);
     const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000);
     const staleCardPendingFilter = {
       NOT: {
@@ -250,22 +265,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Előleg kiszámítása az érvényes árrule policy-ja alapján
-    // Először szezon-specifikus szabályt keresünk, ha nincs, akkor az alapértelmezettet
-    const periodRule = await prisma.pricingRule.findFirst({
-      where: {
-        isActive: true,
-        dateFrom: { not: null, lte: checkInDate },
-        dateTo:   { not: null, gte: checkInDate },
-      },
-      orderBy: { priority: "desc" },
-      include: { policy: true },
-    });
-    const applicableRule = periodRule ?? await prisma.pricingRule.findFirst({
-      where:   { isActive: true, dateFrom: null, dateTo: null },
-      orderBy: { priority: "desc" },
-      include: { policy: true },
-    });
+    // Előleg / lemondási feltétel az apartmanokra érvényes szezonok policy-jából (a szigorúbb)
+    const policy = getStrictestPolicy(checkInDate, allRules, selectedApartmentIds);
     // Kedvezmény keresés — sima + last minute
     const now = new Date();
     const allDiscounts = await prisma.discount.findMany({
@@ -290,12 +291,6 @@ export async function POST(req: NextRequest) {
     const discountPercent = applicableDiscount?.discountPercent ?? 0;
 
     // ─── Szerver oldali árszámítás (a kliens által küldött árak nem megbízhatók) ───
-    // Éjszakánkénti szabály: apartman-specifikus szabály előnyben, utána a globális
-    const globalRules = allRules.filter((r) => !r.apartmentId);
-    const ruleFor = (date: Date, aptId: string) =>
-      getRuleForNight(date, allRules.filter((r) => r.apartmentId === aptId)) ??
-      getRuleForNight(date, globalRules);
-
     const apartmentBreakdowns = apartmentGuests.map((a) => {
       // personCount: felnőtt + gyerek + (baba - 1, első ingyenes)
       const personCount = a.adults + a.teens + Math.max(0, a.babies - 1);
@@ -396,8 +391,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const depositPercent  = (applicableRule as any)?.policy?.depositPercent ?? 100;
-    const freeCancelDays  = (applicableRule as any)?.policy?.freeCancelDays ?? 11;
+    const depositPercent  = policy?.depositPercent ?? 100;
+    const freeCancelDays  = policy?.freeCancelDays ?? 11;
     const depositAmount  = Math.round(finalTotal * depositPercent / 100);
 
     // Foglalás ID

@@ -44,7 +44,7 @@ export function getApplicablePricingRule(
   return active.find((r) => !r.dateFrom && !r.dateTo) ?? null;
 }
 
-export function getRuleForNight(date: Date, rules: PricingRule[]): PricingRule | null {
+export function getRuleForNight<T extends PricingRule>(date: Date, rules: T[]): T | null {
   const active  = rules.filter((r) => r.isActive).sort((a, b) => b.priority - a.priority);
   const dateStr = toDateStr(date);
   return (
@@ -53,6 +53,30 @@ export function getRuleForNight(date: Date, rules: PricingRule[]): PricingRule |
       return dateStr >= toDateStr(r.dateFrom) && dateStr <= toDateStr(r.dateTo);
     }) ?? active.find((r) => !r.dateFrom && !r.dateTo) ?? null
   );
+}
+
+// Apartman-specifikus szezon előnyben, utána a globális (ugyanaz, mint a foglalási naptárban)
+export function getRuleForApartmentNight<T extends PricingRule>(date: Date, rules: T[], apartmentId: string): T | null {
+  return (
+    getRuleForNight(date, rules.filter((r) => r.apartmentId === apartmentId)) ??
+    getRuleForNight(date, rules.filter((r) => !r.apartmentId))
+  );
+}
+
+// Több apartmanos foglalásnál a szigorúbb feltétel érvényes (külön-külön a legnagyobb érték)
+export function getStrictestPolicy<T extends PricingRule & { policy?: { depositPercent: number; freeCancelDays: number } | null }>(
+  checkIn: Date,
+  rules: T[],
+  apartmentIds: string[]
+): { depositPercent: number; freeCancelDays: number } | null {
+  const policies = apartmentIds
+    .map((id) => getRuleForApartmentNight(checkIn, rules, id)?.policy)
+    .filter((p): p is { depositPercent: number; freeCancelDays: number } => !!p);
+  if (policies.length === 0) return null;
+  return {
+    depositPercent: Math.max(...policies.map((p) => p.depositPercent)),
+    freeCancelDays: Math.max(...policies.map((p) => p.freeCancelDays)),
+  };
 }
 
 // Péntek és szombat éjszaka hétvégének számít (ugyanúgy, mint az árazásnál)

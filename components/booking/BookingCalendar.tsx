@@ -69,6 +69,11 @@ function getGlobalApplicableRule(date: Date, rules: PricingRule[]): PricingRule 
   return sorted.find(r => !r.dateFrom && !r.dateTo) ?? null;
 }
 
+// Több apartmannál a legtöbb nap érvényes
+function getMinAdvanceDays(date: Date, rules: PricingRule[], apartmentIds: string[]): number {
+  return Math.max(0, ...apartmentIds.map(id => getApplicableRuleForApartment(date, rules, id)?.minAdvanceDays ?? 0));
+}
+
 function getPriceForNight(date: Date, rule: PricingRule, personCount: number): number {
   const isWeekend = [5, 6].includes(getDay(date));
   const wkday3 = rule.price3 > 0 ? rule.price3 : rule.pricePerNight;
@@ -314,7 +319,7 @@ export default function BookingCalendar({ apartmentGuests, onBack, onNext }: Pro
           disabled={(day) => {
             const d = startOfDay(day);
             const latest  = startOfDay(addDays(new Date(), 365));
-            const advance = getGlobalApplicableRule(d, rules)?.minAdvanceDays ?? 0;
+            const advance = getMinAdvanceDays(d, rules, apartmentGuests.map(a => a.id));
             const earliest = startOfDay(addDays(new Date(), advance));
             if (d < earliest || d > latest) return true;
             return bookedRanges.some(r => d > startOfDay(r.from) && d < startOfDay(r.to));
@@ -330,7 +335,7 @@ export default function BookingCalendar({ apartmentGuests, onBack, onNext }: Pro
             },
             tooSoon: (day) => {
               const d = startOfDay(day);
-              const advance = getGlobalApplicableRule(d, rules)?.minAdvanceDays ?? 0;
+              const advance = getMinAdvanceDays(d, rules, apartmentGuests.map(a => a.id));
               const earliest = startOfDay(addDays(new Date(), advance));
               return d >= startOfDay(new Date()) && d < earliest;
             },

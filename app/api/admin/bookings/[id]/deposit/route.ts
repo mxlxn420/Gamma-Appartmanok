@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { format } from "date-fns";
 import { requireAuth } from "@/lib/auth";
+import { getStrictestPolicy } from "@/lib/utils";
 
 export async function POST(
   req: NextRequest,
@@ -46,23 +47,13 @@ export async function POST(
     });
 
     // Szezon policy lekérése (depositPercent, freeCancelDays)
-    const checkInDate = new Date(booking.checkIn);
-    const periodRule = await prisma.pricingRule.findFirst({
-      where: {
-        isActive: true,
-        dateFrom: { not: null, lte: checkInDate },
-        dateTo:   { not: null, gte: checkInDate },
-      },
-      orderBy: { priority: "desc" },
+    const policyRules = await prisma.pricingRule.findMany({
+      where:   { isActive: true },
       include: { policy: true },
     });
-    const applicableRule = periodRule ?? await prisma.pricingRule.findFirst({
-      where:   { isActive: true, dateFrom: null, dateTo: null },
-      orderBy: { priority: "desc" },
-      include: { policy: true },
-    });
-    const depositPercent = (applicableRule as any)?.policy?.depositPercent ?? 30;
-    const freeCancelDays = (applicableRule as any)?.policy?.freeCancelDays ?? 11;
+    const policy = getStrictestPolicy(new Date(booking.checkIn), policyRules, booking.apartments.map((a) => a.apartmentId));
+    const depositPercent = policy?.depositPercent ?? 30;
+    const freeCancelDays = policy?.freeCancelDays ?? 11;
 
     // Email küldés
     let emailSent = false;

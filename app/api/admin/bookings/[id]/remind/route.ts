@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { format } from "date-fns";
 import { requireAuth } from "@/lib/auth";
+import { getStrictestPolicy } from "@/lib/utils";
 
 export async function POST(
   _req: NextRequest,
@@ -21,18 +22,12 @@ export async function POST(
     if (!booking) return NextResponse.json({ success: false, error: "Foglalás nem található" }, { status: 404 });
     if (booking.depositPaidAt) return NextResponse.json({ success: false, error: "Az előleg már be van fizetve" }, { status: 409 });
 
-    const checkInDate = new Date(booking.checkIn);
-    const periodRule = await prisma.pricingRule.findFirst({
-      where: { isActive: true, dateFrom: { not: null, lte: checkInDate }, dateTo: { not: null, gte: checkInDate } },
-      orderBy: { priority: "desc" },
+    const policyRules = await prisma.pricingRule.findMany({
+      where:   { isActive: true },
       include: { policy: true },
     });
-    const applicableRule = periodRule ?? await prisma.pricingRule.findFirst({
-      where: { isActive: true, dateFrom: null, dateTo: null },
-      orderBy: { priority: "desc" },
-      include: { policy: true },
-    });
-    const freeCancelDays = (applicableRule as any)?.policy?.freeCancelDays ?? 11;
+    const policy = getStrictestPolicy(new Date(booking.checkIn), policyRules, booking.apartments.map((a) => a.apartmentId));
+    const freeCancelDays = policy?.freeCancelDays ?? 11;
 
     const { sendPaymentReminderEmail } = await import("@/lib/email");
     await sendPaymentReminderEmail({
