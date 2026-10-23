@@ -6,7 +6,7 @@ import { DayPicker, DateRange } from "react-day-picker";
 import { differenceInCalendarDays, getDay, startOfDay, addDays, format } from "date-fns";
 import { hu }                  from "date-fns/locale";
 import { ArrowRight, AlertCircle, Loader2, ChevronDown, ChevronUp } from "lucide-react";
-import { formatDateHu, formatCurrency }  from "@/lib/utils";
+import { formatDateHu, formatCurrency, getMinNightsForNight } from "@/lib/utils";
 import { useBookingStore }     from "@/store/bookingStore";
 import type { BookingData, ApartmentGuests } from "./BookingPage";
 import "react-day-picker/dist/style.css";
@@ -27,6 +27,7 @@ interface PricingRule {
   dateFrom:        string | null;
   dateTo:          string | null;
   minNights:       number;
+  weekendMinNights: number;
   minAdvanceDays:  number;
   isActive:        boolean;
   priority:        number;
@@ -125,7 +126,7 @@ function getEffectiveMinNights(checkIn: Date, checkOut: Date, rules: PricingRule
   while (cur < checkOut) {
     for (const aptId of apartmentIds) {
       const rule = getApplicableRuleForApartment(cur, rules, aptId);
-      if (rule && rule.minNights > max) max = rule.minNights;
+      if (rule) max = Math.max(max, getMinNightsForNight(rule, cur));
     }
     cur.setDate(cur.getDate() + 1);
   }

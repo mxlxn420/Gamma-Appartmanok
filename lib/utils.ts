@@ -55,6 +55,15 @@ export function getRuleForNight(date: Date, rules: PricingRule[]): PricingRule |
   );
 }
 
+// Péntek és szombat éjszaka hétvégének számít (ugyanúgy, mint az árazásnál)
+export function getMinNightsForNight(
+  rule: { minNights: number; weekendMinNights?: number | null },
+  date: Date
+): number {
+  const isWeekend = [5, 6].includes(date.getDay());
+  return isWeekend ? (rule.weekendMinNights ?? rule.minNights) : rule.minNights;
+}
+
 export function getNightRateFromRule(rule: PricingRule, date: Date, personCount: number): number {
   const isWeekend = [5, 6].includes(date.getDay());
   let tier1to2: number, tier3: number, tier4: number, tier5: number, tier6: number;

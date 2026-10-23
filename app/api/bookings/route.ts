@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { stripe } from "@/lib/stripe";
-import { getRuleForNight, getNightRateFromRule, TOURIST_TAX, CLEANING_FEE } from "@/lib/utils";
+import { getRuleForNight, getNightRateFromRule, getMinNightsForNight, TOURIST_TAX, CLEANING_FEE } from "@/lib/utils";
 
 // A POST a Stripe session létrehozása mellett a foglalás-visszaigazoló emaileket is várja
 // (max. ~8mp timeout + 1 retry emailenként, párhuzamosan) — ehhez elég ráhagyás.
@@ -185,7 +185,7 @@ export async function POST(req: NextRequest) {
       const rule =
         allRules.find((r) => r.dateFrom && r.dateTo && cur >= r.dateFrom && cur <= r.dateTo) ??
         allRules.find((r) => !r.dateFrom && !r.dateTo);
-      if (rule && rule.minNights > effectiveMinNights) effectiveMinNights = rule.minNights;
+      if (rule) effectiveMinNights = Math.max(effectiveMinNights, getMinNightsForNight(rule, cur));
       cur.setDate(cur.getDate() + 1);
     }
     if (nights < effectiveMinNights) {

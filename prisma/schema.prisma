@@ -104,6 +104,7 @@ model PricingRule {
   dateFrom        DateTime?
   dateTo          DateTime?
   minNights       Int            @default(2)
+  weekendMinNights Int           @default(2)
   minAdvanceDays  Int            @default(2)
   extraGuestFee   Float          @default(0)
   extraGuestFrom  Int            @default(3)

@@ -44,6 +44,7 @@ interface EditableRule {
   dateFrom:        Date | null;
   dateTo:          Date | null;
   minNights:       number;
+  weekendMinNights: number;
   minAdvanceDays:  number;
   isActive:        boolean;
   featured:        boolean;
@@ -98,6 +99,7 @@ export default function AdminPricing({ rules: initialRules, policies, apartments
     dateFrom:        null as Date | null,
     dateTo:          null as Date | null,
     minNights:       2,
+    weekendMinNights: 2,
     minAdvanceDays:  2,
     isActive:        true,
     featured:        false,
@@ -167,6 +169,7 @@ export default function AdminPricing({ rules: initialRules, policies, apartments
       dateFrom:        rule.dateFrom ? new Date(rule.dateFrom as string) : null,
       dateTo:          rule.dateTo   ? new Date(rule.dateTo   as string) : null,
       minNights:       rule.minNights,
+      weekendMinNights: rule.weekendMinNights ?? rule.minNights,
       minAdvanceDays:  (rule as any).minAdvanceDays ?? 2,
       isActive:        rule.isActive,
       featured:        rule.priority >= 10,
@@ -201,6 +204,7 @@ export default function AdminPricing({ rules: initialRules, policies, apartments
           dateFrom:        editRule.dateFrom ? format(editRule.dateFrom, "yyyy-MM-dd") : null,
           dateTo:          editRule.dateTo   ? format(editRule.dateTo,   "yyyy-MM-dd") : null,
           minNights:       editRule.minNights,
+          weekendMinNights: editRule.weekendMinNights,
           minAdvanceDays:  editRule.minAdvanceDays,
           isActive:        editRule.isActive,
           priority:        editRule.featured ? 10 : 5,
@@ -406,7 +410,7 @@ export default function AdminPricing({ rules: initialRules, policies, apartments
                             ? `${new Date(rule.dateFrom as string).toLocaleDateString("hu-HU")} – ${new Date(rule.dateTo as string).toLocaleDateString("hu-HU")}`
                             : "Dátum nélkül"
                           }
-                          {" · "}Min. {rule.minNights} éj
+                          {" · "}Min. {rule.minNights} éj / hétvége {rule.weekendMinNights ?? rule.minNights} éj
                           {(rule as any).policyId && policies.find((p) => p.id === (rule as any).policyId) && (
                             <span className="ml-2 bg-stone-100 text-stone-500 px-1.5 py-0.5 rounded-full text-[10px]">
                               {policies.find((p) => p.id === (rule as any).policyId)!.name}
@@ -479,7 +483,8 @@ export default function AdminPricing({ rules: initialRules, policies, apartments
                           {(rule as any).childPrice6to12 > 0 && (
                             <div><p className="text-xs text-stone-400 mb-0.5">Gyermek 6–12 év</p><p className="font-medium text-stone-700">{formatCurrency((rule as any).childPrice6to12)}/éj</p></div>
                           )}
-                          <div><p className="text-xs text-stone-400 mb-0.5">Min. éjszaka</p><p className="font-medium text-stone-700">{rule.minNights} éj</p></div>
+                          <div><p className="text-xs text-stone-400 mb-0.5">Min. éjszaka (hétköznap)</p><p className="font-medium text-stone-700">{rule.minNights} éj</p></div>
+                          <div><p className="text-xs text-stone-400 mb-0.5">Min. éjszaka (hétvége)</p><p className="font-medium text-stone-700">{rule.weekendMinNights ?? rule.minNights} éj</p></div>
                           <div><p className="text-xs text-stone-400 mb-0.5">Min. előfoglalás</p><p className="font-medium text-stone-700">{(rule as any).minAdvanceDays ?? 2} nap</p></div>
                           {(rule as any).policyId && policies.find((p) => p.id === (rule as any).policyId) && (
                             <div><p className="text-xs text-stone-400 mb-0.5">Szabály</p><p className="font-medium text-stone-700">{policies.find((p) => p.id === (rule as any).policyId)!.name}</p></div>

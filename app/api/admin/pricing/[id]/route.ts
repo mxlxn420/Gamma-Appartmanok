@@ -63,6 +63,7 @@ export async function PATCH(
         dateFrom:        body.dateFrom ? new Date(body.dateFrom) : null,
         dateTo:          body.dateTo   ? new Date(body.dateTo)   : null,
         minNights:       Number(body.minNights) > 0 ? Number(body.minNights) : 1,
+        weekendMinNights: Number(body.weekendMinNights) > 0 ? Number(body.weekendMinNights) : 1,
         minAdvanceDays:  Number(body.minAdvanceDays) ?? 2,
         isActive:        Boolean(body.isActive),
         priority:        Number(body.priority)        || 0,

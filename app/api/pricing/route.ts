@@ -29,6 +29,7 @@ export async function GET() {
       dateFrom:        r.dateFrom?.toISOString()  ?? null,
       dateTo:          r.dateTo?.toISOString()    ?? null,
       minNights:       r.minNights,
+      weekendMinNights: r.weekendMinNights,
       minAdvanceDays:  r.minAdvanceDays,
       isActive:        r.isActive,
       priority:        r.priority,

@@ -25,6 +25,7 @@ interface SeasonFormRule {
   dateFrom:        Date | null;
   dateTo:          Date | null;
   minNights:       number;
+  weekendMinNights: number;
   minAdvanceDays:  number;
   isActive:        boolean;
   featured:        boolean;
@@ -426,14 +427,32 @@ export default function SeasonForm({
         {/* Min éjszaka */}
         <div>
           <label className="text-xs text-forest-600 uppercase tracking-wider block mb-1.5">
-            Minimum éjszaka
+            Hétköznapi min. éjszaka
           </label>
           <input
             type="number"
+            min={1}
             className="w-full px-4 py-3 rounded-xl bg-white border border-forest-300 text-forest-900 text-sm focus:outline-none focus:border-forest-500"
             value={rule.minNights}
             onChange={(e) => setRule({ ...rule, minNights: Number(e.target.value) })}
           />
+        </div>
+
+        {/* Hétvégi min éjszaka */}
+        <div>
+          <label className="text-xs text-forest-600 uppercase tracking-wider block mb-1.5">
+            Hétvégi min. éjszaka
+          </label>
+          <input
+            type="number"
+            min={1}
+            className="w-full px-4 py-3 rounded-xl bg-white border border-forest-300 text-forest-900 text-sm focus:outline-none focus:border-forest-500"
+            value={rule.weekendMinNights}
+            onChange={(e) => setRule({ ...rule, weekendMinNights: Number(e.target.value) })}
+          />
+          <p className="text-xs text-forest-400 mt-1">
+            Ha a foglalás péntek vagy szombat éjszakát is tartalmaz
+          </p>
         </div>
 
         {/* Min előfoglalás */}

@@ -7,7 +7,7 @@ import {
 } from "date-fns";
 import { hu } from "date-fns/locale";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, getMinNightsForNight } from "@/lib/utils";
 import type { PricingRule } from "@/types";
 
 interface ApartmentOption {
@@ -215,6 +215,12 @@ export default function AdminPriceCalendar({ rules, apartments }: Props) {
                         <p className={`font-semibold ${colors.text}`}>{rule.minNights} éj</p>
                       </div>
                     )}
+                    {(rule.weekendMinNights ?? rule.minNights) > 1 && (
+                      <div>
+                        <p className="text-xs text-stone-400">Min. éjszaka hétvége</p>
+                        <p className={`font-semibold ${colors.text}`}>{rule.weekendMinNights ?? rule.minNights} éj</p>
+                      </div>
+                    )}
                     {(rule as any).minAdvanceDays > 0 && (
                       <div>
                         <p className="text-xs text-stone-400">Előfoglalás</p>
@@ -329,12 +335,12 @@ export default function AdminPriceCalendar({ rules, apartments }: Props) {
                         )}
                       </div>
                     )}
-                    {(rule.minNights > 1 || (rule as any).minAdvanceDays > 0) && (
+                    {(getMinNightsForNight(rule, day) > 1 || (rule as any).minAdvanceDays > 0) && (
                       <div className="border-t border-current border-opacity-10 pt-1.5 space-y-0.5">
-                        {rule.minNights > 1 && (
+                        {getMinNightsForNight(rule, day) > 1 && (
                           <div>
                             <p className="text-[10px] text-stone-400 leading-none">Min. foglalás</p>
-                            <p className={`text-xs font-semibold ${colors.text}`}>{rule.minNights} éj</p>
+                            <p className={`text-xs font-semibold ${colors.text}`}>{getMinNightsForNight(rule, day)} éj</p>
                           </div>
                         )}
                         {(rule as any).minAdvanceDays > 0 && (
