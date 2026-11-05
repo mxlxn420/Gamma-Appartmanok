@@ -3,7 +3,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { format, differenceInCalendarDays, getDay } from "date-fns";
 import { formatDateHu, formatCurrency, getApplicablePricingRule, getAdminNightBreakdown, getRuleForNight, getNightRateFromRule, CLEANING_FEE, TOURIST_TAX } from "@/lib/utils";
-import { Check, X, CreditCard, ChevronRight, Pencil, Trash2, RefreshCw, Plus, Minus, Moon, CalendarCheck, Mail } from "lucide-react";
+import Link from "next/link";
+import { Check, X, CreditCard, ChevronRight, Pencil, Trash2, RefreshCw, Plus, Minus, Moon, CalendarCheck, Mail, ArrowUp, ArrowDown, ArrowUpDown } from "lucide-react";
 import type { Booking, BookingStatus, PricingRule } from "@/types";
 
 const STATUS_CONFIG: Record<BookingStatus, { label: string; color: string }> = {
@@ -42,8 +43,15 @@ interface EditForm {
   status: BookingStatus;
 }
 
+type SortField = "checkIn" | "checkOut";
+
 interface Props {
   bookings: Booking[];
+  /** Ha meg van adva, az Érkezés/Távozás fejléc kattintható rendezés */
+  sort?: SortField;
+  dir?: "asc" | "desc";
+  sortHrefs?: Record<SortField, string>;
+  emptyText?: string;
 }
 
 function toDateInput(date: Date | string): string {
@@ -85,10 +93,13 @@ function calcPriceBreakdown(
   return { basePrice, childPrice2to6: 0, childPrice6to12: 0, guestSurcharge: 0, cleaningFee, touristTax, totalPrice, depositAmount };
 }
 
-export default function AdminBookingsList({ bookings }: Props) {
+export default function AdminBookingsList({ bookings, sort, dir, sortHrefs, emptyText }: Props) {
   type ExtraSvc = NonNullable<Booking["extraServices"]>[number];
 
   const [list, setList]               = useState<Booking[]>(bookings);
+
+  // Szűrés / lapozás után a szerver új listát ad
+  useEffect(() => { setList(bookings); }, [bookings]);
   const [loading, setLoading]         = useState<string | null>(null);
   const [selected, setSelected]       = useState<Booking | null>(null);
   const [editing, setEditing]         = useState(false);
@@ -379,7 +390,7 @@ export default function AdminBookingsList({ bookings }: Props) {
   if (!list.length) {
     return (
       <div className="bg-white rounded-2xl shadow-card p-12 text-center text-stone-400">
-        Még nincsenek foglalások.
+        {emptyText ?? "Még nincsenek foglalások."}
       </div>
     );
   }
@@ -429,9 +440,28 @@ export default function AdminBookingsList({ bookings }: Props) {
           <table className="w-full text-sm">
             <thead className="bg-stone-50 border-b border-stone-100">
               <tr>
-                {["Azonosító", "Vendég", "Érkezés", "Távozás", "Fő", "Összeg", "Státusz", ""].map((h) => (
-                  <th key={h} className="px-5 py-3.5 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">{h}</th>
-                ))}
+                {([
+                  ["Azonosító"], ["Vendég"], ["Érkezés", "checkIn"], ["Távozás", "checkOut"],
+                  ["Fő"], ["Összeg"], ["Státusz"], [""],
+                ] as [string, SortField?][]).map(([h, field]) => {
+                  const thCls = "px-5 py-3.5 text-left text-xs font-medium text-stone-500 uppercase tracking-wider";
+                  if (!field || !sortHrefs) return <th key={h} className={thCls}>{h}</th>;
+                  const active = sort === field;
+                  const Icon = !active ? ArrowUpDown : dir === "desc" ? ArrowDown : ArrowUp;
+                  return (
+                    <th key={h} className={thCls} aria-sort={active ? (dir === "desc" ? "descending" : "ascending") : "none"}>
+                      <Link
+                        href={sortHrefs[field]}
+                        scroll={false}
+                        className={`inline-flex items-center gap-1 uppercase tracking-wider hover:text-stone-800 transition-colors ${active ? "text-stone-800" : ""}`}
+                        title={`Rendezés ${h.toLowerCase()} szerint`}
+                      >
+                        {h}
+                        <Icon size={12} className={active ? "text-forest-600" : "text-stone-300"} />
+                      </Link>
+                    </th>
+                  );
+                })}
               </tr>
             </thead>
             <tbody className="divide-y divide-stone-100">
