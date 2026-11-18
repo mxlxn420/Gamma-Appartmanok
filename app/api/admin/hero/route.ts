@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse, after } from "next/server";
+import { submitIndexNow } from "@/lib/indexnow";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth";
@@ -62,6 +63,7 @@ export async function PATCH(req: NextRequest) {
 
     revalidatePath("/");
     revalidatePath("/api/hero");
+    after(() => submitIndexNow(["/"]));
 
     return NextResponse.json({ success: true, data: hero });
   } catch (error: any) {
