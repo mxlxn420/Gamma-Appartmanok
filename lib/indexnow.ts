@@ -6,9 +6,8 @@ export const INDEXNOW_KEY = "10bc2583039d32331bb439b73dedd48b";
 
 const ENDPOINT = "https://api.indexnow.org/indexnow";
 
-// A canonical host és a www (ahová jelenleg átirányít a domain) — mindkettőt beküldjük,
-// mert az IndexNow kérésben minden URL-nek egyeznie kell a host-tal.
-const HOSTS = ["gammaapartmanok.hu", "www.gammaapartmanok.hu"];
+// Csak a canonical host — a www. 308-cal ide irányít át (Vercel domain beállítás).
+const HOSTS = ["gammaapartmanok.hu"];
 
 export const INDEXNOW_PATHS = ["/", "/galeria", "/foglalas"];
 
