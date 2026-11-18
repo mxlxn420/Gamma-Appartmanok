@@ -11,6 +11,11 @@ import FaqSection            from "@/components/sections/FaqSection";
 import NeighborhoodSection   from "@/components/sections/NeighborhoodSection";
 import ContactSection        from "@/components/sections/ContactSection";
 
+/** Üres alt szöveg helyett értelmes alapértelmezést ad (SEO / akadálymentesség). */
+function withAlt<T extends { alt?: string }>(img: T, fallback: string): T {
+  return img?.alt?.trim() ? img : { ...img, alt: fallback };
+}
+
 const DEFAULT_SLIDES = [
   { src: "/images/haz/IMG_8519 kicsi.jpg",    alt: "Milán Kuckó – vendégház kívülről" },
   { src: "/images/jacuzzi/jacuzzikivilag.jpg", alt: "Privát jacuzzi"                  },
@@ -98,7 +103,8 @@ export default async function HomePage() {
     titleAfter:    heroRow?.titleAfter    ?? HERO_DEFAULTS.titleAfter,
     description:   heroRow?.description   ?? HERO_DEFAULTS.description,
     highlights:    (heroRow?.highlights   ?? HERO_DEFAULTS.highlights) as { icon: string; label: string }[],
-    slides:        (heroRow?.slides       ?? HERO_DEFAULTS.slides)     as { src: string; alt: string; label: string }[],
+    slides:        ((heroRow?.slides      ?? HERO_DEFAULTS.slides)     as { src: string; alt: string; label: string }[])
+      .map((s) => withAlt(s, s.label?.trim() || "Gamma Apartmanok Miskolctapolca")),
   };
 
   const aboutData = {
@@ -106,8 +112,8 @@ export default async function HomePage() {
     heading2:     aboutRow?.heading2     ?? ABOUT_DEFAULTS.heading2,
     description1: aboutRow?.description1 ?? ABOUT_DEFAULTS.description1,
     description2: aboutRow?.description2 ?? ABOUT_DEFAULTS.description2,
-    mainImage:    (aboutRow?.mainImage   ?? ABOUT_DEFAULTS.mainImage)  as { src: string; alt: string },
-    floatImage:   (aboutRow?.floatImage  ?? ABOUT_DEFAULTS.floatImage) as { src: string; alt: string },
+    mainImage:    withAlt((aboutRow?.mainImage  ?? ABOUT_DEFAULTS.mainImage)  as { src: string; alt: string }, "Gamma Apartmanok Miskolctapolca – apartman kívülről"),
+    floatImage:   withAlt((aboutRow?.floatImage ?? ABOUT_DEFAULTS.floatImage) as { src: string; alt: string }, "Gamma Apartmanok – privát jacuzzi"),
     values:       (aboutRow?.values      ?? ABOUT_DEFAULTS.values)     as { icon: string; title: string; text: string }[],
     nearby:       (aboutRow?.nearby      ?? ABOUT_DEFAULTS.nearby)     as string[],
   };
@@ -119,7 +125,8 @@ export default async function HomePage() {
     items:       (amenitiesRow?.items      ?? AMENITIES_DEFAULTS.items) as { icon: string; label: string; desc: string }[],
   };
 
-  const galleryFeatured = (galleryRow?.featured ?? null) as { src: string; alt: string }[] | null;
+  const galleryFeatured = ((galleryRow?.featured ?? null) as { src: string; alt: string }[] | null)
+    ?.map((img, i) => withAlt(img, `Gamma Apartmanok Miskolctapolca – galéria kép ${i + 1}`)) ?? null;
 
   return (
     <>

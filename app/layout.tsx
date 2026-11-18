@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     template: "%s | Gamma Apartmanok",
   },
   description:
-    "4 különálló prémium apartman Miskolctapolcán – időpontra foglalható privát jacuzzival, panorámás tetőterasszal, ingyenes parkolóval. Max. 20 fő. Érintkezésmentes bejelentkezés. Foglaljon közvetlenül!",
+    "4 prémium apartman Miskolctapolcán privát jacuzzival, panorámás tetőterasszal és ingyenes parkolóval. Max. 20 fő. Foglaljon közvetlenül, a legjobb áron!",
   keywords: [
     "gamma apartmanok miskolctapolca",
     "miskolctapolca szállás",
