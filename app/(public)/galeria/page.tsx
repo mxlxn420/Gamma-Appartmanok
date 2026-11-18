@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Galéria | Gamma Apartmanok",
     description: "Nézze meg a Gamma Apartmanok Miskolctapolca apartmanjainak, jakuzzijának és kertjének fotóit.",
-    url: "https://gammaapartmanok.hu/galeria",
+    url: "https://www.gammaapartmanok.hu/galeria",
   },
 };
 

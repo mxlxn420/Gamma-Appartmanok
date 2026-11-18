@@ -20,7 +20,7 @@ const jost = Jost({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://gammaapartmanok.hu"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.gammaapartmanok.hu"),
   title: {
     default: "Gamma Apartmanok | Prémium pihenés Miskolctapolcán",
     template: "%s | Gamma Apartmanok",
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
   openGraph: {
     type:        "website",
     locale:      "hu_HU",
-    url:         "https://gammaapartmanok.hu",
+    url:         "https://www.gammaapartmanok.hu",
     siteName:    "Gamma Apartmanok",
     title:       "Gamma Apartmanok | Prémium pihenés Miskolctapolcán",
     description: "4 különálló prémium apartman Miskolctapolcán – időpontra foglalható privát jacuzzival, panorámás tetőterasszal. Max. 20 fő.",
@@ -61,7 +61,7 @@ export const metadata: Metadata = {
     follow: true,
   },
   alternates: {
-    canonical: "https://gammaapartmanok.hu",
+    canonical: "https://www.gammaapartmanok.hu",
   },
   icons: {
     icon:  [
@@ -90,7 +90,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               "@type":     "LodgingBusiness",
               name:        "Gamma Apartmanok",
               description: "4 különálló prémium apartman Miskolctapolcán, időpontra foglalható privát jacuzzival, panorámás tetőterasszal és teljes felszereltséggel. Maximum 20 fő.",
-              url:         "https://gammaapartmanok.hu",
+              url:         "https://www.gammaapartmanok.hu",
               telephone:   "+36 20 359 9222",
               email:       "gammaapartmanok@gmail.com",
               address: {

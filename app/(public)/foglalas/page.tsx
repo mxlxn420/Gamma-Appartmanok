@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Foglalás | Gamma Apartmanok",
     description: "Foglaljon közvetlenül a Gamma Apartmanok Miskolctapolca 4 apartmanjából a legalacsonyabb áron.",
-    url: "https://gammaapartmanok.hu/foglalas",
+    url: "https://www.gammaapartmanok.hu/foglalas",
   },
 };
 
